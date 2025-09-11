@@ -5,37 +5,27 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Produk NON OTP</title>
   <style>
-    body {font-family: Arial, sans-serif;background:#fffaf5;margin:0;}
-    header {background:linear-gradient(135deg,#ff6600,#ff9900);color:#fff;padding:20px;text-align:center;border-radius:0 0 20px 20px;}
+    body {font-family: Arial, sans-serif;background:#0d0d0d;color:#fff;margin:0;}
+    header {background:linear-gradient(135deg,#ff00cc,#3333ff);color:#fff;padding:20px;text-align:center;border-radius:0 0 20px 20px;}
     .product-list{margin:20px;display:grid;gap:20px;}
-    .product{background:#fff;padding:20px;border-radius:12px;box-shadow:0 4px 10px rgba(0,0,0,0.1);}
-    .product h2{margin:0 0 10px;color:#ff6600;}
-    .price{font-weight:bold;color:#006600;margin:10px 0;}
-    .buy-btn{display:inline-block;background:#ff6600;color:#fff;padding:8px 15px;border-radius:8px;text-decoration:none;}
-    
-    /* Tambahan menu cek stok & area */
-    .extra-menu {
-      display: flex;
-      gap: 15px;
-      justify-content: center;
-      margin: 20px;
-    }
-    .extra-btn {
-      background: #ff6600;
-      color: #fff;
-      padding: 10px 20px;
-      border-radius: 10px;
-      text-decoration: none;
-      font-weight: bold;
-      box-shadow: 0 3px 6px rgba(0,0,0,0.2);
-      transition: transform .2s;
-    }
-    .extra-btn:hover {
-      transform: scale(1.05);
-      background: #ff8800;
-    }
-
+    .product{background:#1a1a1a;padding:20px;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,0.6);}
+    .product h2{margin:0 0 10px;color:#00e6ff;}
+    .price{font-weight:bold;color:#00ff88;margin:10px 0;}
+    .buy-btn{display:inline-block;background:#ff00cc;color:#fff;padding:8px 15px;border-radius:8px;text-decoration:none;transition:.2s;}
+    .buy-btn:hover{background:#ff3399;}
     footer{text-align:center;margin:20px;}
+    /* Menu tambahan */
+    .extra-menu {display:flex;gap:15px;justify-content:center;margin:20px;}
+    .extra-btn {background:#3333ff;color:#fff;padding:10px 20px;border-radius:10px;text-decoration:none;font-weight:bold;box-shadow:0 3px 6px rgba(0,0,0,0.4);transition:.2s;}
+    .extra-btn:hover {transform:scale(1.05);background:#5555ff;}
+    /* Modal QRIS */
+    #qrisModal {display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);z-index:1000;justify-content:center;align-items:center;}
+    #qrisModal .box {background:#111;color:#fff;padding:20px;border-radius:15px;max-width:350px;text-align:center;position:relative;}
+    #qrisModal img {max-width:100%;border-radius:10px;}
+    #qrisModal a, #qrisModal button {margin-top:10px;display:inline-block;padding:10px 20px;border-radius:8px;font-weight:bold;text-decoration:none;cursor:pointer;}
+    #waConfirm {background:#25D366;color:#fff;}
+    #backBtn {background:#ff8800;color:#fff;border:none;}
+    #closeBtn {background:#ff4444;color:#fff;border:none;}
   </style>
 </head>
 <body>
@@ -45,25 +35,49 @@
   </header>
 
   <section class="product-list">
-    <div class="product"><h2>SuperMini</h2><div class="price">Rp45.000</div><p>Kuota: 15GB - 32GB<br>KUOTA TERAKUMULASI</p><a href="https://wa.me/6287859569780?text=Halo%20mau%20SuperMini%2045K" class="buy-btn">Beli via WA</a></div>
-    <div class="product"><h2>Mini</h2><div class="price">Rp55.000</div><p>Kuota: 33.75GB - 50.75GB<br>KUOTA TERAKUMULASI</p><a href="https://wa.me/6287859569780?text=Halo%20mau%20Mini%2055K" class="buy-btn">Beli via WA</a></div>
-    <div class="product"><h2>Big</h2><div class="price">Rp65.000</div><p>Kuota: 40GB - 60GB<br>KUOTA TERAKUMULASI</p><a href="https://wa.me/6287859569780?text=Halo%20mau%20Big%2065K" class="buy-btn">Beli via WA</a></div>
-    <div class="product"><h2>Big Plus</h2><div class="price">Rp65.000</div><p>Kuota: 35GB - 73GB<br>KUOTA TERAKUMULASI</p><a href="https://wa.me/6287859569780?text=Halo%20mau%20Big%20Plus%2065K" class="buy-btn">Beli via WA</a></div>
-    <div class="product"><h2>Jumbo</h2><div class="price">Rp85.000</div><p>Kuota: 65GB - 135GB<br>KUOTA TERAKUMULASI</p><a href="https://wa.me/6287859569780?text=Halo%20mau%20Jumbo%2085K" class="buy-btn">Beli via WA</a></div>
-    <div class="product"><h2>Jumbo V2</h2><div class="price">Rp75.000</div><p>Kuota: 52.5GB - 69.5GB<br>KUOTA TERAKUMULASI</p><a href="https://wa.me/6287859569780?text=Halo%20mau%20Jumbo%20V2%2075K" class="buy-btn">Beli via WA</a></div>
-    <div class="product"><h2>MegaBig</h2><div class="price">Rp95.000</div><p>Kuota: 90GB - 107GB<br>KUOTA TERAKUMULASI</p><a href="https://wa.me/6287859569780?text=Halo%20mau%20MegaBig%2095K" class="buy-btn">Beli via WA</a></div>
-    <div class="product"><h2>Reguler XL 234GB+</h2><div class="price">Rp170.000</div><p>Kuota full reguler 24 jam (234-270GB).<br>Kuota 234GB tanpa pembagian area, area tertentu bisa lebih hingga 270GB.<br>Paket garansi resmi.<br>Paket bersifat perpanjangan, kuota terakumulasi.</p><a href="https://wa.me/6287859569780?text=Halo%20mau%20Reguler%20XL%20234GB%20Rp170.000" class="buy-btn">Beli via WA</a></div>
-    <div class="product"><h2>Reguler XL 75GB+</h2><div class="price">Rp110.000</div><p>Kuota full reguler 24 jam (75-90GB).<br>Kuota 75GB tanpa pembagian area, area tertentu bisa lebih hingga 90GB.<br>Paket garansi resmi.<br>Paket bersifat perpanjangan, kuota terakumulasi.</p><a href="https://wa.me/6287859569780?text=Halo%20mau%20Reguler%20XL%2075GB%20Rp110.000" class="buy-btn">Beli via WA</a></div>
+    <div class="product"><h2>SuperMini</h2><div class="price">Rp45.000</div><p>Kuota: 15GB - 32GB<br>KUOTA TERAKUMULASI</p><a href="javascript:void(0)" onclick="openQRIS('SuperMini 45K','45.000')" class="buy-btn">Beli</a></div>
+    <div class="product"><h2>Mini</h2><div class="price">Rp55.000</div><p>Kuota: 33.75GB - 50.75GB<br>KUOTA TERAKUMULASI</p><a href="javascript:void(0)" onclick="openQRIS('Mini 55K','55.000')" class="buy-btn">Beli</a></div>
+    <div class="product"><h2>Big</h2><div class="price">Rp65.000</div><p>Kuota: 40GB - 60GB<br>KUOTA TERAKUMULASI</p><a href="javascript:void(0)" onclick="openQRIS('Big 65K','65.000')" class="buy-btn">Beli</a></div>
+    <div class="product"><h2>Big Plus</h2><div class="price">Rp65.000</div><p>Kuota: 35GB - 73GB<br>KUOTA TERAKUMULASI</p><a href="javascript:void(0)" onclick="openQRIS('Big Plus 65K','65.000')" class="buy-btn">Beli</a></div>
+    <div class="product"><h2>Jumbo</h2><div class="price">Rp85.000</div><p>Kuota: 65GB - 135GB<br>KUOTA TERAKUMULASI</p><a href="javascript:void(0)" onclick="openQRIS('Jumbo 85K','85.000')" class="buy-btn">Beli</a></div>
+    <div class="product"><h2>Jumbo V2</h2><div class="price">Rp75.000</div><p>Kuota: 52.5GB - 69.5GB<br>KUOTA TERAKUMULASI</p><a href="javascript:void(0)" onclick="openQRIS('Jumbo V2 75K','75.000')" class="buy-btn">Beli</a></div>
+    <div class="product"><h2>MegaBig</h2><div class="price">Rp95.000</div><p>Kuota: 90GB - 107GB<br>KUOTA TERAKUMULASI</p><a href="javascript:void(0)" onclick="openQRIS('MegaBig 95K','95.000')" class="buy-btn">Beli</a></div>
+    <div class="product"><h2>Reguler XL 234GB+</h2><div class="price">Rp170.000</div><p>Kuota full reguler 24 jam (234-270GB).<br>Kuota 234GB tanpa pembagian area.<br>Paket garansi resmi.<br>Kuota terakumulasi.</p><a href="javascript:void(0)" onclick="openQRIS('Reguler XL 234GB+','170.000')" class="buy-btn">Beli</a></div>
+    <div class="product"><h2>Reguler XL 75GB+</h2><div class="price">Rp110.000</div><p>Kuota full reguler 24 jam (75-90GB).<br>Kuota 75GB tanpa pembagian area.<br>Paket garansi resmi.<br>Kuota terakumulasi.</p><a href="javascript:void(0)" onclick="openQRIS('Reguler XL 75GB+','110.000')" class="buy-btn">Beli</a></div>
   </section>
 
-  <!-- Tambahan menu -->
+  <!-- Menu tambahan -->
   <section class="extra-menu">
     <a href="https://xlstock.serversaya.site/" target="_blank" class="extra-btn">🔍 Cek Stok</a>
     <a href="https://jeelsboobz.store/sidompul" target="_blank" class="extra-btn">📍 Cek Area Akrab</a>
   </section>
 
   <footer>
-    <a href="index.html">⬅ Kembali ke Menu Utama</a>
+    <a href="index.html" style="color:#fff;">⬅ Kembali ke Menu Utama</a>
   </footer>
+
+  <!-- Modal QRIS -->
+  <div id="qrisModal">
+    <div class="box">
+      <h3>Scan QRIS untuk Pembayaran</h3>
+      <img src="https://e.top4top.io/p_3534j26v51.jpeg" alt="QRIS Pembayaran">
+      <p>Setelah transfer, klik tombol konfirmasi.</p>
+      <a id="waConfirm" href="#" target="_blank">✅ Konfirmasi via WhatsApp</a><br>
+      <button id="backBtn" onclick="closeQRIS()">⬅ Kembali ke Produk</button><br>
+      <button id="closeBtn" onclick="closeQRIS()">Tutup</button>
+    </div>
+  </div>
+
+  <script>
+    function openQRIS(productName, price) {
+      const waNumber = "6287859569780"; // nomor WA tujuan
+      const pesan = `Halo, saya sudah bayar via QRIS untuk produk *${productName}* seharga Rp${price}. Mohon diproses ya.`;
+      document.getElementById("waConfirm").href = `https://wa.me/${waNumber}?text=${encodeURIComponent(pesan)}`;
+      document.getElementById("qrisModal").style.display = "flex";
+    }
+    function closeQRIS() {
+      document.getElementById("qrisModal").style.display = "none";
+    }
+  </script>
 </body>
 </html>
