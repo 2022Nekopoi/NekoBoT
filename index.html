@@ -1,355 +1,455 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>T-STORE | Kuota Murah XL & Axis</title>
-  <meta name="description" content="T-STORE Official - Jual Kuota XL & Axis Murah Bergaransi. Pembayaran mudah via QRIS.">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>T-STORE — Kuota XL / AXIS</title>
+  <link rel="icon" href="https://i.ibb.co/CHvR7JH/tstore-favicon.png" />
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: 'Segoe UI', Tahoma, sans-serif;
-      color: #fff;
-      overflow-x: hidden;
-      min-height: 100vh;
-      background: linear-gradient(135deg, #0f1c47, #3a0ca3, #7209b7);
-      transition: background 0.5s, color 0.5s;
+    :root{
+      --bg1:#070717;
+      --bg2:#071233;
+      --accent1:#00f0ff;
+      --accent2:#ff37d6;
+      --glass: rgba(255,255,255,0.05);
+      --glass-2: rgba(255,255,255,0.03);
+      --card-radius:18px;
+      --btn-radius:12px;
+      --maxw:1100px;
     }
-    body.light {
-      background: #f5f5f5;
-      color: #222;
-    }
-
-    /* Bintang jatuh */
-    .star {
-      position: fixed;
-      width: 2px;
-      height: 80px;
-      background: linear-gradient(-45deg, white, transparent);
-      animation: fall 3s linear infinite;
-      opacity: 0.8;
-      z-index: -1;
-    }
-    @keyframes fall {
-      0% { transform: translateY(-100px) translateX(0) rotate(45deg); opacity: 1; }
-      100% { transform: translateY(110vh) translateX(200px) rotate(45deg); opacity: 0; }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: "Inter", "Segoe UI", system-ui, Arial;
+      background: radial-gradient(800px 400px at 10% 10%, rgba(0,255,255,0.04), transparent),
+                  radial-gradient(700px 350px at 90% 90%, rgba(255,51,204,0.04), transparent),
+                  linear-gradient(180deg,var(--bg1),var(--bg2));
+      color:#e9f6ff;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      padding-bottom:60px;
     }
 
-    /* Header & promo berjalan */
-    header {
-      background: rgba(0,0,0,0.5);
-      padding: 10px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 15px;
-      border-bottom: 2px solid #fff;
-      flex-wrap: wrap;
+    .container{max-width:var(--maxw);margin:30px auto;padding:0 18px}
+    header{
+      display:flex;align-items:center;gap:16px;
+      padding:18px;border-radius:16px;
+      background:linear-gradient(135deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      box-shadow: 0 6px 30px rgba(0,0,0,0.6), 0 0 40px rgba(0,255,255,0.02) inset;
+      backdrop-filter: blur(6px);
     }
-    body.light header { background: rgba(200,200,200,0.5); border-bottom: 2px solid #000; }
-    header h1 { font-size: 1.8rem; font-weight: bold; letter-spacing: 1px; }
-    header img { height: 35px; width: auto; }
+    .brand {display:flex;align-items:center;gap:12px;}
+    .brand img{width:64px;height:64px;border-radius:12px;box-shadow:0 6px 24px rgba(0,0,0,0.6)}
+    .brand h1{font-size:22px;margin:0;letter-spacing:0.6px}
+    .brand p{margin:0;font-size:12px;opacity:0.9}
+    nav{margin-left:auto; display:flex;gap:10px;flex-wrap:wrap;}
+    nav a{
+      text-decoration:none;color:inherit;
+      padding:8px 14px;border-radius:14px;font-weight:600;
+      background:linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border:1px solid rgba(255,255,255,0.04);
+      transition:transform .18s ease, box-shadow .18s;
+    }
+    nav a:hover{ transform:translateY(-4px); box-shadow: 0 8px 30px rgba(0,0,0,0.6), 0 0 20px rgba(0,255,255,0.06) }
 
-    .promo {
-      background: #ff6ec7;
-      color: #000;
-      font-weight: bold;
-      overflow: hidden;
-      white-space: nowrap;
-    }
-    .promo span {
-      display: inline-block;
-      padding: 10px 20px;
-      animation: marquee 12s linear infinite;
-    }
-    @keyframes marquee {
-      0% { transform: translateX(100%); }
-      100% { transform: translateX(-100%); }
-    }
+    .hero{margin-top:22px;padding:28px;border-radius:18px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));box-shadow: 0 20px 60px rgba(0,0,0,0.6);display:flex;align-items:center;gap:20px;flex-wrap:wrap;}
+    .hero .title{flex:1}
+    .hero h2{font-size:34px;margin:0 0 6px}
+    .hero p{margin:0;opacity:0.9}
 
-    nav {
-      display: flex;
-      justify-content: center;
-      gap: 15px;
-      background: rgba(0,0,0,0.3);
-      padding: 10px;
-      flex-wrap: wrap;
-    }
-    body.light nav { background: rgba(200,200,200,0.3); }
-    nav a {
-      color: inherit;
-      text-decoration: none;
-      font-weight: bold;
-      padding: 8px 15px;
-      border-radius: 20px;
-      background: rgba(255,255,255,0.1);
-      transition: 0.3s;
-    }
-    nav a:hover { background: #ff6ec7; color: #000; }
+    .grid{display:grid;grid-template-columns: 1fr 1fr;gap:22px;margin-top:26px;}
+    @media (max-width:900px){ .grid{grid-template-columns:1fr} }
 
-    section { padding: 40px 20px; text-align: center; }
-    section h2 { font-size: 2rem; margin-bottom: 20px; }
+    .card{border-radius:var(--card-radius);padding:18px;background:linear-gradient(180deg,var(--glass),var(--glass-2));box-shadow: 0 10px 40px rgba(0,0,0,0.6), 0 0 20px rgba(0,255,255,0.02) inset;transition:transform .22s ease, box-shadow .22s;}
+    .card:hover{ transform:translateY(-8px); box-shadow: 0 18px 60px rgba(0,0,0,0.7) }
 
-    .product, .paket {
-      background: rgba(255,255,255,0.1);
-      padding: 20px;
-      margin: 15px auto;
-      border-radius: 15px;
-      max-width: 600px;
-      text-align: left;
-    }
-    body.light .product, body.light .paket { background: rgba(0,0,0,0.05); }
-    .product h3, .paket h3 { margin-bottom: 10px; font-size: 1.2rem; color: #ff6ec7; }
-    .product p, .paket p { margin-bottom: 8px; }
+    .section-title{display:flex;align-items:center;gap:12px;margin-bottom:12px;}
+    .section-title h3{margin:0;font-size:20px}
+    .muted{opacity:0.85;font-size:14px}
 
-    .logos {
-      display: flex;
-      justify-content: center;
-      gap: 20px;
-      margin: 15px 0;
-    }
-    .logos img { height: 40px; width: auto; filter: drop-shadow(0 0 5px #fff); }
+    .prod{display:flex;flex-direction:column;gap:12px;margin-top:10px;}
+    .prod-item{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px;border-radius:12px;background:linear-gradient(90deg, rgba(255,255,255,0.01), rgba(255,255,255,0.015));border:1px solid rgba(255,255,255,0.03);}
+    .badge{min-width:54px;height:48px;border-radius:10px;background:linear-gradient(180deg,var(--accent1),var(--accent2));display:flex;align-items:center;justify-content:center;font-weight:800;color:#001;box-shadow:0 6px 18px rgba(0,0,0,0.6);}
+    .prod-info h4{margin:0;font-size:16px}
+    .prod-info p{margin:4px 0 0;font-size:13px;opacity:0.9}
+    .prod-actions{display:flex;flex-direction:column;gap:8px;min-width:160px}
+    .btn-buy{background:linear-gradient(90deg,var(--accent2),var(--accent1));border:none;padding:10px 12px;border-radius:var(--btn-radius);font-weight:800;color:#001;cursor:pointer;box-shadow:0 8px 30px rgba(0,0,0,0.6);transition:transform .12s ease;}
+    .btn-buy:hover{ transform:translateY(-4px); }
 
-    .btn {
-      display: inline-block;
-      margin-top: 10px;
-      padding: 10px 20px;
-      border-radius: 20px;
-      text-decoration: none;
-      background: #ff6ec7;
-      color: #000;
-      font-weight: bold;
-      transition: 0.3s;
-      box-shadow: 0 0 10px #ff6ec7, 0 0 20px #ff6ec7;
-    }
-    .btn:hover { background: #fff; color: #000; }
+    .form{display:flex;flex-direction:column;gap:12px;}
+    select, .input{width:100%; padding:14px;border-radius:12px;background:transparent;border:1px solid rgba(255,255,255,0.06);color:inherit;font-size:15px; outline:none;}
+    .select-wrap{background:linear-gradient(90deg, rgba(255,255,255,0.008), rgba(255,255,255,0.012)); padding:12px;border-radius:12px}
+    .note{font-size:13px;opacity:0.9}
+    .link-btn{background:none;border:1px dashed rgba(255,255,255,0.06);padding:8px 12px;border-radius:10px;color:inherit;text-decoration:none}
 
-    footer {
-      background: rgba(0,0,0,0.4);
-      text-align: center;
-      padding: 15px;
-      font-size: 0.9rem;
-      margin-top: 40px;
-    }
-    body.light footer { background: rgba(200,200,200,0.4); }
+    .modal {position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:linear-gradient(rgba(1,1,1,0.6),rgba(1,1,1,0.6));z-index:9999;}
+    .modal-card{width:360px;max-width:94%;padding:18px;border-radius:14px;background:#071022;color: #e6fff9;box-shadow: 0 30px 90px rgba(0,0,0,0.8), 0 0 80px rgba(0,255,255,0.03) inset;text-align:center;}
+    .modal-card img{max-width:260px;border-radius:10px;margin-top:12px}
+    .modal-card button{margin-top:12px;padding:10px;border-radius:10px;border:none;cursor:pointer}
 
-    img.qris {
-      max-width: 280px;
-      border-radius: 10px;
-      margin-top: 20px;
-      box-shadow: 0 0 20px rgba(255,255,255,0.5);
-    }
-
-    html { scroll-behavior: smooth; }
-
-    #toggleMode {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      background: #ff6ec7;
-      border: none;
-      border-radius: 50%;
-      width: 50px;
-      height: 50px;
-      cursor: pointer;
-      font-size: 1.5rem;
-      box-shadow: 0 0 10px #ff6ec7;
-    }
-
-    @media (max-width: 600px) {
-      header { flex-direction: column; gap: 10px; }
-      header h1 { font-size: 1.5rem; text-align: center; }
-      section h2 { font-size: 1.6rem; }
-      .btn { padding: 8px 15px; font-size: 0.9rem; }
-      .logos img { height: 30px; }
-    }
+    footer{margin-top:28px;text-align:center;opacity:0.9;font-size:13px;padding:18px}
   </style>
 </head>
 <body>
-  <!-- Bintang jatuh -->
-  <div class="star" style="left: 10%; animation-delay: 0s;"></div>
-  <div class="star" style="left: 30%; animation-delay: 1s;"></div>
-  <div class="star" style="left: 50%; animation-delay: 2s;"></div>
-  <div class="star" style="left: 70%; animation-delay: 0.5s;"></div>
-  <div class="star" style="left: 90%; animation-delay: 1.5s;"></div>
 
-  <!-- Header -->
-  <header>
-    <h1>T-STORE OFFICIAL</h1>
-    <img src="https://f.top4top.io/p_3534ace8l2.png" alt="XL Logo">
-    <img src="https://e.top4top.io/p_3534wrwg81.png" alt="Axis Logo">
-  </header>
+  <div class="container">
+    <header>
+      <div class="brand">
+        <img src="https://i.ibb.co/5BqXQhK/tstore-logo.png" alt="T-STORE">
+        <div>
+          <h1>T-STORE OFFICIAL</h1>
+          <p class="muted">Kuota XL & AXIS — Aman • Cepat • Murah</p>
+        </div>
+      </div>
 
-  <!-- Promo berjalan -->
-  <div class="promo">
-    <span>🔥 Promo Spesial! Paket Full Reguler 80GB cuma Rp110K & 250GB Rp170K 🚀 | Kuota XL & Axis Termurah Bergaransi! | Bayar Mudah via QRIS ✅</span>
+      <nav>
+        <a href="#otp">🔐 OTP</a>
+        <a href="#nonotp">🔓 NON OTP</a>
+        <a href="https://xlstock.serversaya.site/" target="_blank">📦 Cek Stok Akrab</a>
+        <a href="#visi">🌟 Visi & Misi</a>
+        <a href="#kontak">📞 Kontak</a>
+      </nav>
+    </header>
+
+    <section class="hero">
+      <div class="title">
+        <h2>Produk Non OTP & OTP — Pilih, Bayar, Konfirmasi</h2>
+        <p class="muted">Desain modern, mudah digunakan — setiap paket punya tombol <strong>Beli</strong> untuk langsung melakukan pembayaran QRIS dan konfirmasi WhatsApp.</p>
+      </div>
+    </section>
+
+    <div class="grid">
+      <!-- LEFT: OTP -->
+      <div class="card" id="otp">
+        <div class="section-title"><h3>✨ Produk OTP</h3></div>
+
+        <div class="prod">
+          <!-- REDY -->
+          <div class="prod-item">
+            <div class="prod-left">
+              <div class="badge">RY</div>
+              <div class="prod-info">
+                <h4>REDY — Masa Aktif XL 1 Tahun</h4>
+                <p>60GB bundling • 45GB/tahun • 36GB YouTube • Harga Rp10.000</p>
+              </div>
+            </div>
+            <div class="prod-actions">
+              <button class="btn-buy" onclick="openQris('REDY — Masa Aktif XL 1 Tahun',10000)">🛒 Beli REDY</button>
+            </div>
+          </div>
+
+          <!-- XCP group -->
+          <div class="prod-item" style="flex-direction:column;align-items:flex-start;gap:10px">
+            <div style="display:flex;align-items:center;gap:12px;width:100%">
+              <div class="badge">XCP</div>
+              <div class="prod-info"><h4>Xtra Combo Plus Add-On (XCP)</h4><p>Wajib ada paket Xtra Combo Plus. Menimpa kuota yang sama. Masa aktif ikut XCP.</p></div>
+            </div>
+
+            <div style="display:flex;flex-wrap:wrap;gap:8px;width:100%;justify-content:flex-end">
+              <button class="btn-buy" onclick="openQris('XCP — YouTube 15GB',9000)">🛒 XCP YouTube — Rp9K</button>
+              <button class="btn-buy" onclick="openQris('XCP — Instagram 15GB',9000)">🛒 XCP Instagram — Rp9K</button>
+              <button class="btn-buy" onclick="openQris('XCP — TikTok 15GB',9000)">🛒 XCP TikTok — Rp9K</button>
+              <button class="btn-buy" onclick="openQris('XCP — Facebook 15GB',9000)">🛒 XCP Facebook — Rp9K</button>
+              <button class="btn-buy" onclick="openQris('XCP — WhatsApp 15GB',9000)">🛒 XCP WhatsApp — Rp9K</button>
+              <button class="btn-buy" onclick="openQris('XCP — Streaming 15GB',9000)">🛒 XCP Streaming — Rp9K</button>
+              <button class="btn-buy" onclick="openQris('XCP — Social Media 15GB',9000)">🛒 XCP SosMed — Rp9K</button>
+            </div>
+          </div>
+
+          <!-- Circle -->
+          <div class="prod-item">
+            <div class="prod-left">
+              <div class="badge">C</div>
+              <div class="prod-info">
+                <h4>Paket Circle</h4>
+                <p>Kuota 4/5GB full reguler • Menambah masa aktif 30 hari • Hanya nomor XL • Wajib OTP • Rp10.000</p>
+              </div>
+            </div>
+            <div class="prod-actions">
+              <button class="btn-buy" onclick="openQris('Paket Circle',10000)">🛒 Beli Circle</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: NON OTP with Provider -> Product -->
+      <div class="card" id="nonotp">
+        <div class="section-title"><h3>🔓 Produk NON OTP</h3></div>
+
+        <div class="form">
+          <label class="muted">Pilih Provider:</label>
+          <div class="select-wrap">
+            <select id="providerSelect" onchange="populateProducts()">
+              <option value="">-- Pilih Provider --</option>
+              <option value="xl">XL</option>
+              <option value="axis">AXIS</option>
+            </select>
+          </div>
+
+          <label class="muted">Pilih Produk:</label>
+          <div class="select-wrap">
+            <select id="productSelect" disabled>
+              <option value="">-- Pilih Produk --</option>
+            </select>
+          </div>
+
+          <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:8px">
+            <button id="buySelected" class="btn-buy" style="flex:1" onclick="buySelected()" disabled>🛒 Beli Produk Terpilih</button>
+            <a class="link-btn" href="https://xlstock.serversaya.site/" target="_blank">📦 Cek Stok Akrab</a>
+          </div>
+
+          <p class="note">Tip: Pilih provider lalu pilih produk. Tombol beli akan aktif setelah memilih produk.</p>
+        </div>
+
+        <hr style="margin:18px 0;border:none;border-top:1px solid rgba(255,255,255,0.03)">
+
+        <div class="section-title"><h3>Daftar Produk NON OTP</h3></div>
+        <div class="prod">
+          <!-- list compact for quick buy -->
+          <div class="prod-item">
+            <div class="prod-left">
+              <div class="badge">S</div>
+              <div class="prod-info"><h4>SuperMini 50K</h4><p>15GB – 32GB</p></div>
+            </div>
+            <div class="prod-actions"><button class="btn-buy" onclick="openQris('SuperMini 50K',50000)">🛒 Beli — Rp50K</button></div>
+          </div>
+
+          <div class="prod-item">
+            <div class="prod-left">
+              <div class="badge">M</div>
+              <div class="prod-info"><h4>Mini 65K</h4><p>33GB – 50GB</p></div>
+            </div>
+            <div class="prod-actions"><button class="btn-buy" onclick="openQris('Mini 65K',65000)">🛒 Beli — Rp65K</button></div>
+          </div>
+
+          <div class="prod-item">
+            <div class="prod-left">
+              <div class="badge">B</div>
+              <div class="prod-info"><h4>Big 70K</h4><p>40GB – 60GB</p></div>
+            </div>
+            <div class="prod-actions"><button class="btn-buy" onclick="openQris('Big 70K',70000)">🛒 Beli — Rp70K</button></div>
+          </div>
+
+          <div class="prod-item">
+            <div class="prod-left">
+              <div class="badge">BP</div>
+              <div class="prod-info"><h4>Big Plus 75K</h4><p>35GB – 73GB</p></div>
+            </div>
+            <div class="prod-actions"><button class="btn-buy" onclick="openQris('Big Plus 75K',75000)">🛒 Beli — Rp75K</button></div>
+          </div>
+
+          <div class="prod-item">
+            <div class="prod-left">
+              <div class="badge">J</div>
+              <div class="prod-info"><h4>Jumbo 95K</h4><p>65GB – 135GB</p></div>
+            </div>
+            <div class="prod-actions"><button class="btn-buy" onclick="openQris('Jumbo 95K',95000)">🛒 Beli — Rp95K</button></div>
+          </div>
+
+          <div class="prod-item">
+            <div class="prod-left">
+              <div class="badge">JV2</div>
+              <div class="prod-info"><h4>Jumbo V2 75K</h4><p>52GB – 69GB</p></div>
+            </div>
+            <div class="prod-actions"><button class="btn-buy" onclick="openQris('Jumbo V2 75K',75000)">🛒 Beli — Rp75K</button></div>
+          </div>
+
+          <div class="prod-item">
+            <div class="prod-left">
+              <div class="badge">MG</div>
+              <div class="prod-info"><h4>MegaBig 105K</h4><p>90GB – 107GB</p></div>
+            </div>
+            <div class="prod-actions"><button class="btn-buy" onclick="openQris('MegaBig 105K',105000)">🛒 Beli — Rp105K</button></div>
+          </div>
+
+          <div class="prod-item">
+            <div class="prod-left">
+              <div class="badge">R1</div>
+              <div class="prod-info"><h4>Reguler XL 234GB+</h4><p>—</p></div>
+            </div>
+            <div class="prod-actions"><button class="btn-buy" onclick="openQris('Reguler XL 234GB+',175000)">🛒 Beli — Rp175K</button></div>
+          </div>
+
+          <div class="prod-item">
+            <div class="prod-left">
+              <div class="badge">R2</div>
+              <div class="prod-info"><h4>Reguler XL 75GB+</h4><p>—</p></div>
+            </div>
+            <div class="prod-actions"><button class="btn-buy" onclick="openQris('Reguler XL 75GB+',110000)">🛒 Beli — Rp110K</button></div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Visi & Misi -->
+    <section class="card" id="visi">
+      <div class="section-title"><h3>🌟 Visi & Misi</h3></div>
+      <div style="display:flex;gap:18px;flex-wrap:wrap">
+        <div style="flex:1;min-width:260px">
+          <h4>Visi</h4>
+          <p class="muted">Menjadi penyedia kuota XL & AXIS terpercaya dengan harga terjangkau, layanan cepat, dan sistem pembayaran aman.</p>
+        </div>
+        <div style="flex:1;min-width:260px">
+          <h4>Misi</h4>
+          <ul>
+            <li>✅ Produk bergaransi & harga bersahabat</li>
+            <li>✅ Pilihan OTP & NON OTP lengkap</li>
+            <li>✅ Support cepat via WhatsApp</li>
+            <li>✅ Pembayaran mudah via QRIS</li>
+            <li>✅ Inovasi berkelanjutan</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Kontak -->
+    <section class="card" id="kontak">
+      <div class="section-title"><h3>📞 Kontak</h3></div>
+      <p class="muted">Untuk order cepat atau konfirmasi, hubungi admin:</p>
+      <div style="display:flex;gap:12px;align-items:center;margin-top:12px;flex-wrap:wrap">
+        <a class="btn-buy" style="background:linear-gradient(90deg,#25D366,#128C7E)" href="https://wa.me/6287859569780" target="_blank">💬 Chat WhatsApp</a>
+        <a class="link-btn" href="https://xlstock.serversaya.site/" target="_blank">📦 Cek Stok Akrab</a>
+      </div>
+    </section>
+
+    <footer>&copy; 2025 T-STORE Official — All Rights Reserved.</footer>
   </div>
 
-<!-- Tambah di NAV -->
-<nav>
-  <a href="#beranda">Beranda</a>
-  <a href="#produk">Produk</a>
-  <a href="#harga">Harga</a>
-  <a href="#pembayaran">Pembayaran</a>
-  <a href="#kontak">Kontak</a>
-  <a href="https://xlstock.serversaya.site/" target="_blank">Cek Stok Akrab</a>
-</nav>
-
-<!-- Tambah tombol di bawah harga -->
-<div style="text-align:center; margin-top:20px;">
-  <a class="btn" href="https://xlstock.serversaya.site/" target="_blank">🔎 Cek Stok Akrab</a>
-</div>
-
-  <!-- Beranda -->
-  <section id="beranda">
-    <h2>Selamat Datang di T-STORE</h2>
-    <p>Toko kuota murah bergaransi. Tersedia XL & Axis dengan harga terbaik!</p>
-    <div class="logos">
-      <img src="https://f.top4top.io/p_3534ace8l2.png" alt="XL Logo">
-      <img src="https://e.top4top.io/p_3534wrwg81.png" alt="Axis Logo">
+  <!-- QRIS Modal -->
+  <div class="modal" id="qrisModal" aria-hidden="true">
+    <div class="modal-card" role="dialog" aria-modal="true">
+      <h3 id="modalTitle">Scan QRIS untuk Pembayaran</h3>
+      <p id="modalProduct" style="margin:6px 0 0;white-space:pre-line"></p>
+      <img src="https://e.top4top.io/p_3534j26v51.jpeg" alt="QRIS T-Store">
+      <p class="muted" style="margin-top:10px">Setelah bayar: tekan tombol <strong>"Saya sudah bayar"</strong> untuk mengirim konfirmasi ke WhatsApp.</p>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
+        <button style="flex:1;background:linear-gradient(90deg,#ff8bd6,#00f0ff);color:#001;border-radius:10px;padding:10px;border:none" id="confirmPaid">✅ Saya sudah bayar</button>
+        <button style="flex:1;background:transparent;border:1px solid rgba(255,255,255,0.08);color:inherit;border-radius:10px;padding:10px" onclick="closeModal()">✖ Batal</button>
+      </div>
     </div>
-    <a href="#harga" class="btn">💰 Lihat Harga Lengkap</a>
-  </section>
-
-  <!-- Produk Populer -->
-  <section id="produk">
-    <h2>Produk Populer</h2>
-    <div class="product">
-      <h3>➡️ REDY Masa Aktif XL 1 Tahun</h3>
-      <p>🎁 Bundling 60GB</p>
-      <p>📱 Kuota 45GB / Tahun</p>
-      <p>▶️ 36GB / Tahun YouTube</p>
-      <p><b>Harga:</b> Rp 10.000</p>
-      <a class="btn" href="https://wa.me/6287859569780?text=Pesan%20REDY%20XL%201%20Tahun">Beli Sekarang</a>
-    </div>
-
-    <div class="product">
-      <h3>🔥 Xtra Combo Plus Add-On</h3>
-      <p>📺 YT 15GB – Rp 8.000</p>
-      <p>📷 IG 15GB – Rp 8.000</p>
-      <p>🎵 TikTok 15GB – Rp 8.000</p>
-      <p>📘 FB 15GB – Rp 8.000</p>
-      <p>💬 WA 15GB – Rp 8.000</p>
-      <p>🎬 Streaming 15GB – Rp 8.000</p>
-      <p>🌐 Social Media 15GB – Rp 8.000</p>
-      <a class="btn" href="#harga">Lihat Semua Paket</a>
-    </div>
-  </section>
-
-  <!-- Harga Lengkap -->
-  <section id="harga">
-    <h2>💰 Daftar Harga Lengkap</h2>
-    <div class="paket">
-      <h3>➡️ REDY Masa Aktif XL 1 Tahun</h3>
-      <p>Bundling 60GB</p>
-      <p>Kuota 45GB / Tahun</p>
-      <p>36GB / Tahun YouTube</p>
-      <p><b>Harga:</b> Rp 10.000</p>
-      <a class="btn" href="https://wa.me/6287859569780?text=Pesan%20REDY%20XL%201%20Tahun">Order</a>
-    </div>
-    <div class="paket">
-      <h3>🔥 Xtra Combo Plus Add-On</h3>
-      <p>📺 YT 15GB – Rp 8.000</p>
-      <p>📷 IG 15GB – Rp 8.000</p>
-      <p>🎵 TikTok 15GB – Rp 8.000</p>
-      <p>📘 FB 15GB – Rp 8.000</p>
-      <p>💬 WA 15GB – Rp 8.000</p>
-      <p>🎬 Streaming 15GB – Rp 8.000</p>
-      <p>🌐 Social Media 15GB – Rp 8.000</p>
-      <a class="btn" href="https://wa.me/6287859569780?text=Pesan%20XCP%20Add-On">Order</a>
-    </div>
-    <div class="paket">
-      <h3>📦 Paket Full REGULER (Tanpa Pembagian Area)</h3>
-      <p>80GB – 90GB → Rp 110.000</p>
-      <a class="btn" href="https://wa.me/6287859569780?text=Pesan%20Full%20Reguler%2080-90GB">Order</a>
-      <p>245GB – 250GB → Rp 170.000</p>
-      <a class="btn" href="https://wa.me/6287859569780?text=Pesan%20Full%20Reguler%20245-250GB">Order</a>
-    </div>
-    <div class="paket">
-      <h3>⚡ Akrab SuperMini</h3>
-      <p>15GB – 32GB</p>
-      <p><b>Kuota Terakumulasi</b></p>
-      <p><b>Harga:</b> Rp 50.000</p>
-      <a class="btn" href="https://wa.me/6287859569780?text=Pesan%20SuperMini%2050K">Order</a>
-    </div>
-
-    <div class="paket">
-      <h3>⚡ Abrab Mini</h3>
-      <p>33.75GB – 50.75GB</p>
-      <p><b>Kuota Terakumulasi</b></p>
-      <p><b>Harga:</b> Rp 65.000</p>
-      <a class="btn" href="https://wa.me/6287859569780?text=Pesan%20Mini%2065K">Order</a>
-    </div>
-
-    <div class="paket">
-      <h3>⚡ Akrab Big</h3>
-      <p>40GB – 60GB</p>
-      <p><b>Kuota Terakumulasi</b></p>
-      <p><b>Harga:</b> Rp 70.000</p>
-      <a class="btn" href="https://wa.me/6287859569780?text=Pesan%20Big%2070K">Order</a>
-    </div>
-
-    <div class="paket">
-      <h3>⚡ Akrab Big Plus</h3>
-      <p>35GB – 73GB</p>
-      <p><b>Kuota Terakumulasi</b></p>
-      <p><b>Harga:</b> Rp 75.000</p>
-      <a class="btn" href="https://wa.me/6287859569780?text=Pesan%20Big%20Plus%2075K">Order</a>
-    </div>
-
-    <div class="paket">
-      <h3>⚡Akrab Jumbo</h3>
-      <p>65GB – 135GB</p>
-      <p><b>Kuota Terakumulasi</b></p>
-      <p><b>Harga:</b> Rp 95.000</p>
-      <a class="btn" href="https://wa.me/6287859569780?text=Pesan%20Jumbo%2095K">Order</a>
-    </div>
-
-    <div class="paket">
-      <h3>⚡ Akrab Jumbo V2</h3>
-      <p>52.5GB – 69.5GB</p>
-      <p><b>Kuota Terakumulasi</b></p>
-      <p><b>Harga:</b> Rp 75.000</p>
-      <a class="btn" href="https://wa.me/6287859569780?text=Pesan%20Jumbo%20V2%2075K">Order</a>
-    </div>
-
-    <div class="paket">
-      <h3>⚡Akrab MegaBig</h3>
-      <p>90GB – 107GB</p>
-      <p><b>Kuota Terakumulasi</b></p>
-      <p><b>Harga:</b> Rp 105.000</p>
-      <a class="btn" href="https://wa.me/6287859569780?text=Pesan%20MegaBig%20105K">Order</a>
-    </div>
-  </section>
-
-  <!-- Pembayaran -->
-  <section id="pembayaran">
-    <h2>Pembayaran</h2>
-    <p>Scan QRIS berikut untuk melakukan pembayaran:</p>
-    <img src="https://e.top4top.io/p_3534j26v51.jpeg" alt="QRIS T-Store" class="qris">
-  </section>
-
-  <!-- Kontak -->
-  <section id="kontak">
-    <h2>Kontak Kami</h2>
-    <p>Hubungi kami melalui WhatsApp untuk pemesanan lebih cepat:</p>
-    <a class="btn" href="https://wa.me/6287859569780">💬 Chat WhatsApp</a>
-  </section>
-
-  <!-- Footer -->
-  <footer>
-    &copy; 2025 T-STORE Official. All Rights Reserved.
-  </footer>
-
-  <!-- Tombol Dark/Light Mode -->
-  <button id="toggleMode">🌙</button>
+  </div>
 
   <script>
-    const toggle = document.getElementById("toggleMode");
-    toggle.addEventListener("click", () => {
-      document.body.classList.toggle("light");
-      toggle.textContent = document.body.classList.contains("light") ? "☀️" : "🌙";
+    /* Data produk untuk dropdown provider->produk */
+    const productData = {
+      xl: [
+        { id:'supermini', name:'SuperMini 50K (15GB–32GB)', price:50000 },
+        { id:'mini65', name:'Mini 65K (33GB–50GB)', price:65000 },
+        { id:'big70', name:'Big 70K (40GB–60GB)', price:70000 },
+        { id:'bigplus75', name:'Big Plus 75K (35GB–73GB)', price:75000 },
+        { id:'jumbo95', name:'Jumbo 95K (65GB–135GB)', price:95000 },
+        { id:'jv275', name:'Jumbo V2 75K (52GB–69GB)', price:75000 },
+        { id:'megabig', name:'MegaBig 105K (90GB–107GB)', price:105000 },
+        { id:'reg234', name:'Reguler XL 234GB+ (Rp175K)', price:175000 },
+        { id:'reg75', name:'Reguler XL 75GB+ (Rp110K)', price:110000 }
+      ],
+      axis: [
+        { id:'axis-mini', name:'Axis Mini 65K (33GB–50GB)', price:65000 },
+        { id:'axis-big', name:'Axis Big 70K (40GB–60GB)', price:70000 }
+      ]
+    };
+
+    /* UI references */
+    const providerSelect = document.getElementById('providerSelect');
+    const productSelect = document.getElementById('productSelect');
+    const buySelectedBtn = document.getElementById('buySelected');
+
+    function populateProducts(){
+      const provider = providerSelect.value;
+      productSelect.innerHTML = '<option value="">-- Pilih Produk --</option>';
+      if(!provider){ productSelect.disabled = true; buySelectedBtn.disabled = true; return; }
+      const arr = productData[provider] || [];
+      arr.forEach(p => {
+        const opt = document.createElement('option');
+        opt.value = JSON.stringify(p);
+        opt.textContent = `${p.name} — Rp${(p.price).toLocaleString()}`;
+        productSelect.appendChild(opt);
+      });
+      productSelect.disabled = false;
+      buySelectedBtn.disabled = true;
+    }
+
+    productSelect.addEventListener('change', ()=>{
+      buySelectedBtn.disabled = !productSelect.value;
+    });
+
+    function buySelected(){
+      if(!productSelect.value) return;
+      const p = JSON.parse(productSelect.value);
+      openQris(p.name, p.price);
+    }
+
+    /* Modal / QRIS flow + Order ID + LocalStorage */
+    const qrisModal = document.getElementById('qrisModal');
+    const modalProduct = document.getElementById('modalProduct');
+    const confirmPaid = document.getElementById('confirmPaid');
+
+    let currentProduct = '';
+    let currentPrice = 0;
+
+    function generateOrderId() {
+      // Format TS-YYYYMMDD-XXX (XXX = counter)
+      const today = new Date();
+      const datePart = today.toISOString().slice(0,10).replace(/-/g,''); // YYYYMMDD
+      let counter = Number(localStorage.getItem('tstoreCounter') || 0) + 1;
+      localStorage.setItem('tstoreCounter', counter);
+      return `TS-${datePart}-${String(counter).padStart(3,'0')}`;
+    }
+
+    function openQris(name, price){
+      currentProduct = name; currentPrice = price;
+      const tempOrderId = generateOrderId();
+      // tampilkan order id di modal sementara (final disimpan saat konfirmasi)
+      modalProduct.innerText = `${name} — Rp${Number(price).toLocaleString()}\nOrder ID sementara: ${tempOrderId}`;
+      // simpan sementara ke variable agar konfirmasi menyimpan orderId yang sama
+      qrisModal.dataset.pendingOrderId = tempOrderId;
+      qrisModal.style.display = 'flex';
+      qrisModal.setAttribute('aria-hidden','false');
+      window.scrollTo({top:0,behavior:'smooth'});
+    }
+
+    function closeModal(){
+      qrisModal.style.display = 'none';
+      qrisModal.setAttribute('aria-hidden','true');
+      delete qrisModal.dataset.pendingOrderId;
+    }
+
+    confirmPaid.addEventListener('click', ()=>{
+      const orderId = qrisModal.dataset.pendingOrderId || generateOrderId();
+      // Simpan ke LocalStorage (tstore-orders)
+      let orders = JSON.parse(localStorage.getItem('tstore-orders') || '[]');
+      const order = {
+        id: orderId,
+        product: currentProduct,
+        price: currentPrice,
+        time: new Date().toLocaleString()
+      };
+      orders.push(order);
+      localStorage.setItem('tstore-orders', JSON.stringify(orders));
+
+      // Kirim WA dengan Order ID dan detail
+      const waNumber = '6287859569780';
+      const text = `Halo Admin,\n\nSaya sudah melakukan pembayaran melalui QRIS.\n\n🧾 Order ID: ${order.id}\n🛒 Produk: ${currentProduct}\n💰 Harga: Rp${Number(currentPrice).toLocaleString()}\n🕒 Waktu: ${order.time}\n\nSilakan cek dan proses order saya.\n\nTerima kasih.`;
+      const message = encodeURIComponent(text);
+      window.open(`https://wa.me/${waNumber}?text=${message}`, '_blank');
+
+      closeModal();
+    });
+
+    /* Accessibility & modal close */
+    document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeModal(); });
+    qrisModal.addEventListener('click', (e)=>{ if(e.target === qrisModal) closeModal(); });
+
+    /* Deep link behavior */
+    window.addEventListener('load', ()=>{
+      const h = location.hash.replace('#','');
+      if(h){
+        const el = document.getElementById(h);
+        if(el) el.scrollIntoView({behavior:'smooth', block:'start'});
+      }
     });
   </script>
 </body>
-    </html>
+  </html>
