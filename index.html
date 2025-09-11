@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Menu Utama</title>
+  <title>T-STORE | Menu Utama</title>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
   <style>
     body {
@@ -17,13 +17,14 @@
       display: flex;
       flex-direction: column;
       justify-content: center;
+      overflow-x: hidden;
     }
     header {
       margin-bottom: 40px;
     }
     h1 {
-      font-size: 2.5em;
-      text-shadow: 0 0 10px #ff00de, 0 0 20px #ff00de;
+      font-size: 2.8em;
+      text-shadow: 0 0 15px #ff00de, 0 0 30px #ff00de;
     }
     p {
       color: #bbb;
@@ -33,6 +34,7 @@
       justify-content: center;
       gap: 30px;
       flex-wrap: wrap;
+      margin-bottom: 40px;
     }
     .menu a {
       background: #111;
@@ -50,16 +52,137 @@
       box-shadow: 0 0 20px #ff00de, 0 0 30px #ff00de inset;
       transform: scale(1.1);
     }
+    section {
+      margin: 30px auto;
+      max-width: 700px;
+      background: rgba(0,0,0,0.5);
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 0 15px #00fff7;
+    }
+    footer {
+      margin-top: 40px;
+      font-size: 0.9em;
+      color: #aaa;
+    }
+    /* Tombol WA & Telepon */
+    .floating-btns {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      z-index: 1000;
+    }
+    .floating-btns a {
+      width: 55px;
+      height: 55px;
+      background: #25D366;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 26px;
+      color: white;
+      text-decoration: none;
+      box-shadow: 0 0 12px #25D366;
+      animation: pulse 2s infinite;
+    }
+    .floating-btns a.phone {
+      background: #007BFF;
+      box-shadow: 0 0 12px #007BFF;
+    }
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.15); }
+      100% { transform: scale(1); }
+    }
+    /* Tombol Musik */
+    #music-btn {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      background: rgba(0,0,0,0.6);
+      padding: 12px 15px;
+      border-radius: 50%;
+      font-size: 22px;
+      cursor: pointer;
+      color: #fff;
+      box-shadow: 0 0 10px #00fff7;
+      transition: transform 0.2s ease;
+      z-index: 1001;
+    }
+    #music-btn:hover {
+      transform: scale(1.2);
+    }
   </style>
 </head>
 <body>
   <header>
-    <h1> Cyberpunk Store </h1>
+    <h1>⚡ T-STORE ⚡</h1>
     <p>Pilih kategori produk Anda</p>
   </header>
+
   <div class="menu">
     <a href="otp.html">Produk OTP</a>
     <a href="non-otp.html">Produk NON OTP</a>
   </div>
+
+  <section>
+    <h2>VISI</h2>
+    <p>Menjadi penyedia kuota termurah, tercepat, dan terpercaya.</p>
+    <h2>MISI</h2>
+    <p>Memberikan layanan terbaik, harga terjangkau, dan kenyamanan untuk pelanggan.</p>
+  </section>
+
+  <footer>
+    <p>🙏 Terima kasih sudah membeli & berkunjung ke T-STORE 🙏</p>
+  </footer>
+
+  <!-- Tombol WhatsApp & Telepon -->
+  <div class="floating-btns">
+    <a href="https://wa.me/6287859569780" target="_blank">💬</a>
+    <a href="tel:+6287859569780" class="phone">📞</a>
+  </div>
+
+  <!-- Musik Latar -->
+  <audio id="bg-music" loop>
+    <source src="" type="audio/mp3">
+    Browser Anda tidak mendukung audio.
+  </audio>
+
+  <!-- Tombol Musik -->
+  <div id="music-btn">🔇</div>
+
+  <script>
+    // Daftar musik
+    const tracks = [
+      "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+      "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
+      "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3"
+    ];
+
+    const music = document.getElementById("bg-music");
+    const musicBtn = document.getElementById("music-btn");
+
+    // Pilih lagu acak
+    const randomTrack = tracks[Math.floor(Math.random() * tracks.length)];
+    music.src = randomTrack;
+    music.volume = 0.3;
+
+    let isPlaying = false;
+
+    musicBtn.onclick = () => {
+      if (isPlaying) {
+        music.pause();
+        musicBtn.textContent = "🔇";
+      } else {
+        music.play();
+        musicBtn.textContent = "🔊";
+      }
+      isPlaying = !isPlaying;
+    };
+  </script>
 </body>
 </html>
