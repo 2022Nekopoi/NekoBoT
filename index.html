@@ -9,118 +9,70 @@
     body {
       font-family: 'Orbitron', sans-serif;
       background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
-      color: #fff;
-      text-align: center;
-      margin: 0;
-      padding: 0;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
+      color: #fff; text-align: center; margin: 0; padding: 0;
+      min-height: 100vh; display: flex; flex-direction: column; justify-content: flex-start;
       overflow-x: hidden;
     }
-    header {
-      margin-bottom: 40px;
-    }
-    h1 {
-      font-size: 2.8em;
-      text-shadow: 0 0 15px #ff00de, 0 0 30px #ff00de;
-    }
-    p {
-      color: #bbb;
-    }
-    .menu {
-      display: flex;
-      justify-content: center;
-      gap: 30px;
-      flex-wrap: wrap;
-      margin-bottom: 40px;
-    }
+    header { margin: 20px 0; }
+    h1 { font-size: 2.8em; text-shadow: 0 0 15px #ff00de, 0 0 30px #ff00de; }
+    p { color: #bbb; }
+    .menu { display: flex; justify-content: center; gap: 30px; flex-wrap: wrap; margin-bottom: 20px; }
     .menu a {
-      background: #111;
-      color: #00fff7;
-      padding: 20px 40px;
-      border-radius: 12px;
-      text-decoration: none;
-      font-size: 1.2em;
-      font-weight: bold;
-      box-shadow: 0 0 10px #00fff7, 0 0 20px #00fff7 inset;
-      transition: all 0.3s ease-in-out;
+      background: #111; color: #00fff7; padding: 20px 40px; border-radius: 12px;
+      text-decoration: none; font-size: 1.2em; font-weight: bold;
+      box-shadow: 0 0 10px #00fff7, 0 0 20px #00fff7 inset; transition: all 0.3s ease-in-out;
     }
-    .menu a:hover {
-      color: #ff00de;
-      box-shadow: 0 0 20px #ff00de, 0 0 30px #ff00de inset;
-      transform: scale(1.1);
-    }
+    .menu a:hover { color: #ff00de; box-shadow: 0 0 20px #ff00de, 0 0 30px #ff00de inset; transform: scale(1.1); }
     section {
-      margin: 30px auto;
-      max-width: 700px;
-      background: rgba(0,0,0,0.5);
-      padding: 20px;
-      border-radius: 12px;
-      box-shadow: 0 0 15px #00fff7;
+      margin: 20px auto; max-width: 700px; background: rgba(0,0,0,0.5);
+      padding: 20px; border-radius: 12px; box-shadow: 0 0 15px #00fff7;
     }
-    footer {
-      margin-top: 40px;
-      font-size: 0.9em;
-      color: #aaa;
-    }
-    /* Tombol WA & Telepon */
+    footer { margin: 20px 0; font-size: 0.9em; color: #aaa; }
     .floating-btns {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-      z-index: 1000;
+      position: fixed; bottom: 20px; right: 20px;
+      display: flex; flex-direction: column; gap: 15px; z-index: 1000;
     }
     .floating-btns a {
-      width: 55px;
-      height: 55px;
-      background: #25D366;
-      border-radius: 50%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-size: 26px;
-      color: white;
-      text-decoration: none;
-      box-shadow: 0 0 12px #25D366;
-      animation: pulse 2s infinite;
+      width: 55px; height: 55px; background: #25D366; border-radius: 50%;
+      display: flex; justify-content: center; align-items: center;
+      font-size: 26px; color: white; text-decoration: none;
+      box-shadow: 0 0 12px #25D366; animation: pulse 2s infinite;
     }
-    .floating-btns a.phone {
-      background: #007BFF;
-      box-shadow: 0 0 12px #007BFF;
-    }
-    @keyframes pulse {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.15); }
-      100% { transform: scale(1); }
-    }
-    /* Tombol Musik */
+    .floating-btns a.phone { background: #007BFF; box-shadow: 0 0 12px #007BFF; }
+    @keyframes pulse { 0% { transform: scale(1);} 50% { transform: scale(1.15);} 100% { transform: scale(1);} }
     #music-btn {
-      position: fixed;
-      bottom: 20px;
-      left: 20px;
-      background: rgba(0,0,0,0.6);
-      padding: 12px 15px;
-      border-radius: 50%;
-      font-size: 22px;
-      cursor: pointer;
-      color: #fff;
-      box-shadow: 0 0 10px #00fff7;
-      transition: transform 0.2s ease;
-      z-index: 1001;
+      position: fixed; bottom: 20px; left: 20px;
+      background: rgba(0,0,0,0.6); padding: 12px 15px; border-radius: 50%;
+      font-size: 22px; cursor: pointer; color: #fff;
+      box-shadow: 0 0 10px #00fff7; transition: transform 0.2s ease; z-index: 1001;
     }
-    #music-btn:hover {
-      transform: scale(1.2);
+    #music-btn:hover { transform: scale(1.2); }
+
+    /* Riwayat Transaksi */
+    #riwayat { margin: 20px auto; max-width: 900px; padding: 20px; background: rgba(0,0,0,0.6); border-radius: 12px; box-shadow: 0 0 15px #ff00de; }
+    #riwayat h2 { margin-bottom: 15px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    th, td { padding: 10px; border: 1px solid #555; font-size: 0.9em; }
+    th { background: #111; color: #00fff7; }
+    td { background: rgba(255,255,255,0.05); }
+    .status-btn { padding: 5px 10px; border: none; border-radius: 6px; cursor: pointer; font-size: 0.8em; }
+    .belum { background: #ff4444; color: #fff; }
+    .proses { background: #ffaa00; color: #fff; }
+    .selesai { background: #44ff44; color: #111; }
+
+    /* Tombol Konfirmasi */
+    .confirm-btn {
+      display: inline-block; margin-top: 15px; padding: 12px 20px;
+      background: #25D366; color: #fff; border-radius: 8px;
+      text-decoration: none; font-weight: bold; font-size: 1em;
+      box-shadow: 0 0 10px #25D366; transition: 0.3s;
     }
+    .confirm-btn:hover { background: #20b358; transform: scale(1.05); }
   </style>
 </head>
 <body>
   <header>
-    <h1>⚡T-STORE⚡</h1>
+    <h1>★ T-STORE ★</h1>
     <p>Pilih kategori produk Anda</p>
   </header>
 
@@ -134,15 +86,31 @@
     <p>Menjadi penyedia kuota termurah, tercepat, dan terpercaya.</p>
     <h2>MISI</h2>
     <p>Memberikan layanan terbaik, harga terjangkau, dan kenyamanan untuk pelanggan.</p>
+    
+  <!-- Riwayat Transaksi -->
+  <section id="riwayat">
+    <h2>Riwayat Transaksi</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Nama</th>
+          <th>Produk</th>
+          <th>Harga</th>
+          <th>Status</th>
+          <th>Waktu</th>
+        </tr>
+      </thead>
+      <tbody id="riwayat-body"></tbody>
+    </table>
   </section>
 
   <footer>
-    <p>🙏 Terima kasih sudah membeli & berkunjung ke T-STORE 🙏</p>
+    <p>★Terima kasih sudah membeli & berkunjung ke T-STORE★</p>
   </footer>
 
   <!-- Tombol WhatsApp & Telepon -->
   <div class="floating-btns">
-    <a href="https://wa.me/6287859569780" target="_blank">💬</a>
+    <a href="https://wa.me/6287859569780" target="_blank">📱</a>
     <a href="tel:+6287859569780" class="phone">📞</a>
   </div>
 
@@ -151,38 +119,89 @@
     <source src="" type="audio/mp3">
     Browser Anda tidak mendukung audio.
   </audio>
+  <div id="music-btn">🎵</div>
 
-  <!-- Tombol Musik -->
-  <div id="music-btn">🔇</div>
+  <!-- Notifikasi Suara -->
+  <audio id="notif-sound">
+    <source src="https://assets.mixkit.co/sfx/download/mixkit-confirmation-tone-2867.mp3" type="audio/mp3">
+  </audio>
 
   <script>
-    // Daftar musik
+    // Musik
     const tracks = [
       "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
       "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
       "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3"
     ];
-
     const music = document.getElementById("bg-music");
     const musicBtn = document.getElementById("music-btn");
-
-    // Pilih lagu acak
-    const randomTrack = tracks[Math.floor(Math.random() * tracks.length)];
-    music.src = randomTrack;
+    music.src = tracks[Math.floor(Math.random() * tracks.length)];
     music.volume = 0.3;
-
     let isPlaying = false;
-
     musicBtn.onclick = () => {
-      if (isPlaying) {
-        music.pause();
-        musicBtn.textContent = "🔇";
-      } else {
-        music.play();
-        musicBtn.textContent = "🔊";
-      }
+      if (isPlaying) { music.pause(); musicBtn.textContent = "🎵"; }
+      else { music.play(); musicBtn.textContent = "⏸"; }
       isPlaying = !isPlaying;
     };
+
+    // Riwayat Transaksi
+    const riwayatBody = document.getElementById("riwayat-body");
+    const notifSound = document.getElementById("notif-sound");
+
+    function playNotif() {
+      notifSound.currentTime = 0;
+      notifSound.play();
+    }
+
+    function renderRiwayat() {
+      let riwayat = JSON.parse(localStorage.getItem("riwayatTransaksi")) || [];
+      riwayatBody.innerHTML = "";
+      riwayat.forEach((t, i) => {
+        riwayatBody.innerHTML += `
+          <tr>
+            <td>${t.nama}</td>
+            <td>${t.produk}</td>
+            <td>${t.harga}</td>
+            <td>
+              <button class="status-btn ${t.status === 'Belum Bayar' ? 'belum' : t.status === 'Diproses' ? 'proses' : 'selesai'}" onclick="ubahStatus(${i})">
+                ${t.status}
+              </button>
+            </td>
+            <td>${t.waktu}</td>
+          </tr>`;
+      });
+    }
+
+    function tambahTransaksi(nama, produk, harga) {
+      let riwayat = JSON.parse(localStorage.getItem("riwayatTransaksi")) || [];
+      riwayat.push({
+        nama, produk, harga,
+        status: "Belum Bayar",
+        waktu: new Date().toLocaleString()
+      });
+      localStorage.setItem("riwayatTransaksi", JSON.stringify(riwayat));
+      renderRiwayat();
+      playNotif(); // 🔔 bunyi saat transaksi baru
+    }
+
+    function ubahStatus(i) {
+      let riwayat = JSON.parse(localStorage.getItem("riwayatTransaksi")) || [];
+      if (riwayat[i].status === "Belum Bayar") riwayat[i].status = "Diproses";
+      else if (riwayat[i].status === "Diproses") riwayat[i].status = "Selesai";
+      else riwayat[i].status = "Belum Bayar";
+      localStorage.setItem("riwayatTransaksi", JSON.stringify(riwayat));
+      renderRiwayat();
+    }
+
+    renderRiwayat();
+
+      // tambah ke riwayat + bunyi
+      tambahTransaksi(nama, produk, harga);
+
+      // buka WhatsApp
+      const pesan = `Halo Admin, saya ingin konfirmasi pembelian:\nNama: ${nama}\nProduk: ${produk}\nHarga: ${harga}`;
+      window.open(`https://wa.me/6287859569780?text=${encodeURIComponent(pesan)}`, "_blank");
+    });
   </script>
 </body>
 </html>
