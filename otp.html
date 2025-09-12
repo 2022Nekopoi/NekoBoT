@@ -11,27 +11,104 @@
     .product, .detail-box {background:#fff; padding:20px; border-radius:12px; box-shadow:0 4px 10px rgba(0,0,0,0.1);}
     .product h2 {margin:0 0 10px; color:#6a00f4;}
     .price {font-weight:bold; color:#008000; margin:10px 0;}
-    .buy-btn, .back-btn {
+    .buy-btn, .back-btn, .reset-btn {
       display:inline-block; padding:10px 20px; border-radius:8px; text-decoration:none;
-      font-weight:bold; margin-top:10px;
+      font-weight:bold; margin-top:10px; cursor:pointer;
     }
     .buy-btn {background:#6a00f4; color:#fff;}
     .buy-btn:hover {background:#8a2be2;}
     .back-btn {background:#555; color:#fff;}
     .back-btn:hover {background:#333;}
+    .reset-btn {background:#f44336; color:#fff;}
+    .reset-btn:hover {background:#d32f2f;}
     footer {text-align:center; margin:20px;}
     .hidden {display:none;}
     img {max-width:250px; border-radius:12px; margin:15px 0;}
+    table {width:100%; border-collapse:collapse; margin-top:20px;}
+    th,td {border:1px solid #ccc; padding:8px; text-align:center;}
+    th {background:#eee;}
+    .status {font-weight:bold;}
+    .belum {color:red;}
+    .proses {color:orange;}
+    .selesai {color:green;}
+    .aksi-btn {padding:4px 8px; margin:2px; border:none; border-radius:6px; cursor:pointer;}
+    .btn-belum {background:#ffdddd;}
+    .btn-proses {background:#fff3cd;}
+    .btn-selesai {background:#d4edda;}
   </style>
   <script>
+    // Tampilkan detail produk
     function showDetail(id) {
       document.getElementById('product-list').classList.add('hidden');
       document.getElementById(id).classList.remove('hidden');
+
+      // Buat Order ID unik
+      const orderId = "TS-" + new Date().toISOString().slice(0,10).replace(/-/g,"") + "-" + Math.floor(Math.random()*1000);
+      document.querySelector("#"+id+" .order-id").innerText = "Order ID: " + orderId;
+      document.querySelector("#"+id+" .wa-btn").setAttribute("data-orderid", orderId);
     }
+
+    // Kembali ke daftar produk
     function goBack(id) {
       document.getElementById(id).classList.add('hidden');
       document.getElementById('product-list').classList.remove('hidden');
     }
+
+    // Simpan ke riwayat pembelian
+    function simpanRiwayat(namaProduk, harga, orderId) {
+      let riwayat = JSON.parse(localStorage.getItem("riwayatPembelian")) || [];
+      riwayat.push({produk:namaProduk, harga:harga, orderId:orderId, waktu:new Date().toLocaleString(), status:"Belum Bayar"});
+      localStorage.setItem("riwayatPembelian", JSON.stringify(riwayat));
+      tampilRiwayat();
+    }
+
+    // Tampilkan riwayat pembelian
+    function tampilRiwayat() {
+      let riwayat = JSON.parse(localStorage.getItem("riwayatPembelian")) || [];
+      let tbody = document.getElementById("riwayat-body");
+      tbody.innerHTML = "";
+      riwayat.forEach((r,i) => {
+        tbody.innerHTML += `<tr>
+          <td>${r.orderId}</td>
+          <td>${r.produk}</td>
+          <td>${r.harga}</td>
+          <td class="status ${r.status.toLowerCase()}">${r.status}</td>
+          <td>${r.waktu}</td>
+          <td>
+            <button class="aksi-btn btn-belum" onclick="ubahStatus(${i},'Belum Bayar')">Belum</button>
+            <button class="aksi-btn btn-proses" onclick="ubahStatus(${i},'Diproses')">Proses</button>
+            <button class="aksi-btn btn-selesai" onclick="ubahStatus(${i},'Selesai')">Selesai</button>
+          </td>
+        </tr>`;
+      });
+    }
+
+    // Ubah status transaksi
+    function ubahStatus(index, statusBaru) {
+      let riwayat = JSON.parse(localStorage.getItem("riwayatPembelian")) || [];
+      riwayat[index].status = statusBaru;
+      localStorage.setItem("riwayatPembelian", JSON.stringify(riwayat));
+      tampilRiwayat();
+    }
+
+    // Reset riwayat
+    function resetRiwayat() {
+      if(confirm("Yakin ingin menghapus semua riwayat pembelian?")) {
+        localStorage.removeItem("riwayatPembelian");
+        tampilRiwayat();
+        alert("Riwayat pembelian berhasil dihapus!");
+      }
+    }
+
+    // Saat klik konfirmasi WA
+    function konfirmasiWA(el, produk, harga) {
+      const orderId = el.getAttribute("data-orderid");
+      simpanRiwayat(produk, harga, orderId);
+      const pesan = `Halo, saya sudah bayar ${produk} (${harga})\nOrder ID: ${orderId}`;
+      window.open(`https://wa.me/6287859569780?text=${encodeURIComponent(pesan)}`, "_blank");
+    }
+
+    window.onload = tampilRiwayat;
   </script>
 </head>
 <body>
@@ -61,26 +138,15 @@
   <section id="detail-addon" class="product-detail hidden">
     <div class="detail-box">
       <h2>ADD-ON (Xtra Combo Plus)</h2>
-      <p>
-        ● XCP - Youtube 15GB - 10k<br>
-        ● XCP - Instagram 15GB - 10K<br>
-        ● XCP - TikTok 15GB - 10K<br>
-        ● XCP - Facebook 15GB - 10K<br>
-        ● XCP - WhatsApp 15GB - 10K<br>
-        ● XCP - Streaming 15GB - 10K<br>
-        ● XCP - Social Media 15GB - 10K<br>
-        ● XCP - Games 15GB - 10K<br><br>
-        Wajib ada paket Xtra Combo Plus.<br>
-        Pastikan paket sudah masuk.<br>
-        Masa aktif mengikuti Xtra Combo Plus.<br>
-        Menimpa / Menghapus kuota di paket yang sama.
-      </p>
+      <p>● XCP - Youtube 15GB - 10k<br>● XCP - Instagram 15GB - 10K<br>● XCP - TikTok 15GB - 10K<br>● XCP - Facebook 15GB - 10K</p>
+      <p class="order-id"></p>
 
       <h3>📲 Scan QRIS untuk bayar</h3>
       <img src="https://e.top4top.io/p_3534j26v51.jpeg" alt="QRIS">
 
       <div>
-        <a href="https://wa.me/6287859569780?text=Halo%20saya%20sudah%20bayar%20ADD-ON%20Xtra%20Combo%20Plus%20Rp10.000" class="buy-btn">✅ Konfirmasi via WA</a>
+        <a href="javascript:void(0)" class="buy-btn wa-btn"
+           onclick="konfirmasiWA(this,'ADD-ON Xtra Combo Plus','Rp10.000')">✅ Konfirmasi via WA</a>
         <a href="javascript:void(0)" onclick="goBack('detail-addon')" class="back-btn">⬅ Kembali</a>
       </div>
     </div>
@@ -90,22 +156,38 @@
   <section id="detail-circle" class="product-detail hidden">
     <div class="detail-box">
       <h2>Paket Circle</h2>
-      <p>
-        Kuota: 4/5GB Full Reguler<br><br>
-        📋 Langkah-langkah:<br>
-        - Harus bersih dari grup Circle<br>
-        - Hanya untuk nomor XL<br>
-        - Menambah Masa Aktif 30 Hari<br>
-        - Wajib OTP dulu
-      </p>
+      <p>Kuota: 4/5GB Full Reguler<br>Harus bersih dari grup Circle<br>Wajib OTP dulu</p>
+      <p class="order-id"></p>
 
       <h3>📲 Scan QRIS untuk bayar</h3>
       <img src="https://e.top4top.io/p_3534j26v51.jpeg" alt="QRIS">
 
       <div>
-        <a href="https://wa.me/6287859569780?text=Halo%20saya%20sudah%20bayar%20Paket%20Circle%20Rp10.000" class="buy-btn">✅ Konfirmasi via WA</a>
+        <a href="javascript:void(0)" class="buy-btn wa-btn"
+           onclick="konfirmasiWA(this,'Paket Circle','Rp10.000')">✅ Konfirmasi via WA</a>
         <a href="javascript:void(0)" onclick="goBack('detail-circle')" class="back-btn">⬅ Kembali</a>
       </div>
+    </div>
+  </section>
+
+  <!-- Riwayat Pembelian -->
+  <section class="product-detail">
+    <div class="detail-box">
+      <h2>📜 Riwayat Pembelian</h2>
+      <button class="reset-btn" onclick="resetRiwayat()">🗑 Hapus Semua Riwayat</button>
+      <table>
+        <thead>
+          <tr>
+            <th>Order ID</th>
+            <th>Produk</th>
+            <th>Harga</th>
+            <th>Status</th>
+            <th>Waktu</th>
+            <th>Aksi</th>
+          </tr>
+        </thead>
+        <tbody id="riwayat-body"></tbody>
+      </table>
     </div>
   </section>
 
