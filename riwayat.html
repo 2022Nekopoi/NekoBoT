@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>T-STORE | Riwayat Transaksi</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Orbitron', sans-serif;
+      background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+      color: #fff;
+      text-align: center;
+      margin: 0;
+      padding: 20px;
+    }
+    header { margin-bottom: 20px; }
+    h1 {
+      font-size: 2.5em;
+      text-shadow: 0 0 15px #00fff7, 0 0 30px #00fff7;
+    }
+    .controls {
+      margin-bottom: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      justify-content: center;
+    }
+    select, input {
+      padding: 8px 15px;
+      border-radius: 6px;
+      border: none;
+      font-family: 'Orbitron', sans-serif;
+      font-weight: bold;
+    }
+    input { width: 220px; }
+    table {
+      width: 100%;
+      max-width: 1000px;
+      margin: auto;
+      border-collapse: collapse;
+      background: rgba(0,0,0,0.6);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 0 15px #00fff7;
+    }
+    th, td {
+      padding: 12px;
+      border-bottom: 1px solid #444;
+      font-size: 0.95em;
+    }
+    th {
+      background: #111;
+      color: #00fff7;
+    }
+    tr:hover { background: rgba(255,255,255,0.05); }
+    .status {
+      font-weight: bold;
+      padding: 5px 10px;
+      border-radius: 8px;
+    }
+    .belumbayar { background: #ff4444; color: white; }
+    .diproses { background: #ffaa00; color: black; }
+    .selesai { background: #00c851; color: white; }
+    .action-btn {
+      margin: 3px;
+      padding: 6px 12px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .btn-proses { background: #ffaa00; }
+    .btn-selesai { background: #00c851; color: white; }
+    .btn-hapus { background: #ff4444; color: white; }
+    .back-btn {
+      margin-top: 30px;
+      display: inline-block;
+      background: #00fff7;
+      color: #000;
+      padding: 12px 25px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: bold;
+      box-shadow: 0 0 15px #00fff7;
+    }
+    .back-btn:hover {
+      background: #ff00de;
+      color: white;
+      box-shadow: 0 0 20px #ff00de;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>📜 Riwayat Transaksi</h1>
+    <p>Lihat status & kelola pesanan Anda</p>
+  </header>
+
+  <!-- Filter & Search -->
+  <div class="controls">
+    <select id="filter" onchange="loadTransaksi()">
+      <option value="all">Semua</option>
+      <option value="Belum Bayar">Belum Bayar</option>
+      <option value="Diproses">Diproses</option>
+      <option value="Selesai">Selesai</option>
+    </select>
+    <input type="text" id="search" placeholder="🔍 Cari produk / harga..." onkeyup="loadTransaksi()">
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>No</th>
+        <th>Produk</th>
+        <th>Harga</th>
+        <th>Status</th>
+        <th>Waktu</th>
+        <th>Aksi (Admin)</th>
+      </tr>
+    </thead>
+    <tbody id="riwayat-list"></tbody>
+  </table>
+
+  <a href="index.html" class="back-btn">⬅ Kembali ke Menu Utama</a>
+
+  <script>
+    function loadTransaksi() {
+      const transaksi = JSON.parse(localStorage.getItem("transaksi")) || [];
+      const tbody = document.getElementById("riwayat-list");
+      const filter = document.getElementById("filter").value;
+      const search = document.getElementById("search").value.toLowerCase();
+      tbody.innerHTML = "";
+
+      const filtered = transaksi.filter(t => {
+        const cocokFilter = filter === "all" ? true : t.status === filter;
+        const cocokSearch = t.produk.toLowerCase().includes(search) || t.harga.toLowerCase().includes(search);
+        return cocokFilter && cocokSearch;
+      });
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6">Tidak ada transaksi sesuai filter/pencarian</td></tr>`;
+      } else {
+        filtered.forEach((t, i) => {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>${i+1}</td>
+            <td>${t.produk}</td>
+            <td>${t.harga}</td>
+            <td><span class="status ${t.status.replace(" ", "").toLowerCase()}">${t.status}</span></td>
+            <td>${t.waktu || "-"}</td>
+            <td>
+              <button class="action-btn btn-proses" onclick="ubahStatus(${i}, 'Diproses')">Proses</button>
+              <button class="action-btn btn-selesai" onclick="ubahStatus(${i}, 'Selesai')">Selesai</button>
+              <button class="action-btn btn-hapus" onclick="hapusTransaksi(${i})">Hapus</button>
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+      }
+    }
+
+    function ubahStatus(index, statusBaru) {
+      let transaksi = JSON.parse(localStorage.getItem("transaksi")) || [];
+      transaksi[index].status = statusBaru;
+      localStorage.setItem("transaksi", JSON.stringify(transaksi));
+      loadTransaksi();
+    }
+
+    function hapusTransaksi(index) {
+      let transaksi = JSON.parse(localStorage.getItem("transaksi")) || [];
+      transaksi.splice(index, 1);
+      localStorage.setItem("transaksi", JSON.stringify(transaksi));
+      loadTransaksi();
+    }
+
+    // Simpan transaksi baru dengan waktu
+    function tambahTransaksi(produk, harga) {
+      let transaksi = JSON.parse(localStorage.getItem("transaksi")) || [];
+      const now = new Date();
+      const waktu = now.toLocaleDateString("id-ID") + " " + now.toLocaleTimeString("id-ID");
+      transaksi.push({ produk, harga, status: "Belum Bayar", waktu });
+      localStorage.setItem("transaksi", JSON.stringify(transaksi));
+    }
+
+    loadTransaksi();
+  </script>
+</body>
+</html>
