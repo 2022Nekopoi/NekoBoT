@@ -23,6 +23,56 @@
       box-shadow: 0 0 10px #00fff7, 0 0 20px #00fff7 inset; transition: all 0.3s ease-in-out;
     }
     .menu a:hover { color: #ff00de; box-shadow: 0 0 20px #ff00de, 0 0 30px #ff00de inset; transform: scale(1.1); }
+
+    /* Tombol khusus MP3 & MP4 */
+    .menu a.btn-mp3 {
+      background: #0b3d0b;
+      color: #4eff4e;
+      box-shadow: 0 0 10px #4eff4e, 0 0 20px #4eff4e inset;
+      animation: glowGreen 2s infinite alternate;
+      transition: transform 0.1s ease-in-out;
+    }
+    .menu a.btn-mp3:hover {
+      color: #fff;
+      background: #1e7e1e;
+      box-shadow: 0 0 25px #4eff4e, 0 0 40px #4eff4e inset;
+      animation: glowGreen 1s infinite alternate, vibrate 0.2s infinite;
+    }
+    .menu a.btn-mp3:active { transform: scale(0.9); }
+
+    .menu a.btn-mp4 {
+      background: #3d0b0b;
+      color: #ff4e4e;
+      box-shadow: 0 0 10px #ff4e4e, 0 0 20px #ff4e4e inset;
+      animation: glowRed 2s infinite alternate;
+      transition: transform 0.1s ease-in-out;
+    }
+    .menu a.btn-mp4:hover {
+      color: #fff;
+      background: #7e1e1e;
+      box-shadow: 0 0 25px #ff4e4e, 0 0 40px #ff4e4e inset;
+      animation: glowRed 1s infinite alternate, vibrate 0.2s infinite;
+    }
+    .menu a.btn-mp4:active { transform: scale(0.9); }
+
+    /* Animasi glow */
+    @keyframes glowGreen {
+      from { box-shadow: 0 0 10px #4eff4e, 0 0 20px #4eff4e inset; }
+      to   { box-shadow: 0 0 25px #4eff4e, 0 0 50px #4eff4e inset; }
+    }
+    @keyframes glowRed {
+      from { box-shadow: 0 0 10px #ff4e4e, 0 0 20px #ff4e4e inset; }
+      to   { box-shadow: 0 0 25px #ff4e4e, 0 0 50px #ff4e4e inset; }
+    }
+    /* Animasi vibrate */
+    @keyframes vibrate {
+      0% { transform: translate(0); }
+      25% { transform: translate(-1px, 1px); }
+      50% { transform: translate(1px, -1px); }
+      75% { transform: translate(-1px, -1px); }
+      100% { transform: translate(1px, 1px); }
+    }
+
     section {
       margin: 20px auto; max-width: 700px; background: rgba(0,0,0,0.5);
       padding: 20px; border-radius: 12px; box-shadow: 0 0 15px #00fff7;
@@ -79,6 +129,8 @@
   <div class="menu">
     <a href="otp.html">Produk OTP</a>
     <a href="non-otp.html">Produk NON OTP</a>
+    <a href="https://id.ytmp3.mobi/v1/" target="_blank" class="btn-mp3">🎶 Download MP3</a>
+    <a href="https://ytmp4.is/id3/" target="_blank" class="btn-mp4">🎬 Download MP4</a>
   </div>
 
   <section>
@@ -86,6 +138,7 @@
     <p>Menjadi penyedia kuota termurah, tercepat, dan terpercaya.</p>
     <h2>MISI</h2>
     <p>Memberikan layanan terbaik, harga terjangkau, dan kenyamanan untuk pelanggan.</p>
+  </section>
     
   <!-- Riwayat Transaksi -->
   <section id="riwayat">
@@ -194,14 +247,6 @@
     }
 
     renderRiwayat();
-
-      // tambah ke riwayat + bunyi
-      tambahTransaksi(nama, produk, harga);
-
-      // buka WhatsApp
-      const pesan = `Halo Admin, saya ingin konfirmasi pembelian:\nNama: ${nama}\nProduk: ${produk}\nHarga: ${harga}`;
-      window.open(`https://wa.me/6287859569780?text=${encodeURIComponent(pesan)}`, "_blank");
-    });
   </script>
 </body>
 </html>
