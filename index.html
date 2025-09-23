@@ -1,253 +1,236 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>T-STORE | Menu Utama</title>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>T-STORE | Cyberpunk Grid</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --yellow: #ffd800;
+      --cyan: #00fff7;
+      --red: #ff0044;
+      --bg: #050308;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
     body {
+      font-family: 'Rajdhani', sans-serif;
+      color: #fff;
+      background: var(--bg);
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* Background grid animasi */
+    .bg-grid {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle at center, rgba(0,255,247,0.1) 0%, transparent 70%),
+                  repeating-linear-gradient(0deg, rgba(0,255,247,0.08) 0, rgba(0,255,247,0.08) 1px, transparent 1px, transparent 50px),
+                  repeating-linear-gradient(90deg, rgba(255,216,0,0.08) 0, rgba(255,216,0,0.08) 1px, transparent 1px, transparent 50px);
+      animation: moveGrid 12s linear infinite;
+      z-index: 0;
+    }
+    @keyframes moveGrid {
+      from { background-position: 0 0, 0 0, 0 0; }
+      to   { background-position: 0 0, 0 100px, 100px 0; }
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 70px;
+      background: linear-gradient(180deg, rgba(20,0,10,0.95), rgba(10,0,20,0.9));
+      border-right: 2px solid rgba(255,255,255,0.05);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px 10px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100%;
+      z-index: 300;
+      transition: width 0.3s ease-in-out;
+      overflow: hidden;
+    }
+    .sidebar.active { width: 250px; align-items: flex-start; padding: 20px; }
+
+    .logo {
       font-family: 'Orbitron', sans-serif;
-      background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
-      color: #fff; text-align: center; margin: 0; padding: 0;
-      min-height: 100vh; display: flex; flex-direction: column; justify-content: flex-start;
-      overflow-x: hidden;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--yellow);
+      text-shadow: 0 0 12px var(--yellow);
+      text-align: center;
+      margin-bottom: 20px;
+      animation: flicker 3s infinite;
     }
-    header { margin: 20px 0; }
-    h1 { font-size: 2.8em; text-shadow: 0 0 15px #ff00de, 0 0 30px #ff00de; }
-    p { color: #bbb; }
-    .menu { display: flex; justify-content: center; gap: 30px; flex-wrap: wrap; margin-bottom: 20px; }
-    .menu a {
-      background: #111; color: #00fff7; padding: 20px 40px; border-radius: 12px;
-      text-decoration: none; font-size: 1.2em; font-weight: bold;
-      box-shadow: 0 0 10px #00fff7, 0 0 20px #00fff7 inset; transition: all 0.3s ease-in-out;
-    }
-    .menu a:hover { color: #ff00de; box-shadow: 0 0 20px #ff00de, 0 0 30px #ff00de inset; transform: scale(1.1); }
 
-    /* Tombol khusus MP3 & MP4 */
-    .menu a.btn-mp3 {
-      background: #0b3d0b;
-      color: #4eff4e;
-      box-shadow: 0 0 10px #4eff4e, 0 0 20px #4eff4e inset;
-      animation: glowGreen 2s infinite alternate;
-      transition: transform 0.1s ease-in-out;
+    .toggle-btn {
+      font-size: 24px;
+      color: var(--cyan);
+      cursor: pointer;
+      background: none;
+      border: none;
+      margin-bottom: 20px;
+      transition: transform 0.2s;
     }
-    .menu a.btn-mp3:hover {
+    .toggle-btn:hover { transform: scale(1.2); color: var(--yellow); }
+
+    nav { width: 100%; display: none; }
+    .sidebar.active nav { display: block; }
+
+    nav a {
+      display: block;
+      font-size: 16px;
+      padding: 10px;
+      margin: 8px 0;
+      text-decoration: none;
       color: #fff;
-      background: #1e7e1e;
-      box-shadow: 0 0 25px #4eff4e, 0 0 40px #4eff4e inset;
-      animation: glowGreen 1s infinite alternate, vibrate 0.2s infinite;
+      border-left: 3px solid transparent;
+      transition: 0.2s;
+      cursor: pointer;
+      white-space: nowrap;
     }
-    .menu a.btn-mp3:active { transform: scale(0.9); }
-
-    .menu a.btn-mp4 {
-      background: #3d0b0b;
-      color: #ff4e4e;
-      box-shadow: 0 0 10px #ff4e4e, 0 0 20px #ff4e4e inset;
-      animation: glowRed 2s infinite alternate;
-      transition: transform 0.1s ease-in-out;
+    nav a:hover {
+      color: var(--cyan);
+      border-left: 3px solid var(--cyan);
+      background: rgba(0,255,247,0.05);
     }
-    .menu a.btn-mp4:hover {
-      color: #fff;
-      background: #7e1e1e;
-      box-shadow: 0 0 25px #ff4e4e, 0 0 40px #ff4e4e inset;
-      animation: glowRed 1s infinite alternate, vibrate 0.2s infinite;
-    }
-    .menu a.btn-mp4:active { transform: scale(0.9); }
-
-    /* Animasi glow */
-    @keyframes glowGreen {
-      from { box-shadow: 0 0 10px #4eff4e, 0 0 20px #4eff4e inset; }
-      to   { box-shadow: 0 0 25px #4eff4e, 0 0 50px #4eff4e inset; }
-    }
-    @keyframes glowRed {
-      from { box-shadow: 0 0 10px #ff4e4e, 0 0 20px #ff4e4e inset; }
-      to   { box-shadow: 0 0 25px #ff4e4e, 0 0 50px #ff4e4e inset; }
-    }
-    /* Animasi vibrate */
-    @keyframes vibrate {
-      0% { transform: translate(0); }
-      25% { transform: translate(-1px, 1px); }
-      50% { transform: translate(1px, -1px); }
-      75% { transform: translate(-1px, -1px); }
-      100% { transform: translate(1px, 1px); }
+    nav a.active {
+      color: var(--yellow);
+      border-left: 3px solid var(--yellow);
+      background: rgba(255,216,0,0.05);
     }
 
-    section {
-      margin: 20px auto; max-width: 700px; background: rgba(0,0,0,0.5);
-      padding: 20px; border-radius: 12px; box-shadow: 0 0 15px #00fff7;
+    .promo {
+      margin-top: 20px;
+      background: linear-gradient(90deg, rgba(255,0,68,0.2), rgba(255,0,68,0.05));
+      border: 1px solid rgba(255,0,68,0.3);
+      border-radius: 8px;
+      padding: 10px;
+      font-size: 13px;
+      display: none;
     }
-    footer { margin: 20px 0; font-size: 0.9em; color: #aaa; }
-    .floating-btns {
-      position: fixed; bottom: 20px; right: 20px;
-      display: flex; flex-direction: column; gap: 15px; z-index: 1000;
-    }
-    .floating-btns a {
-      width: 55px; height: 55px; background: #25D366; border-radius: 50%;
-      display: flex; justify-content: center; align-items: center;
-      font-size: 26px; color: white; text-decoration: none;
-      box-shadow: 0 0 12px #25D366; animation: pulse 2s infinite;
-    }
-    .floating-btns a.phone { background: #007BFF; box-shadow: 0 0 12px #007BFF; }
-    @keyframes pulse { 0% { transform: scale(1);} 50% { transform: scale(1.15);} 100% { transform: scale(1);} }
-    #music-btn {
-      position: fixed; bottom: 20px; left: 20px;
-      background: rgba(0,0,0,0.6); padding: 12px 15px; border-radius: 50%;
-      font-size: 22px; cursor: pointer; color: #fff;
-      box-shadow: 0 0 10px #00fff7; transition: transform 0.2s ease; z-index: 1001;
-    }
-    #music-btn:hover { transform: scale(1.2); }
+    .sidebar.active .promo { display: block; }
 
-    /* Riwayat Transaksi */
-    #riwayat { margin: 20px auto; max-width: 900px; padding: 20px; background: rgba(0,0,0,0.6); border-radius: 12px; box-shadow: 0 0 15px #ff00de; }
-    #riwayat h2 { margin-bottom: 15px; }
-    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-    th, td { padding: 10px; border: 1px solid #555; font-size: 0.9em; }
-    th { background: #111; color: #00fff7; }
-    td { background: rgba(255,255,255,0.05); }
-    .status-btn { padding: 5px 10px; border: none; border-radius: 6px; cursor: pointer; font-size: 0.8em; }
-    .belum { background: #ff4444; color: #fff; }
-    .proses { background: #ffaa00; color: #fff; }
-    .selesai { background: #44ff44; color: #111; }
-
-    /* Tombol Konfirmasi */
-    .confirm-btn {
-      display: inline-block; margin-top: 15px; padding: 12px 20px;
-      background: #25D366; color: #fff; border-radius: 8px;
-      text-decoration: none; font-weight: bold; font-size: 1em;
-      box-shadow: 0 0 10px #25D366; transition: 0.3s;
+    /* Main */
+    .main {
+      flex: 1;
+      margin-left: 70px;
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 20px;
+      transition: margin-left 0.3s;
     }
-    .confirm-btn:hover { background: #20b358; transform: scale(1.05); }
+    .sidebar.active ~ .main { margin-left: 250px; }
+
+    .content h1 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 34px;
+      color: var(--yellow);
+      text-shadow: 0 0 15px var(--yellow);
+      animation: glitch-text 2.5s infinite;
+    }
+    .content p { margin-top: 8px; font-size: 16px; color: #aaa; }
+
+    .actions {
+      margin-top: 20px;
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .actions a {
+      padding: 10px 16px;
+      border-radius: 6px;
+      font-weight: bold;
+      text-decoration: none;
+      color: #000;
+      background: var(--cyan);
+      box-shadow: 0 0 10px var(--cyan);
+      transition: 0.2s;
+    }
+    .actions a:hover {
+      transform: scale(1.05);
+      background: var(--yellow);
+      box-shadow: 0 0 15px var(--yellow);
+    }
+
+    footer {
+      position: absolute;
+      bottom: 10px;
+      font-size: 12px;
+      color: #777;
+      width: 100%;
+      text-align: center;
+    }
+
+    /* Animasi */
+    @keyframes flicker {
+      0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { opacity: 1; }
+      20%, 24%, 55% { opacity: 0.4; }
+    }
+    @keyframes glitch-text {
+      0% { text-shadow: 2px 0 red, -2px 0 cyan; }
+      20% { text-shadow: -2px 0 red, 2px 0 cyan; }
+      40% { text-shadow: 2px 0 cyan, -2px 0 red; }
+      60% { text-shadow: 0 0 5px var(--yellow); }
+      100% { text-shadow: 2px 0 red, -2px 0 cyan; }
+    }
+
+    @media (max-width: 768px) {
+      .sidebar { width: 60px; }
+      .sidebar.active { width: 220px; }
+      .main { margin-left: 60px; }
+      .sidebar.active ~ .main { margin-left: 220px; }
+      .content h1 { font-size: 26px; }
+    }
   </style>
 </head>
 <body>
-  <header>
-    <h1>★ T-STORE ★</h1>
-    <p>Pilih kategori produk Anda</p>
-  </header>
+  <div class="bg-grid"></div>
 
-  <div class="menu">
-    <a href="otp.html">Produk OTP</a>
-    <a href="non-otp.html">Produk NON OTP</a>
-    <a href="https://leonskennedy.my.id/cekcircle/" target="_blank">Cek Paket CIRCLE</a>
-    <a href="https://id.ytmp3.mobi/v1/" target="_blank" class="btn-mp3">🎶 Download MP3</a>
-    <a href="https://ytmp4.is/id3/" target="_blank" class="btn-mp4">🎬 Download MP4</a>
-  </div>
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="logo">MENU </div>
+    <button class="toggle-btn" id="toggleBtn">=</button>
+    <nav>
+      <a href="otp.html">Produk OTP</a>
+      <a href="non-otp.html">Produk NON OTP</a>
+      <a href="https://id.ytmp3.mobi/v1/" target="_blank">Download MP3</a>
+      <a href="https://ytmp4.is/id3/" target="_blank">Download MP4</a>
+      <a id="riwayatBtn"> Riwayat Transaksi</a>
+    </nav>
+    <div class="promo">
+      <h3>PROMO HARI INI</h3>
+      <p>Kuota murah + bonus spesial</p>
+    </div>
+  </aside>
 
-  <section>
-    <h2>VISI</h2>
-    <p>Menjadi penyedia kuota termurah, tercepat, dan terpercaya.</p>
-    <h2>MISI</h2>
-    <p>Memberikan layanan terbaik, harga terjangkau, dan kenyamanan untuk pelanggan.</p>
-  </section>
-    
-  <!-- Riwayat Transaksi -->
-  <section id="riwayat">
-    <h2>Riwayat Transaksi</h2>
-    <table>
-      <thead>
-        <tr>
-          <th>Nama</th>
-          <th>Produk</th>
-          <th>Harga</th>
-          <th>Status</th>
-          <th>Waktu</th>
-        </tr>
-      </thead>
-      <tbody id="riwayat-body"></tbody>
-    </table>
-  </section>
-
-  <footer>
-    <p>★Terima kasih sudah membeli & berkunjung ke T-STORE★</p>
-  </footer>
-
-  <!-- Tombol WhatsApp & Telepon -->
-  <div class="floating-btns">
-    <a href="https://wa.me/6287859569780" target="_blank">📱</a>
-    <a href="tel:+6287859569780" class="phone">📞</a>
-  </div>
-
-  <!-- Musik Latar -->
-  <audio id="bg-music" loop>
-    <source src="" type="audio/mp3">
-    Browser Anda tidak mendukung audio.
-  </audio>
-  <div id="music-btn">🎵</div>
-
-  <!-- Notifikasi Suara -->
-  <audio id="notif-sound">
-    <source src="https://assets.mixkit.co/sfx/download/mixkit-confirmation-tone-2867.mp3" type="audio/mp3">
-  </audio>
+  <!-- Main -->
+  <main class="main">
+    <div class="content">
+      <h1>Selamat Datang<h1>T-STORE</h1>
+      <p>Pusat kuota digital murah, cepat, terpercaya.</p>
+      <div class="actions">
+        <a href="https://wa.me/6287859569780" target="_blank">WhatsApp</a>
+        <a href="tel:+6287859569780">Telepon</a>
+      </div>
+    </div>
+    <footer>Terima kasih sudah berkunjung</footer>
+  </main>
 
   <script>
-    // Musik
-    const tracks = [
-      "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
-      "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
-      "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3"
-    ];
-    const music = document.getElementById("bg-music");
-    const musicBtn = document.getElementById("music-btn");
-    music.src = tracks[Math.floor(Math.random() * tracks.length)];
-    music.volume = 0.3;
-    let isPlaying = false;
-    musicBtn.onclick = () => {
-      if (isPlaying) { music.pause(); musicBtn.textContent = "🎵"; }
-      else { music.play(); musicBtn.textContent = "⏸"; }
-      isPlaying = !isPlaying;
-    };
-
-    // Riwayat Transaksi
-    const riwayatBody = document.getElementById("riwayat-body");
-    const notifSound = document.getElementById("notif-sound");
-
-    function playNotif() {
-      notifSound.currentTime = 0;
-      notifSound.play();
-    }
-
-    function renderRiwayat() {
-      let riwayat = JSON.parse(localStorage.getItem("riwayatTransaksi")) || [];
-      riwayatBody.innerHTML = "";
-      riwayat.forEach((t, i) => {
-        riwayatBody.innerHTML += `
-          <tr>
-            <td>${t.nama}</td>
-            <td>${t.produk}</td>
-            <td>${t.harga}</td>
-            <td>
-              <button class="status-btn ${t.status === 'Belum Bayar' ? 'belum' : t.status === 'Diproses' ? 'proses' : 'selesai'}" onclick="ubahStatus(${i})">
-                ${t.status}
-              </button>
-            </td>
-            <td>${t.waktu}</td>
-          </tr>`;
-      });
-    }
-
-    function tambahTransaksi(nama, produk, harga) {
-      let riwayat = JSON.parse(localStorage.getItem("riwayatTransaksi")) || [];
-      riwayat.push({
-        nama, produk, harga,
-        status: "Belum Bayar",
-        waktu: new Date().toLocaleString()
-      });
-      localStorage.setItem("riwayatTransaksi", JSON.stringify(riwayat));
-      renderRiwayat();
-      playNotif(); // 🔔 bunyi saat transaksi baru
-    }
-
-    function ubahStatus(i) {
-      let riwayat = JSON.parse(localStorage.getItem("riwayatTransaksi")) || [];
-      if (riwayat[i].status === "Belum Bayar") riwayat[i].status = "Diproses";
-      else if (riwayat[i].status === "Diproses") riwayat[i].status = "Selesai";
-      else riwayat[i].status = "Belum Bayar";
-      localStorage.setItem("riwayatTransaksi", JSON.stringify(riwayat));
-      renderRiwayat();
-    }
-
-    renderRiwayat();
+    const toggleBtn = document.getElementById('toggleBtn');
+    const sidebar = document.getElementById('sidebar');
+    toggleBtn.onclick = () => { sidebar.classList.toggle('active'); };
   </script>
 </body>
 </html>
