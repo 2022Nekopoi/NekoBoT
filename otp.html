@@ -11,104 +11,27 @@
     .product, .detail-box {background:#fff; padding:20px; border-radius:12px; box-shadow:0 4px 10px rgba(0,0,0,0.1);}
     .product h2 {margin:0 0 10px; color:#6a00f4;}
     .price {font-weight:bold; color:#008000; margin:10px 0;}
-    .buy-btn, .back-btn, .reset-btn {
+    .buy-btn, .back-btn {
       display:inline-block; padding:10px 20px; border-radius:8px; text-decoration:none;
-      font-weight:bold; margin-top:10px; cursor:pointer;
+      font-weight:bold; margin-top:10px;
     }
     .buy-btn {background:#6a00f4; color:#fff;}
     .buy-btn:hover {background:#8a2be2;}
     .back-btn {background:#555; color:#fff;}
     .back-btn:hover {background:#333;}
-    .reset-btn {background:#f44336; color:#fff;}
-    .reset-btn:hover {background:#d32f2f;}
     footer {text-align:center; margin:20px;}
     .hidden {display:none;}
     img {max-width:250px; border-radius:12px; margin:15px 0;}
-    table {width:100%; border-collapse:collapse; margin-top:20px;}
-    th,td {border:1px solid #ccc; padding:8px; text-align:center;}
-    th {background:#eee;}
-    .status {font-weight:bold;}
-    .belum {color:red;}
-    .proses {color:orange;}
-    .selesai {color:green;}
-    .aksi-btn {padding:4px 8px; margin:2px; border:none; border-radius:6px; cursor:pointer;}
-    .btn-belum {background:#ffdddd;}
-    .btn-proses {background:#fff3cd;}
-    .btn-selesai {background:#d4edda;}
   </style>
   <script>
-    // Tampilkan detail produk
     function showDetail(id) {
       document.getElementById('product-list').classList.add('hidden');
       document.getElementById(id).classList.remove('hidden');
-
-      // Buat Order ID unik
-      const orderId = "TS-" + new Date().toISOString().slice(0,10).replace(/-/g,"") + "-" + Math.floor(Math.random()*1000);
-      document.querySelector("#"+id+" .order-id").innerText = "Order ID: " + orderId;
-      document.querySelector("#"+id+" .wa-btn").setAttribute("data-orderid", orderId);
     }
-
-    // Kembali ke daftar produk
     function goBack(id) {
       document.getElementById(id).classList.add('hidden');
       document.getElementById('product-list').classList.remove('hidden');
     }
-
-    // Simpan ke riwayat pembelian
-    function simpanRiwayat(namaProduk, harga, orderId) {
-      let riwayat = JSON.parse(localStorage.getItem("riwayatPembelian")) || [];
-      riwayat.push({produk:namaProduk, harga:harga, orderId:orderId, waktu:new Date().toLocaleString(), status:"Belum Bayar"});
-      localStorage.setItem("riwayatPembelian", JSON.stringify(riwayat));
-      tampilRiwayat();
-    }
-
-    // Tampilkan riwayat pembelian
-    function tampilRiwayat() {
-      let riwayat = JSON.parse(localStorage.getItem("riwayatPembelian")) || [];
-      let tbody = document.getElementById("riwayat-body");
-      tbody.innerHTML = "";
-      riwayat.forEach((r,i) => {
-        tbody.innerHTML += `<tr>
-          <td>${r.orderId}</td>
-          <td>${r.produk}</td>
-          <td>${r.harga}</td>
-          <td class="status ${r.status.toLowerCase()}">${r.status}</td>
-          <td>${r.waktu}</td>
-          <td>
-            <button class="aksi-btn btn-belum" onclick="ubahStatus(${i},'Belum Bayar')">Belum</button>
-            <button class="aksi-btn btn-proses" onclick="ubahStatus(${i},'Diproses')">Proses</button>
-            <button class="aksi-btn btn-selesai" onclick="ubahStatus(${i},'Selesai')">Selesai</button>
-          </td>
-        </tr>`;
-      });
-    }
-
-    // Ubah status transaksi
-    function ubahStatus(index, statusBaru) {
-      let riwayat = JSON.parse(localStorage.getItem("riwayatPembelian")) || [];
-      riwayat[index].status = statusBaru;
-      localStorage.setItem("riwayatPembelian", JSON.stringify(riwayat));
-      tampilRiwayat();
-    }
-
-    // Reset riwayat
-    function resetRiwayat() {
-      if(confirm("Yakin ingin menghapus semua riwayat pembelian?")) {
-        localStorage.removeItem("riwayatPembelian");
-        tampilRiwayat();
-        alert("Riwayat pembelian berhasil dihapus!");
-      }
-    }
-
-    // Saat klik konfirmasi WA
-    function konfirmasiWA(el, produk, harga) {
-      const orderId = el.getAttribute("data-orderid");
-      simpanRiwayat(produk, harga, orderId);
-      const pesan = `Halo, saya sudah bayar ${produk} (${harga})\nOrder ID: ${orderId}`;
-      window.open(`https://wa.me/6287859569780?text=${encodeURIComponent(pesan)}`, "_blank");
-    }
-
-    window.onload = tampilRiwayat;
   </script>
 </head>
 <body>
@@ -120,79 +43,175 @@
   <!-- Daftar Produk -->
   <section id="product-list" class="product-list">
     <div class="product">
-      <h2>ADD-ON (Xtra Combo Plus)</h2>
-      <div class="price">Rp10.000</div>
-      <p>Kuota 15GB YouTube, IG, TikTok, FB, WA, Streaming, Sosmed, Games.<br>Wajib ada paket Xtra Combo Plus.</p>
-      <a href="javascript:void(0)" onclick="showDetail('detail-addon')" class="buy-btn">Beli Sekarang</a>
+      <h2>BIZ Prepaid - BIZ Starter</h2>
+      <div class="price">Rp65.000</div>
+      <p>Kuota 10GB + Games/YT 1GB + Unlimited Voice & SMS XL.</p>
+      <a href="javascript:void(0)" onclick="showDetail('detail-biz')" class="buy-btn">Beli Sekarang</a>
     </div>
 
     <div class="product">
-      <h2>Paket Circle</h2>
+      <h2>Unlimited Turbo - Xtra Combo TikTok</h2>
+      <div class="price">Rp45.000</div>
+      <p>Masa aktif mengikuti XCP/XCL. Unlimited Turbo + TikTok.</p>
+      <a href="javascript:void(0)" onclick="showDetail('detail-unlimited')" class="buy-btn">Beli Sekarang</a>
+    </div>
+
+    <div class="product">
+      <h2>Swadaya Xlalu Untukmu - 11GB</h2>
+      <div class="price">Rp60.000</div>
+      <p>Kuota 11GB + Unlimited SMS & Telpon XL + App Access Gojek.</p>
+      <a href="javascript:void(0)" onclick="showDetail('detail-swadaya')" class="buy-btn">Beli Sekarang</a>
+    </div>
+
+    <div class="product">
+      <h2>Promo Xtra Combo 1GB + 1GB</h2>
+      <div class="price">Rp35.000</div>
+      <p>Kuota 1GB reguler + 1GB YouTube + 20 menit telpon.</p>
+      <a href="javascript:void(0)" onclick="showDetail('detail-promo')" class="buy-btn">Beli Sekarang</a>
+    </div>
+
+    <div class="product">
+      <h2>Xtra Combo Flex M - 5GB</h2>
+      <div class="price">Rp55.000</div>
+      <p>Kuota 10GB + WhatsApp, Line + 5 menit telpon semua operator.</p>
+      <a href="javascript:void(0)" onclick="showDetail('detail-flex')" class="buy-btn">Beli Sekarang</a>
+    </div>
+
+    <div class="product">
+      <h2>Video & Music Vidio</h2>
+      <div class="price">Rp25.000</div>
+      <p>Unlimited Vidio Quota selama 30 hari.</p>
+      <a href="javascript:void(0)" onclick="showDetail('detail-vidio')" class="buy-btn">Beli Sekarang</a>
+    </div>
+
+    <div class="product">
+      <h2>ADD-ON (Xtra Combo Plus)</h2>
       <div class="price">Rp10.000</div>
-      <p>Kuota 4/5GB Full Reguler.<br>Harus bersih dari grup Circle.<br>Wajib OTP dulu.</p>
-      <a href="javascript:void(0)" onclick="showDetail('detail-circle')" class="buy-btn">Beli Sekarang</a>
+      <p>Kuota 15GB untuk YT, IG, TikTok, FB, WA, Streaming, Games.</p>
+      <a href="javascript:void(0)" onclick="showDetail('detail-addon')" class="buy-btn">Beli Sekarang</a>
     </div>
   </section>
 
-  <!-- Detail Produk: ADD-ON -->
+  <!-- Detail Produk -->
+  <section id="detail-biz" class="product-detail hidden">
+    <div class="detail-box">
+      <h2>BIZ Prepaid - BIZ Starter</h2>
+      <p>Masa Aktif: 30 Hari<br>
+         Kuota Utama: 10GB<br>
+         Games/YT: 1GB<br>
+         Unlimited Voice XL, Unlimited SMS XL<br>
+         WhatsApp & LINE</p>
+      <h3>ðŸ“² Scan QRIS untuk bayar</h3>
+      <img src="https://e.top4top.io/p_3534j26v51.jpeg" alt="QRIS">
+      <div>
+        <a href="https://wa.me/6287859569780?text=Halo%20saya%20sudah%20bayar%20BIZ%20Prepaid%20Rp65.000" target="_blank" class="buy-btn">âœ… Konfirmasi via WA</a>
+        <a href="javascript:void(0)" onclick="goBack('detail-biz')" class="back-btn">â¬… Kembali</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="detail-unlimited" class="product-detail hidden">
+    <div class="detail-box">
+      <h2>Unlimited Turbo - Xtra Combo TikTok</h2>
+      <p>Harga: Rp45.000<br>Masa aktif mengikuti XCP/XCL.<br>Benefit: Unlimited Turbo + TikTok.</p>
+      <h3>ðŸ“² Scan QRIS untuk bayar</h3>
+      <img src="https://e.top4top.io/p_3534j26v51.jpeg" alt="QRIS">
+      <div>
+        <a href="https://wa.me/6287859569780?text=Halo%20saya%20sudah%20bayar%20Unlimited%20Turbo%20Rp45.000" target="_blank" class="buy-btn">âœ… Konfirmasi via WA</a>
+        <a href="javascript:void(0)" onclick="goBack('detail-unlimited')" class="back-btn">â¬… Kembali</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="detail-swadaya" class="product-detail hidden">
+    <div class="detail-box">
+      <h2>Swadaya Xlalu Untukmu - 11GB</h2>
+      <p>Harga: Rp60.000<br>Masa Aktif: 30 Hari<br>
+         Kuota: 11GB<br>
+         Unlimited SMS & Telpon XL<br>
+         App Access: Gojek, Wazee, Gojek Driver</p>
+      <h3>ðŸ“² Scan QRIS untuk bayar</h3>
+      <img src="https://e.top4top.io/p_3534j26v51.jpeg" alt="QRIS">
+      <div>
+        <a href="https://wa.me/6287859569780?text=Halo%20saya%20sudah%20bayar%20Swadaya%20Xlalu%20Rp60.000" target="_blank" class="buy-btn">âœ… Konfirmasi via WA</a>
+        <a href="javascript:void(0)" onclick="goBack('detail-swadaya')" class="back-btn">â¬… Kembali</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="detail-promo" class="product-detail hidden">
+    <div class="detail-box">
+      <h2>Promo Xtra Combo 1GB + 1GB</h2>
+      <p>Harga: Rp35.000<br>Masa Aktif: 30 Hari<br>
+         Kuota Utama: 1GB<br>
+         Kuota YouTube: 1GB<br>
+         Telpon: 20 menit (XL/Non XL)</p>
+      <h3>ðŸ“² Scan QRIS untuk bayar</h3>
+      <img src="https://e.top4top.io/p_3534j26v51.jpeg" alt="QRIS">
+      <div>
+        <a href="https://wa.me/6287859569780?text=Halo%20saya%20sudah%20bayar%20Promo%20Xtra%20Combo%20Rp35.000" target="_blank" class="buy-btn">âœ… Konfirmasi via WA</a>
+        <a href="javascript:void(0)" onclick="goBack('detail-promo')" class="back-btn">â¬… Kembali</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="detail-flex" class="product-detail hidden">
+    <div class="detail-box">
+      <h2>Xtra Combo Flex M - 5GB</h2>
+      <p>Harga: Rp55.000<br>Masa Aktif: 30 Hari<br>
+         Kuota Utama: 10GB<br>
+         WhatsApp, LINE<br>
+         Telpon semua operator: 5 menit</p>
+      <h3>ðŸ“² Scan QRIS untuk bayar</h3>
+      <img src="https://e.top4top.io/p_3534j26v51.jpeg" alt="QRIS">
+      <div>
+        <a href="https://wa.me/6287859569780?text=Halo%20saya%20sudah%20bayar%20Xtra%20Combo%20Flex%20Rp55.000" target="_blank" class="buy-btn">âœ… Konfirmasi via WA</a>
+        <a href="javascript:void(0)" onclick="goBack('detail-flex')" class="back-btn">â¬… Kembali</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="detail-vidio" class="product-detail hidden">
+    <div class="detail-box">
+      <h2>Video & Music Vidio</h2>
+      <p>Harga: Rp25.000<br>Masa Aktif: 30 Hari<br>
+         Unlimited Vidio quota selama 30 hari.<br>
+         SnK berlaku sesuai aplikasi MyXL.</p>
+      <h3>ðŸ“² Scan QRIS untuk bayar</h3>
+      <img src="https://e.top4top.io/p_3534j26v51.jpeg" alt="QRIS">
+      <div>
+        <a href="https://wa.me/6287859569780?text=Halo%20saya%20sudah%20bayar%20Vidio%20Rp25.000" target="_blank" class="buy-btn">âœ… Konfirmasi via WA</a>
+        <a href="javascript:void(0)" onclick="goBack('detail-vidio')" class="back-btn">â¬… Kembali</a>
+      </div>
+    </div>
+  </section>
+
   <section id="detail-addon" class="product-detail hidden">
     <div class="detail-box">
       <h2>ADD-ON (Xtra Combo Plus)</h2>
-      <p>● XCP - Youtube 15GB - 10k<br>● XCP - Instagram 15GB - 10K<br>● XCP - TikTok 15GB - 10K<br>● XCP - Facebook 15GB - 10K</p>
-      <p class="order-id"></p>
-
-      <h3>📲 Scan QRIS untuk bayar</h3>
+      <p>Harga: Rp10.000<br>
+         — XCP - Youtube 15GB<br>
+         — XCP - Instagram 15GB<br>
+         — XCP - TikTok 15GB<br>
+         — XCP - Facebook 15GB<br>
+         — XCP - WhatsApp 15GB<br>
+         — XCP - Streaming 15GB<br>
+         — XCP - Social Media 15GB<br>
+         — XCP - Games 15GB<br><br>
+          Wajib ada paket Xtra Combo Plus.<br>
+          Masa aktif mengikuti Xtra Combo Plus.<br>
+          Menimpa / Menghapus kuota di paket yang sama.</p>
+      <h3> Scan QRIS untuk bayar</h3>
       <img src="https://e.top4top.io/p_3534j26v51.jpeg" alt="QRIS">
-
       <div>
-        <a href="javascript:void(0)" class="buy-btn wa-btn"
-           onclick="konfirmasiWA(this,'ADD-ON Xtra Combo Plus','Rp10.000')">✅ Konfirmasi via WA</a>
-        <a href="javascript:void(0)" onclick="goBack('detail-addon')" class="back-btn">⬅ Kembali</a>
+        <a href="https://wa.me/6287859569780?text=Halo%20saya%20sudah%20bayar%20ADD-ON%20Xtra%20Combo%20Plus%20Rp10.000" target="_blank" class="buy-btn">âœ… Konfirmasi via WA</a>
+        <a href="javascript:void(0)" onclick="goBack('detail-addon')" class="back-btn">â¬… Kembali</a>
       </div>
-    </div>
-  </section>
-
-  <!-- Detail Produk: Circle -->
-  <section id="detail-circle" class="product-detail hidden">
-    <div class="detail-box">
-      <h2>Paket Circle</h2>
-      <p>Kuota: 4/5GB Full Reguler<br>Harus bersih dari grup Circle<br>Wajib OTP dulu</p>
-      <p class="order-id"></p>
-
-      <h3>📲 Scan QRIS untuk bayar</h3>
-      <img src="https://e.top4top.io/p_3534j26v51.jpeg" alt="QRIS">
-
-      <div>
-        <a href="javascript:void(0)" class="buy-btn wa-btn"
-           onclick="konfirmasiWA(this,'Paket Circle','Rp10.000')">✅ Konfirmasi via WA</a>
-        <a href="javascript:void(0)" onclick="goBack('detail-circle')" class="back-btn">⬅ Kembali</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- Riwayat Pembelian -->
-  <section class="product-detail">
-    <div class="detail-box">
-      <h2>📜 Riwayat Pembelian</h2>
-      <button class="reset-btn" onclick="resetRiwayat()">🗑 Hapus Semua Riwayat</button>
-      <table>
-        <thead>
-          <tr>
-            <th>Order ID</th>
-            <th>Produk</th>
-            <th>Harga</th>
-            <th>Status</th>
-            <th>Waktu</th>
-            <th>Aksi</th>
-          </tr>
-        </thead>
-        <tbody id="riwayat-body"></tbody>
-      </table>
     </div>
   </section>
 
   <footer>
-    <a href="index.html">⬅ Kembali ke Menu Utama</a>
+    <a href="index.html">â¬… Kembali ke Menu Utama</a>
   </footer>
 </body>
-</html>
+  </html>
