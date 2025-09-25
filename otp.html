@@ -41,23 +41,157 @@
   </header>
 
   <!-- Daftar Produk -->
-  	  <!-- Produk Circle -->
-  <section id="circle" class="product-list">
-    <h2>🔥New Produk Paket Circle🔥</h2>
-    <div class="product">
-      <h2>XL Circle 65GB</h2>
-      <div class="price">Rp68.000</div>
-      <p>Paket nambah masa aktif.</p>
-      <a href="https://panel.khfy-store.com/au.html" target="_blank" class="buy-btn">Beli (Wajib OTP)</a>
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>T-Store - Paket Circle</title>
+<style>
+body { font-family: Arial; background:#f7f7f7; margin:0; padding:0; }
+.product-list { display:flex; flex-direction:column; gap:20px; margin:20px; }
+.product { background:#fff; padding:15px; border-radius:10px; box-shadow:0 2px 5px rgba(0,0,0,0.1);}
+.product h2 { margin:0 0 5px 0; font-size:18px;}
+.product .price { font-weight:bold; color:#e74c3c; margin-bottom:5px;}
+.product p { margin:5px 0; font-size:14px;}
+.buy-btn { background:#007bff; color:#fff; border:none; padding:8px 12px; border-radius:6px; cursor:pointer; font-size:14px;}
+.buy-btn:hover { background:#0056b3; }
+.qris-small { width:120px; margin-top:10px; border:2px solid #007bff; border-radius:10px; }
+
+/* Modal QRIS */
+.modal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:1000; }
+.modal-content { background:#fff; margin:5% auto; padding:20px; border-radius:12px; max-width:400px; text-align:center; }
+.close { float:right; font-size:24px; cursor:pointer; font-weight:bold; }
+.preview-container { display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-bottom:10px;}
+.preview-item { position:relative; width:80px; height:80px;}
+.preview-item img { width:100%; height:100%; object-fit:cover; border-radius:10px; border:2px solid #007bff; cursor:pointer; }
+.preview-item button { position:absolute; top:-8px; right:-8px; background:#dc3545; color:#fff; border:none; border-radius:50%; width:20px; height:20px; font-size:12px; cursor:pointer; }
+.done-btn { background:#28a745; color:#fff; border:none; padding:12px 18px; border-radius:8px; font-size:16px; cursor:pointer; width:90%; max-width:250px; margin-top:10px; }
+.done-btn:hover { background:#218838; }
+.countdown { font-weight:bold; color:#e67e22; margin:10px 0; }
+</style>
+</head>
+<body>
+
+<section id="circle" class="product-list">
+  <h2>🔥New Paket Circle🔥</h2>
+
+  <div class="product" data-qris="https://e.top4top.io/p_3534j26v51.jpeg">
+    <h2>XL Circle 65GB</h2>
+    <div class="price">Rp68.000</div>
+    <p>Paket Menambah masa aktif.</p>
+    <button class="buy-btn" onclick="goOtp('XL Circle 65GB - Rp68.000', this)">Beli (Wajib OTP)</button>
+    <div>
+      <p>Scan QRIS untuk pembayaran langsung:</p>
+      <img src="https://e.top4top.io/p_3534j26v51.jpeg" class="qris-small" alt="QRIS">
     </div>
-    <div class="product">
-      <h2>XL Circle 65GB</h2>
-      <div class="price">Rp63.000</div>
-      <p>Paket tidak nambah masa aktif.</p>
-      <a href="https://panel.khfy-store.com/au.html" target="_blank" class="buy-btn">Beli (Wajib OTP)</a>
+  </div>
+
+  <div class="product" data-qris="https://e.top4top.io/p_3534j26v51.jpeg">
+    <h2>XL Circle 65GB</h2>
+    <div class="price">Rp63.000</div>
+    <p>Paket tidak nambah masa aktif.</p>
+    <button class="buy-btn" onclick="goOtp('XL Circle 65GB - Rp63.000', this)">Beli (Wajib OTP)</button>
+    <div>
+      <p>Scan QRIS untuk pembayaran langsung:</p>
+      <img src="https://e.top4top.io/p_3534j26v51.jpeg" class="qris-small" alt="QRIS">
     </div>
-    <p><b>Note:</b> Kartu keadaan Fresh dan tidak tergabung di Paket Circle mana pun.</p>
-  </section>
+  </div>
+
+  <p><b>Note:</b> Kartu keadaan Fresh dan tidak tergabung di Paket Circle mana pun.</p>
+</section>
+
+<!-- Modal QRIS -->
+<div id="qrisModal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal()">&times;</span>
+    <h3>Pembayaran via QRIS</h3>
+    <img id="modalQris" src="" alt="QRIS" style="width:150px; border-radius:10px; border:2px solid #007bff;">
+    <div id="countdownMsg" class="countdown"></div>
+    <h4>Upload Bukti Pembayaran</h4>
+    <input type="file" id="buktiFiles" accept="image/*" multiple onchange="previewFiles()">
+    <div id="previewContainer" class="preview-container"></div>
+    <button class="done-btn" onclick="paymentDone()">✅ Selesai Bayar</button>
+  </div>
+</div>
+
+<script>
+function goOtp(productName, btn){
+  const productDiv = btn.closest('.product');
+  const qrisUrl = productDiv.getAttribute('data-qris');
+  sessionStorage.setItem('lastProduct', productName);
+  sessionStorage.setItem('lastQris', qrisUrl);
+
+  const otpUrl = `https://panel.khfy-store.com/au.html?product=${encodeURIComponent(productName)}&callback=${encodeURIComponent(location.origin + location.pathname + "?otp_success=1")}`;
+  window.open(otpUrl,"_blank");
+}
+
+// Tampilkan modal QRIS dengan countdown 10 detik
+window.onload = function(){
+  const params = new URLSearchParams(window.location.search);
+  if(params.get("otp_success") === "1"){
+    const qrisUrl = sessionStorage.getItem('lastQris');
+    if(qrisUrl) document.getElementById('modalQris').src = qrisUrl;
+    let countdown = 10;
+    const countdownMsg = document.getElementById("countdownMsg");
+    countdownMsg.innerText = `Berhasil login! Menampilkan pembayaran dalam ${countdown} detik...`;
+    const interval = setInterval(()=>{
+      countdown--;
+      if(countdown>0){
+        countdownMsg.innerText = `Berhasil login! Menampilkan pembayaran dalam ${countdown} detik...`;
+      } else {
+        clearInterval(interval);
+        countdownMsg.innerText = "";
+        document.getElementById("qrisModal").style.display="block";
+      }
+    },1000);
+  }
+}
+
+// Preview bukti pembayaran
+function previewFiles(){
+  const container = document.getElementById("previewContainer");
+  const files = document.getElementById("buktiFiles").files;
+  container.innerHTML="";
+  Array.from(files).forEach((file,index)=>{
+    const reader = new FileReader();
+    reader.onload=function(e){
+      const div=document.createElement("div"); div.className="preview-item";
+      const img=document.createElement("img"); img.src=e.target.result;
+      const btn=document.createElement("button"); btn.textContent="×"; btn.onclick=()=>removeFile(index);
+      div.appendChild(img); div.appendChild(btn); container.appendChild(div);
+    }
+    reader.readAsDataURL(file);
+  });
+}
+function removeFile(index){
+  const input=document.getElementById("buktiFiles");
+  const dt=new DataTransfer();
+  const files=Array.from(input.files);
+  files.splice(index,1);
+  files.forEach(f=>dt.items.add(f));
+  input.files=dt.files;
+  previewFiles();
+}
+
+function closeModal(){ document.getElementById("qrisModal").style.display="none"; }
+
+// Selesai bayar → WA admin otomatis
+function paymentDone(){
+  const product = sessionStorage.getItem("lastProduct") || "Produk Circle";
+  const phone = "6287859569780";
+  const time = new Date().toLocaleString();
+  const files = document.getElementById("buktiFiles").files;
+  let message=`Halo Admin, pembayaran untuk ${product} berhasil.\nWaktu: ${time}.\n`;
+  if(files.length>0){ message+="Bukti pembayaran sudah siap. Silakan attach di WA."; }
+  else{ message+="Belum upload bukti pembayaran."; }
+  window.location.href = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+  closeModal();
+}
+</script>
+
+</body>
+</html>
   </div>
   <section id="product-list" class="product-list">
     <div class="product">
@@ -65,6 +199,8 @@
       <div class="price">Rp65.000</div>
       <p>Kuota 10GB + Games/YT 1GB + Unlimited Voice & SMS XL.</p>
       <a href="javascript:void(0)" onclick="showDetail('detail-biz')" class="buy-btn">Beli Sekarang</a>
+            <p>Scan QRIS untuk pembayaran langsung:</p>
+      <img src="https://e.top4top.io/p_3534j26v51.jpeg" class="qris-small" alt="QRIS">
     </div>
 
     <div class="product">
@@ -72,6 +208,9 @@
       <div class="price">Rp45.000</div>
       <p>Masa aktif mengikuti XCP/XCL. Unlimited Turbo + TikTok.</p>
       <a href="javascript:void(0)" onclick="showDetail('detail-unlimited')" class="buy-btn">Beli Sekarang</a>
+            <p>Scan QRIS untuk pembayaran langsung:</p>
+      <img src="https://e.top4top.io/p_3534j26v51.jpeg" class="qris-small" alt="QRIS">
+    </div>
     </div>
 
     <div class="product">
@@ -79,6 +218,9 @@
       <div class="price">Rp60.000</div>
       <p>Kuota 11GB + Unlimited SMS & Telpon XL + App Access Gojek.</p>
       <a href="javascript:void(0)" onclick="showDetail('detail-swadaya')" class="buy-btn">Beli Sekarang</a>
+            <p>Scan QRIS untuk pembayaran langsung:</p>
+      <img src="https://e.top4top.io/p_3534j26v51.jpeg" class="qris-small" alt="QRIS">
+    </div>
     </div>
 
     <div class="product">
@@ -86,6 +228,9 @@
       <div class="price">Rp35.000</div>
       <p>Kuota 1GB reguler + 1GB YouTube + 20 menit telpon.</p>
       <a href="javascript:void(0)" onclick="showDetail('detail-promo')" class="buy-btn">Beli Sekarang</a>
+            <p>Scan QRIS untuk pembayaran langsung:</p>
+      <img src="https://e.top4top.io/p_3534j26v51.jpeg" class="qris-small" alt="QRIS">
+    </div>
     </div>
 
     <div class="product">
@@ -93,6 +238,9 @@
       <div class="price">Rp55.000</div>
       <p>Kuota 10GB + WhatsApp, Line + 5 menit telpon semua operator.</p>
       <a href="javascript:void(0)" onclick="showDetail('detail-flex')" class="buy-btn">Beli Sekarang</a>
+            <p>Scan QRIS untuk pembayaran langsung:</p>
+      <img src="https://e.top4top.io/p_3534j26v51.jpeg" class="qris-small" alt="QRIS">
+    </div>
     </div>
 
     <div class="product">
@@ -100,6 +248,9 @@
       <div class="price">Rp25.000</div>
       <p>Unlimited Vidio Quota selama 30 hari.</p>
       <a href="javascript:void(0)" onclick="showDetail('detail-vidio')" class="buy-btn">Beli Sekarang</a>
+            <p>Scan QRIS untuk pembayaran langsung:</p>
+      <img src="https://e.top4top.io/p_3534j26v51.jpeg" class="qris-small" alt="QRIS">
+    </div>
     </div>
 
     <div class="product">
@@ -107,6 +258,9 @@
       <div class="price">Rp10.000</div>
       <p>Kuota 15GB untuk YT, IG, TikTok, FB, WA, Streaming, Games.</p>
       <a href="javascript:void(0)" onclick="showDetail('detail-addon')" class="buy-btn">Beli Sekarang</a>
+            <p>Scan QRIS untuk pembayaran langsung:</p>
+      <img src="https://e.top4top.io/p_3534j26v51.jpeg" class="qris-small" alt="QRIS">
+    </div>
     </div>
   </section>
 
@@ -232,4 +386,4 @@
     <a href="index.html">Kembali ke Menu Utama</a>
   </footer>
 </body>
-</html>
+    </html>
