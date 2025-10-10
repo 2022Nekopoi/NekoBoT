@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>T-STORE - Kuota XL & AXIS</title>
+    <title>T-STORE - Kuota & Aplikasi Premium</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -11,6 +11,7 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
+            background-color: #0A183E;
             background-image: url('https://placehold.co/1920x1080/0A183E/4B0082?text=Koneksi+Cyber+XL+%26+AXIS');
             background-size: cover;
             background-position: center;
@@ -21,6 +22,7 @@
             backdrop-filter: blur(12px);
             border: 1px solid rgba(0, 255, 255, 0.4);
             box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+            border-radius: 1rem;
         }
         .cyber-button {
             background-color: rgba(224, 64, 251, 0.2);
@@ -39,29 +41,20 @@
             border: 1px solid #00FFFF;
             color: #00FFFF;
         }
-        .info-button:hover {
-            background-color: #00FFFF;
-            color: #0A183E;
+        .app-button {
+            background-color: rgba(255, 215, 0, 0.15);
+            border: 1px solid #FFD700;
+            color: #FFD700;
         }
         .product-card {
-             position: relative;
-             border: 1px solid rgba(0, 255, 255, 0.2);
              transition: all 0.3s ease;
              display: flex;
              flex-direction: column;
-             padding-top: 2.5rem;
         }
         .product-card:hover {
             border-color: rgba(0, 255, 255, 0.8);
             box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
-        }
-        .provider-logo-container {
-            position: absolute;
-            top: 0.75rem;
-            right: 0.75rem;
-            display: flex;
-            gap: 0.5rem;
-            align-items: center;
+            transform: translateY(-5px);
         }
         .provider-logo {
             height: 20px;
@@ -69,6 +62,7 @@
         }
         .modal-overlay {
             z-index: 50;
+            overflow-y: auto;
         }
         .payment-button {
              background-color: rgba(0, 255, 255, 0.1);
@@ -81,195 +75,118 @@
             color: #0A183E;
             font-weight: bold;
         }
+        .accordion-header svg {
+            transition: transform 0.3s ease;
+        }
+        .accordion-body {
+            transition: max-height 0.5s ease-in-out, padding-top 0.5s ease-in-out;
+            max-height: 0;
+            overflow: hidden;
+            padding-top: 0;
+        }
+        .accordion-body.open {
+            max-height: 1200px; /* Cukup besar untuk menampung konten */
+            padding-top: 1.5rem;
+        }
     </style>
 </head>
 <body class="text-gray-200">
 
-    <div class="container mx-auto p-4 md:p-8">
+    <div class="container mx-auto p-4 md:p-8 max-w-7xl">
         
         <header class="text-center mb-8">
             <h1 class="text-4xl md:text-6xl font-black uppercase text-cyan-300" style="text-shadow: 0 0 10px #00FFFF, 0 0 20px #00FFFF;">T-STORE</h1>
-            <p class="text-lg text-fuchsia-400 mt-2">Solusi Kuota Internet XL & AXIS Tercepat</p>
+            <p class="text-lg text-fuchsia-400 mt-2">Solusi Kuota & Aplikasi Premium Tercepat</p>
         </header>
 
         <main>
             <!-- MENU UTAMA -->
             <section id="main-menu">
-                <div class="cyber-card rounded-lg p-6 mb-8 max-w-2xl mx-auto">
+                <div class="cyber-card p-6 mb-8 max-w-2xl mx-auto">
                     <h2 class="text-2xl font-bold text-cyan-300 mb-4 border-b-2 border-cyan-400 pb-2">Informasi Pembayaran</h2>
                     <div class="space-y-3 text-lg">
                         <p><strong class="text-cyan-400">Bank:</strong> Seabank</p>
                         <p><strong class="text-cyan-400">No. Rekening:</strong> 901030212504</p>
                         <p><strong class="text-cyan-400">Atas Nama:</strong> GAGAT GINATA</p>
-                        <p class="text-sm text-fuchsia-300 pt-2 border-t border-fuchsia-500/20"><strong>Info:</strong> Pembayaran via QRIS juga tersedia (pilih saat checkout).</p>
+                        <p class="text-sm text-fuchsia-300 pt-2 border-t border-fuchsia-500/20"><strong>Info:</strong> Pembayaran via QRIS juga tersedia.</p>
                     </div>
                 </div>
-                <div class="cyber-card rounded-lg p-6 max-w-2xl mx-auto text-center">
-                    <h2 class="text-2xl font-bold text-cyan-300 mb-4">Pilih Kategori Produk</h2>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <button id="show-otp-button" class="cyber-button font-bold text-xl py-6 rounded-lg w-full">PRODUK OTP</button>
-                        <button id="show-non-otp-button" class="cyber-button font-bold text-xl py-6 rounded-lg w-full">PRODUK NON-OTP</button>
+                <div class="cyber-card p-6 max-w-2xl mx-auto text-center">
+                    <h2 class="text-2xl font-bold text-cyan-300 mb-5">Pilih Kategori Produk</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <button id="show-otp-button" class="cyber-button font-bold text-base py-5 rounded-xl w-full">PRODUK OTP</button>
+                        <button id="show-non-otp-button" class="cyber-button info-button font-bold text-base py-5 rounded-xl w-full">PRODUK NON-OTP</button>
+                        <button id="show-app-button" class="cyber-button app-button font-bold text-base py-5 rounded-xl w-full">APLIKASI PREMIUM</button>
                     </div>
-                    <h2 class="text-xl font-bold text-cyan-300 my-4 pt-4 border-t border-cyan-500/30">Menu Bantuan</h2>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <a href="https://xlstock.serversaya.site/" target="_blank" rel="noopener noreferrer" class="cyber-button info-button font-bold text-lg py-3 rounded-lg w-full block text-center">Cek Stok Produk</a>
-                        <a href="https://jeelsboobz.store/sidompul" target="_blank" rel="noopener noreferrer" class="cyber-button info-button font-bold text-lg py-3 rounded-lg w-full block text-center">Cek Area Akrab</a>
+                    <h2 class="text-xl font-bold text-cyan-300 my-4 pt-4 border-t border-cyan-500/30">Menu Lainnya</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <a href="https://xlstock.serversaya.site/" target="_blank" rel="noopener noreferrer" class="cyber-button info-button font-semibold py-3 rounded-xl w-full block text-center">Cek Stok</a>
+                        <a href="https://jeelsboobz.store/sidompul" target="_blank" rel="noopener noreferrer" class="cyber-button info-button font-semibold py-3 rounded-xl w-full block text-center">Cek Area</a>
+                        <button id="show-history-button" class="cyber-button info-button font-semibold py-3 rounded-xl w-full">Riwayat</button>
                     </div>
-                </div>
-                <div class="cyber-card rounded-lg p-6 max-w-2xl mx-auto mt-8">
-                    <h2 class="text-2xl font-bold text-center text-cyan-300 mb-4 border-b-2 border-cyan-400 pb-2">Visi & Misi T-STORE</h2>
-                    <div class="mt-4"><h3 class="text-xl font-bold text-fuchsia-400 mb-2">Visi</h3><p class="text-gray-300">Menjadi penyedia kuota digital terpercaya dengan layanan tercepat dan termudah di Indonesia.</p></div>
-                    <div class="mt-6"><h3 class="text-xl font-bold text-fuchsia-400 mb-2">Misi</h3><ul class="list-disc list-inside space-y-2 text-gray-300"><li>Menyediakan produk kuota XL & AXIS terlengkap dengan harga kompetitif.</li><li>Memberikan proses transaksi yang instan, aman, dan tanpa ribet.</li><li>Membangun kepercayaan pelanggan melalui pelayanan yang responsif dan solutif.</li></ul></div>
                 </div>
             </section>
             
             <!-- Halaman Produk OTP -->
             <section id="otp-section" class="hidden">
-                 <button class="back-button cyber-button font-bold py-2 px-4 rounded-md mb-6">← Kembali ke Menu Utama</button>
-                <h2 class="text-3xl font-bold text-center mb-6 text-fuchsia-400" style="text-shadow: 0 0 8px #E040FB;">DAFTAR PRODUK OTP</h2>
-                
-                <div class="cyber-card rounded-lg p-4 mb-8 text-center bg-amber-900/50 border-amber-500 max-w-3xl mx-auto">
-                    <h3 class="font-bold text-amber-400">PENTING</h3>
-                    <p class="text-sm text-gray-300 mt-1">Semua produk di halaman ini hanya berlaku untuk kartu prabayar XL.</p>
+                 <button class="back-button cyber-button font-bold py-2 px-6 rounded-xl mb-6">← Kembali</button>
+                <h2 class="text-3xl font-bold text-center mb-6 text-fuchsia-400">PRODUK OTP</h2>
+                <div class="cyber-card p-4 mb-8 text-center bg-red-900/50 border-red-500 max-w-3xl mx-auto">
+                    <h3 class="font-bold text-red-400">PERHATIAN PENTING!</h3>
+                    <p class="text-sm text-gray-300 mt-2">Produk di halaman ini memerlukan proses OTP manual. <strong class="text-yellow-300 block mt-1">Setelah pembayaran berhasil, Anda WAJIB menghubungi Admin untuk menyelesaikan proses OTP.</strong></p>
                 </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
-                    <div class="cyber-card rounded-lg p-6 product-card"><div class="provider-logo-container"><img src="https://b.top4top.io/p_3569f76th1.png" alt="Logo XL" class="provider-logo"></div><h3 class="text-2xl font-bold text-fuchsia-400">REDY Masa Aktif XL 1 Tahun</h3><p class="text-4xl font-black text-cyan-300 my-4">Rp 10.000</p><ul class="space-y-2 text-gray-300 flex-grow"><li>➡️ Perpanjang Masa Aktif 30 Hari</li><li>🎁 60GB Bundling</li><li>📱 45GB/Tahun</li><li>▶️ 36GB YouTube Setahun</li></ul><p class="text-xs text-amber-400 mt-4 border-t border-amber-400/20 pt-2"><strong>PENTING:</strong> Hanya untuk mengembalikan masa aktif kartu XL ke 30 hari, bukan mengakumulasinya.</p><button class="buy-button mt-6 w-full cyber-button font-bold py-3 rounded-md" data-product="Masa Aktif XL 1 Tahun - 10K" data-price="10000">Beli Sekarang</button></div>
-                    <div class="cyber-card rounded-lg p-6 product-card"><div class="provider-logo-container"><img src="https://b.top4top.io/p_3569f76th1.png" alt="Logo XL" class="provider-logo"></div><h3 class="text-2xl font-bold text-fuchsia-400">Xtra Combo Plus Add-On</h3><p class="text-4xl font-black text-cyan-300 my-4">Rp 9.000 <span class="text-lg">/ item</span></p><div class="space-y-2 text-gray-300 flex-grow"><p>📺 YouTube 15GB</p><p>📷 Instagram 15GB</p><p>🎵 TikTok 15GB</p><p>📘 Facebook 15GB</p><p>💬 WhatsApp 15GB</p><p>🎬 Streaming 15GB</p><p>🌐 Social Media 15GB</p></div><button class="buy-button mt-6 w-full cyber-button font-bold py-3 rounded-md" data-product="Xtra Combo Plus Add-On - 9K (Sebutkan pilihan di WA)" data-price="9000">Beli Sekarang</button></div>
-                </div>
-
-                <!-- PRODUK ADD ON & SPESIAL -->
-                <h2 class="text-3xl font-bold text-center mb-6 text-yellow-300" style="text-shadow: 0 0 8px #FFD700;">🌟 PRODUK ADD ON & PAKET SPESIAL 🌟</h2>
-                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                    <!-- Card 1: Masa Aktif 30 Hari -->
-                    <div class="cyber-card rounded-lg p-6 product-card">
-                        <div class="provider-logo-container"><img src="https://b.top4top.io/p_3569f76th1.png" alt="Logo XL" class="provider-logo"></div>
-                        <div class="flex-grow">
-                            <h3 class="text-xl font-bold text-fuchsia-400">Masa Aktif 30 Hari</h3>
-                        </div>
-                        <p class="text-3xl font-black text-cyan-300 my-3">Rp 5.000</p>
-                        <button class="buy-button mt-auto w-full cyber-button font-bold py-2 rounded-md" data-product="Masa Aktif 30 Hari - 5K" data-price="5000">Beli Sekarang</button>
-                    </div>
-                    <!-- Card 2: Masa Aktif 30 Hari + 100MB -->
-                    <div class="cyber-card rounded-lg p-6 product-card">
-                        <div class="provider-logo-container"><img src="https://b.top4top.io/p_3569f76th1.png" alt="Logo XL" class="provider-logo"></div>
-                        <div class="flex-grow">
-                            <h3 class="text-xl font-bold text-fuchsia-400">Masa Aktif 30 Hari + 100MB</h3>
-                        </div>
-                        <p class="text-3xl font-black text-cyan-300 my-3">Rp 5.000</p>
-                        <button class="buy-button mt-auto w-full cyber-button font-bold py-2 rounded-md" data-product="Masa Aktif 30 Hari + 100MB - 5K" data-price="5000">Beli Sekarang</button>
-                    </div>
-                    <!-- Card 3: Masa Aktif 45 Hari + 50GB* -->
-                    <div class="cyber-card rounded-lg p-6 product-card">
-                        <div class="provider-logo-container"><img src="https://b.top4top.io/p_3569f76th1.png" alt="Logo XL" class="provider-logo"></div>
-                        <div class="flex-grow">
-                            <h3 class="text-xl font-bold text-fuchsia-400">Masa Aktif 45 Hari + 50GB*</h3>
-                            <p class="text-xs text-amber-400 mt-2"><strong>Detail:</strong> Membuat masa aktif menjadi 45 hari dari tanggal pembelian. Tidak bisa akumulasi.</p>
-                        </div>
-                        <p class="text-3xl font-black text-cyan-300 my-3">Rp 5.000</p>
-                        <button class="buy-button mt-auto w-full cyber-button font-bold py-2 rounded-md" data-product="Masa Aktif 45 Hari + 50GB* (1) - 5K" data-price="5000">Beli Sekarang</button>
-                    </div>
-                    <!-- Card 4: Masa Aktif 45 Hari + 50GB* -->
-                    <div class="cyber-card rounded-lg p-6 product-card">
-                        <div class="provider-logo-container"><img src="https://b.top4top.io/p_3569f76th1.png" alt="Logo XL" class="provider-logo"></div>
-                        <div class="flex-grow">
-                            <h3 class="text-xl font-bold text-fuchsia-400">Masa Aktif 45 Hari + 50GB*</h3>
-                             <p class="text-xs text-amber-400 mt-2"><strong>Detail:</strong> Membuat masa aktif menjadi 45 hari dari tanggal pembelian. Tidak bisa akumulasi.</p>
-                        </div>
-                        <p class="text-3xl font-black text-cyan-300 my-3">Rp 5.000</p>
-                        <button class="buy-button mt-auto w-full cyber-button font-bold py-2 rounded-md" data-product="Masa Aktif 45 Hari + 50GB* (2) - 5K" data-price="5000">Beli Sekarang</button>
-                    </div>
-                    <!-- Card 5: Add On YouTube 24GB -->
-                    <div class="cyber-card rounded-lg p-6 product-card">
-                        <div class="provider-logo-container"><img src="https://b.top4top.io/p_3569f76th1.png" alt="Logo XL" class="provider-logo"></div>
-                        <div class="flex-grow">
-                            <h3 class="text-xl font-bold text-fuchsia-400">Add On YouTube 24GB</h3>
-                            <ul class="text-xs text-amber-400 mt-2 space-y-1 list-disc list-inside">
-                                <li>Syarat: Punya XC VIP Plus 75GB & sudah ambil bonus addon.</li>
-                                <li>Tidak akumulasi (beli ulang jika habis).</li>
-                                <li>Masa aktif mengikuti paket XC VIP Plus.</li>
-                            </ul>
-                        </div>
-                        <p class="text-3xl font-black text-cyan-300 my-3">Rp 5.000</p>
-                        <button class="buy-button mt-auto w-full cyber-button font-bold py-2 rounded-md" data-product="Add On YouTube 24GB (1) - 5K" data-price="5000">Beli Sekarang</button>
-                    </div>
-                    <!-- Card 6: Add On YouTube 24GB -->
-                    <div class="cyber-card rounded-lg p-6 product-card">
-                        <div class="provider-logo-container"><img src="https://b.top4top.io/p_3569f76th1.png" alt="Logo XL" class="provider-logo"></div>
-                        <div class="flex-grow">
-                            <h3 class="text-xl font-bold text-fuchsia-400">Add On YouTube 24GB</h3>
-                            <ul class="text-xs text-amber-400 mt-2 space-y-1 list-disc list-inside">
-                                <li>Syarat: Punya XC VIP Plus 75GB & sudah ambil bonus addon.</li>
-                                <li>Tidak akumulasi (beli ulang jika habis).</li>
-                                <li>Masa aktif mengikuti paket XC VIP Plus.</li>
-                            </ul>
-                        </div>
-                        <p class="text-3xl font-black text-cyan-300 my-3">Rp 5.000</p>
-                        <button class="buy-button mt-auto w-full cyber-button font-bold py-2 rounded-md" data-product="Add On YouTube 24GB (2) - 5K" data-price="5000">Beli Sekarang</button>
-                    </div>
-                    <!-- Card 7: Add On TikTok 10GB -->
-                    <div class="cyber-card rounded-lg p-6 product-card">
-                        <div class="provider-logo-container"><img src="https://b.top4top.io/p_3569f76th1.png" alt="Logo XL" class="provider-logo"></div>
-                        <div class="flex-grow">
-                            <h3 class="text-xl font-bold text-fuchsia-400">Add On TikTok 10GB</h3>
-                            <ul class="text-xs text-amber-400 mt-2 space-y-1 list-disc list-inside">
-                                <li>Syarat: Punya XC VIP Plus 75GB & sudah ambil bonus addon.</li>
-                                <li>Tidak akumulasi (beli ulang jika habis).</li>
-                                <li>Masa aktif mengikuti paket XC VIP Plus.</li>
-                            </ul>
-                        </div>
-                        <p class="text-3xl font-black text-cyan-300 my-3">Rp 5.000</p>
-                        <button class="buy-button mt-auto w-full cyber-button font-bold py-2 rounded-md" data-product="Add On TikTok 10GB - 5K" data-price="5000">Beli Sekarang</button>
-                    </div>
-                    <!-- Card 8: Add On Facebook 20GB -->
-                    <div class="cyber-card rounded-lg p-6 product-card">
-                        <div class="provider-logo-container"><img src="https://b.top4top.io/p_3569f76th1.png" alt="Logo XL" class="provider-logo"></div>
-                        <div class="flex-grow">
-                            <h3 class="text-xl font-bold text-fuchsia-400">Add On Facebook 20GB</h3>
-                            <ul class="text-xs text-amber-400 mt-2 space-y-1 list-disc list-inside">
-                                <li>Syarat: Punya XC VIP Plus 75GB & sudah ambil bonus addon.</li>
-                                <li>Tidak akumulasi (beli ulang jika habis).</li>
-                                <li>Masa aktif mengikuti paket XC VIP Plus.</li>
-                            </ul>
-                        </div>
-                        <p class="text-3xl font-black text-cyan-300 my-3">Rp 5.000</p>
-                        <button class="buy-button mt-auto w-full cyber-button font-bold py-2 rounded-md" data-product="Add On Facebook 20GB - 5K" data-price="5000">Beli Sekarang</button>
-                    </div>
+                <div id="otp-product-container" class="space-y-6">
+                    <!-- Konten OTP dirender oleh JS -->
                 </div>
             </section>
             
+            <!-- Halaman Produk Non-OTP -->
             <section id="non-otp-section" class="hidden">
-                <button class="back-button cyber-button font-bold py-2 px-4 rounded-md mb-6">← Kembali ke Menu Utama</button>
-                <h2 class="text-3xl font-bold text-center mb-6 text-cyan-300" style="text-shadow: 0 0 8px #00FFFF;">DAFTAR PRODUK NON-OTP</h2>
-                <div class="cyber-card rounded-lg p-4 mb-6 text-center bg-fuchsia-900/50 border-fuchsia-500 max-w-3xl mx-auto"><h3 class="font-bold text-fuchsia-400">Info Penting Paket AKRAB</h3><p class="text-sm text-gray-300 mt-2">Semua Paket Akrab berlaku 24 jam di semua jaringan (2G/3G/4G) selama 28 hari.<strong class="text-amber-400 block mt-1">Pastikan tidak ada paket Akrab lain yang masih aktif sebelum membeli.</strong></p></div>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                    <div class="cyber-card rounded-lg p-6 product-card"><div class="provider-logo-container"><img src="https://b.top4top.io/p_3569f76th1.png" alt="Logo XL" class="provider-logo"><img src="https://a.top4top.io/p_3569qb2pj0.jpeg" alt="Logo AXIS" class="provider-logo"></div><h3 class="text-2xl font-bold text-fuchsia-400">AKRAB SMILL</h3><p class="text-4xl font-black text-cyan-300 my-4">Rp 50.000</p><ul class="space-y-1 text-sm text-gray-300 flex-grow"><li><span class="font-bold text-cyan-400">Area 1:</span> 13GB</li><li><span class="font-bold text-cyan-400">Area 2:</span> 15GB</li><li><span class="font-bold text-cyan-400">Area 3:</span> 20GB</li><li><span class="font-bold text-cyan-400">Area 4:</span> 30GB</li></ul><button class="buy-button mt-6 w-full cyber-button font-bold py-2 rounded-md" data-product="AKRAB SMILL - 50K" data-price="50000">Beli Sekarang</button></div>
-                    <div class="cyber-card rounded-lg p-6 product-card"><div class="provider-logo-container"><img src="https://b.top4top.io/p_3569f76th1.png" alt="Logo XL" class="provider-logo"><img src="https://a.top4top.io/p_3569qb2pj0.jpeg" alt="Logo AXIS" class="provider-logo"></div><h3 class="text-2xl font-bold text-fuchsia-400">AKRAB SMILL</h3><p class="text-4xl font-black text-cyan-300 my-4">Rp 53.000</p><ul class="space-y-1 text-sm text-gray-300 flex-grow"><li><span class="font-bold text-cyan-400">Area 1:</span> 19GB</li><li><span class="font-bold text-cyan-400">Area 2:</span> 21GB</li><li><span class="font-bold text-cyan-400">Area 3:</span> 26GB</li><li><span class="font-bold text-cyan-400">Area 4:</span> 36GB</li></ul><button class="buy-button mt-6 w-full cyber-button font-bold py-2 rounded-md" data-product="AKRAB SMILL - 53K" data-price="53000">Beli Sekarang</button></div>
-                    <div class="cyber-card rounded-lg p-6 product-card"><div class="provider-logo-container"><img src="https://b.top4top.io/p_3569f76th1.png" alt="Logo XL" class="provider-logo"><img src="https://a.top4top.io/p_3569qb2pj0.jpeg" alt="Logo AXIS" class="provider-logo"></div><h3 class="text-2xl font-bold text-fuchsia-400">AKRAB LITE</h3><p class="text-4xl font-black text-cyan-300 my-4">Rp 60.000</p><ul class="space-y-1 text-sm text-gray-300 flex-grow"><li><span class="font-bold text-cyan-400">Area 1:</span> 31GB</li><li><span class="font-bold text-cyan-400">Area 2:</span> 32GB</li><li><span class="font-bold text-cyan-400">Area 3:</span> 38GB</li><li><span class="font-bold text-cyan-400">Area 4:</span> 48GB</li></ul><button class="buy-button mt-6 w-full cyber-button font-bold py-2 rounded-md" data-product="AKRAB LITE - 60K" data-price="60000">Beli Sekarang</button></div>
-                    <div class="cyber-card rounded-lg p-6 product-card"><div class="provider-logo-container"><img src="https://b.top4top.io/p_3569f76th1.png" alt="Logo XL" class="provider-logo"><img src="https://a.top4top.io/p_3569qb2pj0.jpeg" alt="Logo AXIS" class="provider-logo"></div><h3 class="text-2xl font-bold text-fuchsia-400">AKRAB MID</h3><p class="text-4xl font-black text-cyan-300 my-4">Rp 65.000</p><ul class="space-y-1 text-sm text-gray-300 flex-grow"><li><span class="font-bold text-cyan-400">Area 1:</span> 38GB</li><li><span class="font-bold text-cyan-400">Area 2:</span> 40GB</li><li><span class="font-bold text-cyan-400">Area 3:</span> 45GB</li><li><span class="font-bold text-cyan-400">Area 4:</span> 55GB</li></ul><button class="buy-button mt-6 w-full cyber-button font-bold py-2 rounded-md" data-product="AKRAB MID - 65K" data-price="65000">Beli Sekarang</button></div>
-                    <div class="cyber-card rounded-lg p-6 product-card"><div class="provider-logo-container"><img src="https://b.top4top.io/p_3569f76th1.png" alt="Logo XL" class="provider-logo"><img src="https://a.top4top.io/p_3569qb2pj0.jpeg" alt="Logo AXIS" class="provider-logo"></div><h3 class="text-2xl font-bold text-fuchsia-400">AKRAB MAX</h3><p class="text-4xl font-black text-cyan-300 my-4">Rp 85.000</p><ul class="space-y-1 text-sm text-gray-300 flex-grow"><li><span class="font-bold text-cyan-400">Area 1:</span> 63GB</li><li><span class="font-bold text-cyan-400">Area 2:</span> 65GB</li><li><span class="font-bold text-cyan-400">Area 3:</span> 70GB</li><li><span class="font-bold text-cyan-400">Area 4:</span> 80GB</li></ul><button class="buy-button mt-6 w-full cyber-button font-bold py-2 rounded-md" data-product="AKRAB MAX - 85K" data-price="85000">Beli Sekarang</button></div>
-                    <div class="cyber-card rounded-lg p-6 product-card"><div class="provider-logo-container"><img src="https://b.top4top.io/p_3569f76th1.png" alt="Logo XL" class="provider-logo"><img src="https://a.top4top.io/p_3569qb2pj0.jpeg" alt="Logo AXIS" class="provider-logo"></div><h3 class="text-2xl font-bold text-fuchsia-400">AKRAB LARGE</h3><p class="text-4xl font-black text-cyan-300 my-4">Rp 110.000</p><ul class="space-y-1 text-sm text-gray-300 flex-grow"><li><span class="font-bold text-cyan-400">Area 1:</span> 88GB</li><li><span class="font-bold text-cyan-400">Area 2:</span> 90GB</li><li><span class="font-bold text-cyan-400">Area 3:</span> 95GB</li><li><span class="font-bold text-cyan-400">Area 4:</span> 105GB</li></ul><button class="buy-button mt-6 w-full cyber-button font-bold py-2 rounded-md" data-product="AKRAB LARGE - 110K" data-price="110000">Beli Sekarang</button></div>
-                    <div class="cyber-card rounded-lg p-6 product-card"><div class="provider-logo-container"><img src="https://b.top4top.io/p_3569f76th1.png" alt="Logo XL" class="provider-logo"></div><h3 class="text-2xl font-bold text-fuchsia-400">BEBAS PUAS 75GB+</h3><p class="text-4xl font-black text-cyan-300 my-4">Rp 105.000</p><ul class="space-y-2 text-gray-300 flex-grow"><li><span class="text-cyan-400">✓</span> Kuota 75GB tanpa pembagian area</li><li><span class="text-cyan-400">✓</span> Bonus hingga 90GB di area tertentu</li></ul><p class="text-xs text-amber-400 mt-4 border-t border-amber-400/20 pt-2">Paket Garansi Resmi</p><button class="buy-button mt-6 w-full cyber-button font-bold py-2 rounded-md" data-product="Bebas Puas 75GB+ - 105K" data-price="105000">Beli Sekarang</button></div>
-                    <div class="cyber-card rounded-lg p-6 product-card"><div class="provider-logo-container"><img src="https://b.top4top.io/p_3569f76th1.png" alt="Logo XL" class="provider-logo"></div><h3 class="text-2xl font-bold text-fuchsia-400">BEBAS PUAS 234GB+</h3><p class="text-4xl font-black text-cyan-300 my-4">Rp 165.000</p><ul class="space-y-2 text-gray-300 flex-grow"><li><span class="text-cyan-400">✓</span> Kuota 234GB tanpa pembagian area</li><li><span class="text-cyan-400">✓</span> Bonus hingga 270GB di area tertentu</li></ul><p class="text-xs text-amber-400 mt-4 border-t border-amber-400/20 pt-2">Paket Garansi Resmi</p<button class="buy-button mt-6 w-full cyber-button font-bold py-2 rounded-md" data-product="Bebas Puas 234GB+ - 165K" data-price="165000">Beli Sekarang</button></div>
+                <button class="back-button cyber-button font-bold py-2 px-6 rounded-xl mb-6">← Kembali</button>
+                <h2 class="text-3xl font-bold text-center mb-6 text-cyan-300">PRODUK NON-OTP</h2>
+                 <div id="non-otp-product-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                    <!-- Cards Produk Non-OTP dirender oleh JS -->
+                </div>
+            </section>
+
+            <!-- HALAMAN APLIKASI PREMIUM -->
+            <section id="app-section" class="hidden">
+                <button class="back-button cyber-button font-bold py-2 px-6 rounded-xl mb-6">← Kembali</button>
+                <h2 class="text-3xl font-bold text-center mb-6 text-yellow-300">APLIKASI PREMIUM</h2>
+                <div class="cyber-card p-4 mb-8 text-center bg-green-900/50 border-green-500 max-w-3xl mx-auto">
+                    <h3 class="font-bold text-green-400">PENTING: Info Aplikasi</h3>
+                    <p class="text-sm text-gray-300 mt-2">Produk di halaman ini bukan berbentuk AKUN, melainkan APLIKASI yang sudah dimodifikasi.<strong class="text-yellow-300 block mt-1">Anda hanya perlu install dan langsung pakai, tidak perlu repot ganti-ganti akun.</strong></p>
+                </div>
+                 <div id="app-product-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+                    <!-- Cards Aplikasi dirender oleh JS -->
+                </div>
+            </section>
+
+             <!-- HALAMAN RIWAYAT TRANSAKSI -->
+            <section id="history-section" class="hidden">
+                <button class="back-button cyber-button font-bold py-2 px-6 rounded-xl mb-6">← Kembali</button>
+                <h2 class="text-3xl font-bold text-center mb-6 text-cyan-300">Riwayat Transaksi Anda</h2>
+                <div id="history-list" class="space-y-4 max-w-4xl mx-auto">
+                    <!-- Riwayat akan dimuat di sini oleh JavaScript -->
                 </div>
             </section>
         </main>
     </div>
 
-    <!-- Modal Pembayaran -->
-    <div id="purchase-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 hidden modal-overlay">
-        <div class="cyber-card rounded-lg p-6 md:p-8 max-w-lg w-full relative">
-            <button id="close-modal" class="absolute top-4 right-4 text-gray-400 hover:text-white text-2xl">&times;</button>
-            <h2 class="text-3xl font-bold text-cyan-300 mb-2">Langkah Pembayaran</h2>
-            <p class="mb-6 text-gray-300">Untuk membeli: <strong id="modal-product-name" class="text-fuchsia-400"></strong></p>
+    <!-- Modal 1: Pembayaran -->
+    <div id="payment-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-start justify-center p-4 py-8 overflow-y-auto hidden modal-overlay">
+        <div class="cyber-card p-6 md:p-8 max-w-lg w-full relative">
+            <button class="close-modal absolute top-4 right-4 text-gray-400 hover:text-white text-3xl">&times;</button>
+            <h2 class="text-3xl font-bold text-cyan-300 mb-2">Langkah 1: Pembayaran</h2>
+            <p class="mb-6 text-gray-300">Membeli: <strong id="payment-modal-product-name" class="text-fuchsia-400 font-semibold"></strong></p>
             <div class="space-y-6">
                 <div>
-                    <h3 class="text-xl font-bold text-cyan-400 mb-3">Langkah 1: Pilih Metode & Lakukan Pembayaran</h3>
+                    <h3 class="text-xl font-bold text-cyan-400 mb-3">Pilih Metode Pembayaran</h3>
                     <div class="grid grid-cols-2 gap-4">
-                        <button id="payment-bank-btn" class="payment-button font-bold py-3 rounded-md">Transfer Bank</button>
-                        <button id="payment-qris-btn" class="payment-button font-bold py-3 rounded-md">QRIS</button>
+                        <button id="payment-bank-btn" class="payment-button font-semibold py-3 rounded-lg">Transfer Bank</button>
+                        <button id="payment-qris-btn" class="payment-button font-semibold py-3 rounded-lg">QRIS</button>
                     </div>
-                     <div id="payment-error" class="text-red-400 text-sm mt-2 hidden text-center">Silakan pilih metode pembayaran.</div>
+                    <div id="payment-error" class="text-red-400 text-sm mt-2 hidden text-center">Silakan pilih metode pembayaran.</div>
                     <div id="bank-details" class="hidden mt-4 border border-cyan-500 rounded-lg p-4 bg-gray-900/50">
                         <p>Silakan transfer ke rekening berikut:</p>
                         <p class="mt-2"><strong class="text-gray-400">Bank:</strong> Seabank</p>
@@ -277,174 +194,186 @@
                         <p><strong class="text-gray-400">Atas Nama:</strong> GAGAT GINATA</p>
                     </div>
                     <div id="qris-details" class="hidden mt-4 text-center">
-                        <p class="mb-2">Scan QR Code ini menggunakan M-Banking atau E-Wallet Anda.</p>
-                        <img src="https://l.top4top.io/p_35692pj055.png" alt="QRIS T-STORE" class="mx-auto rounded-lg max-w-xs w-full bg-white p-2">
+                        <p class="mb-2">Scan QR Code ini.</p>
+                        <img src="https://l.top4top.io/p_35692pj055.png" alt="QRIS T-STORE" class="mx-auto rounded-lg max-w-xs w-full bg-white p-2 border">
                     </div>
                     <div class="mt-4 border-t border-cyan-500/50 pt-3 text-center">
-                         <p class="text-xs text-amber-300 mb-2">PENTING: Mohon transfer sesuai jumlah di bawah ini (termasuk 2 digit terakhir) untuk verifikasi otomatis.</p>
-                        <p class="text-lg">Total yang harus dibayar:</p>
-                        <p id="modal-product-price" class="text-3xl font-bold text-fuchsia-400"></p>
+                        <p class="text-sm text-yellow-400 mb-2">PENTING: Mohon transfer sesuai total (termasuk 2 digit unik).</p>
+                        <p class="text-lg">Total Bayar:</p>
+                        <p id="payment-modal-price" class="text-4xl font-extrabold text-fuchsia-400"></p>
                     </div>
                 </div>
                 <div>
-                    <h3 class="text-xl font-bold text-cyan-400 mb-2">Langkah 2: Isi Nomor Tujuan</h3>
-                    <input type="tel" id="phone-number" class="bg-gray-900/50 border border-cyan-500 text-white text-lg rounded-lg focus:ring-fuchsia-500 focus:border-fuchsia-500 block w-full p-2.5" placeholder="0878..." required>
-                    <div id="phone-error" class="text-red-400 text-sm mt-2 hidden">Nomor telepon tidak boleh kosong.</div>
-                </div>
-                <div>
-                    <h3 class="text-xl font-bold text-cyan-400 mb-2">Langkah 3: Konfirmasi via WhatsApp</h3>
-                    <p class="text-xs text-amber-300 mb-4">Setelah transfer berhasil, klik tombol di bawah ini. Jangan lupa untuk <strong class="uppercase">melampirkan bukti transfer</strong> Anda di chat WhatsApp.</p>
-                    <button id="confirm-purchase" class="w-full cyber-button font-bold py-3 text-lg rounded-md">Kirim Konfirmasi ke Admin</button>
+                    <button id="payment-complete-button" class="w-full cyber-button font-bold py-3 text-lg rounded-xl">Saya Sudah Bayar & Lanjutkan</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- POP-UP PEMBERITAHUAN UPDATE -->
-    <div id="update-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 hidden modal-overlay">
-        <div class="cyber-card rounded-lg p-6 md:p-8 max-w-lg w-full relative text-center">
-            <h2 id="update-title" class="text-3xl font-bold text-cyan-300 mb-4"></h2>
-            <p id="update-message" class="text-gray-300 mb-6 whitespace-pre-line"></p>
-            <button id="close-update-modal" class="cyber-button font-bold py-2 px-8 rounded-md">Mengerti</button>
+    <!-- Modal 2: Konfirmasi -->
+    <div id="confirmation-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-start justify-center p-4 py-8 overflow-y-auto hidden modal-overlay">
+        <div class="cyber-card p-6 md:p-8 max-w-lg w-full relative">
+            <button class="close-modal absolute top-4 right-4 text-gray-400 hover:text-white text-3xl">&times;</button>
+            <h2 class="text-3xl font-bold text-cyan-300 mb-2">Langkah 2: Konfirmasi</h2>
+            <p class="mb-6 text-gray-300">Konfirmasi untuk: <strong id="confirmation-modal-product-name" class="text-fuchsia-400 font-semibold"></strong></p>
+            <div class="space-y-6">
+                <div>
+                    <h3 id="phone-number-label" class="text-xl font-bold text-cyan-400 mb-2">Isi Tujuan</h3>
+                    <input type="text" id="phone-number" class="bg-gray-900/50 border border-cyan-500 text-white text-lg rounded-lg focus:ring-fuchsia-500 focus:border-fuchsia-500 block w-full p-2.5" placeholder="Nomor HP atau Email" required>
+                    <div id="phone-error" class="text-red-400 text-sm mt-2 hidden">Input tidak boleh kosong.</div>
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold text-cyan-400 mb-2">Hubungi Admin</h3>
+                    <p class="text-sm text-gray-400 mb-4">Klik tombol di bawah untuk mengirim detail pesanan ke Admin. Jangan lupa lampirkan bukti transfer Anda di WhatsApp.</p>
+                    <button id="confirm-purchase-button" class="w-full cyber-button font-bold py-3 text-lg rounded-xl">Kirim Konfirmasi ke Admin</button>
+                </div>
+            </div>
         </div>
     </div>
     
     <script>
-        // --- PENGATURAN POP-UP PEMBERITAHUAN ---
-        const tampilkanPopupUpdate = false;
-        const judulUpdate = "🎉 Update Terbaru T-STORE!";
-        const pesanUpdate = "Ada penambahan produk baru di kategori Non-OTP dan penyesuaian harga.\n\nSilakan cek sekarang!";
-        
-        // --- LOGIKA APLIKASI ---
-        const mainMenu = document.getElementById('main-menu');
-        const otpSection = document.getElementById('otp-section');
-        const nonOtpSection = document.getElementById('non-otp-section');
-        const showOtpButton = document.getElementById('show-otp-button');
-        const showNonOtpButton = document.getElementById('show-non-otp-button');
-        const backButtons = document.querySelectorAll('.back-button');
-
-        function hideAllSections() {
-            mainMenu.classList.add('hidden');
-            otpSection.classList.add('hidden');
-            nonOtpSection.classList.add('hidden');
-        }
-
-        showOtpButton.addEventListener('click', () => { hideAllSections(); otpSection.classList.remove('hidden'); });
-        showNonOtpButton.addEventListener('click', () => { hideAllSections(); nonOtpSection.classList.remove('hidden'); });
-        backButtons.forEach(button => {
-            button.addEventListener('click', () => { hideAllSections(); mainMenu.classList.remove('hidden'); });
-        });
-        
-        const purchaseModal = document.getElementById('purchase-modal');
-        const closeModalButton = document.getElementById('close-modal');
-        const buyButtons = document.querySelectorAll('.buy-button');
-        const confirmPurchaseButton = document.getElementById('confirm-purchase');
-        const modalProductName = document.getElementById('modal-product-name');
-        const modalProductPrice = document.getElementById('modal-product-price');
-        const phoneNumberInput = document.getElementById('phone-number');
-        const phoneError = document.getElementById('phone-error');
-        const paymentError = document.getElementById('payment-error');
-        
-        const paymentBankBtn = document.getElementById('payment-bank-btn');
-        const paymentQrisBtn = document.getElementById('payment-qris-btn');
-        const bankDetails = document.getElementById('bank-details');
-        const qrisDetails = document.getElementById('qris-details');
-
-        let selectedProduct = '';
-        let selectedPrice = 0;
-        let uniqueCode = 0;
-        let finalPrice = 0;
-        let orderTime = '';
-        let selectedPaymentMethod = '';
         const adminWhatsAppNumber = '6287859569780';
-
-        function resetPaymentSelection() {
-            paymentBankBtn.classList.remove('active-payment-button');
-            paymentQrisBtn.classList.remove('active-payment-button');
-            bankDetails.classList.add('hidden');
-            qrisDetails.classList.add('hidden');
-            selectedPaymentMethod = '';
-            paymentError.classList.add('hidden');
+        const products = {
+            otp: [
+                { name: "Masa Aktif XL 1 Thn", price: 10000, desc: "<ul><li>➡️ Perpanjang Aktif 30 Hari</li><li>🎁 60GB Bundling</li><li>📱 45GB/Tahun</li><li>▶️ 36GB YouTube/Tahun</li></ul><p class='text-xs text-yellow-400 mt-2 pt-2 border-t border-yellow-400/20'><strong>Catatan:</strong> Hanya mengembalikan masa aktif ke 30 hari, tidak akumulasi.</p>", logo: "xl" },
+                { name: "Xtra Combo+ Add-On", price: 9000, desc: "<div class='text-sm'><p>📺 YouTube 15GB</p><p>📷 Instagram 15GB</p><p>🎵 TikTok 15GB</p><p>📘 Facebook 15GB</p><p>💬 WhatsApp 15GB</p><p>🎬 Streaming 15GB</p><p>🌐 Social Media 15GB</p></div>", logo: "xl", priceSuffix: "/ item" }
+            ],
+            masaAktifSpesial: [
+                 { name: "Masa Aktif 30 Hari", price: 5000, desc: "" }, { name: "Aktif 30 Hr + 100MB", price: 5000, desc: "" },
+                 { name: "Aktif 45 Hr + 50GB*", price: 5000, desc: "<p class='text-xs text-yellow-400 mt-1'><strong>Detail:</strong> Jadi 45 hari dari tgl beli. Tidak akumulasi.</p>" },
+                 { name: "Aktif 45 Hr + 50GB*", price: 5000, desc: "<p class='text-xs text-yellow-400 mt-1'><strong>Detail:</strong> Jadi 45 hari dari tgl beli. Tidak akumulasi.</p>" }
+            ],
+            addOnAplikasi: [
+                 { name: "Add On Youtube 24GB", price: 5000, desc: "<ul class='text-xs text-yellow-400 mt-1 list-disc list-inside'><li>Syarat: Punya XC VIP Plus 75GB & addon diambil.</li><li>Tidak akumulasi.</li><li>Aktif ikut paket utama.</li></ul>" },
+                 { name: "Add On Youtube 24GB", price: 5000, desc: "<ul class='text-xs text-yellow-400 mt-1 list-disc list-inside'><li>Syarat: Punya XC VIP Plus 75GB & addon diambil.</li><li>Tidak akumulasi.</li><li>Aktif ikut paket utama.</li></ul>" },
+                 { name: "Add On TikTok 10GB", price: 5000, desc: "<ul class='text-xs text-yellow-400 mt-1 list-disc list-inside'><li>Syarat: Punya XC VIP Plus 75GB & addon diambil.</li><li>Tidak akumulasi.</li><li>Aktif ikut paket utama.</li></ul>" },
+                 { name: "Add On Facebook 20GB", price: 5000, desc: "<ul class='text-xs text-yellow-400 mt-1 list-disc list-inside'><li>Syarat: Punya XC VIP Plus 75GB & addon diambil.</li><li>Tidak akumulasi.</li><li>Aktif ikut paket utama.</li></ul>" }
+            ],
+            nonOtp: [
+                { name: "AKRAB SMILL", price: 50000, desc: "<ul><li><span class='font-semibold text-cyan-400'>Area 1:</span> 13GB</li><li><span class='font-semibold text-cyan-400'>Area 2:</span> 15GB</li><li><span class='font-semibold text-cyan-400'>Area 3:</span> 20GB</li><li><span class='font-semibold text-cyan-400'>Area 4:</span> 30GB</li></ul>" },
+                { name: "AKRAB SMILL", price: 53000, desc: "<ul><li><span class='font-semibold text-cyan-400'>Area 1:</span> 19GB</li><li><span class='font-semibold text-cyan-400'>Area 2:</span> 21GB</li><li><span class='font-semibold text-cyan-400'>Area 3:</span> 26GB</li><li><span class='font-semibold text-cyan-400'>Area 4:</span> 36GB</li></ul>" },
+                { name: "AKRAB LITE", price: 60000, desc: "<ul><li><span class='font-semibold text-cyan-400'>Area 1:</span> 31GB</li><li><span class='font-semibold text-cyan-400'>Area 2:</span> 32GB</li><li><span class='font-semibold text-cyan-400'>Area 3:</span> 38GB</li><li><span class='font-semibold text-cyan-400'>Area 4:</span> 48GB</li></ul>" },
+                { name: "AKRAB MID", price: 65000, desc: "<ul><li><span class='font-semibold text-cyan-400'>Area 1:</span> 38GB</li><li><span class='font-semibold text-cyan-400'>Area 2:</span> 40GB</li><li><span class='font-semibold text-cyan-400'>Area 3:</span> 45GB</li><li><span class='font-semibold text-cyan-400'>Area 4:</span> 55GB</li></ul>" },
+                { name: "AKRAB MAX", price: 85000, desc: "<ul><li><span class='font-semibold text-cyan-400'>Area 1:</span> 63GB</li><li><span class='font-semibold text-cyan-400'>Area 2:</span> 65GB</li><li><span class='font-semibold text-cyan-400'>Area 3:</span> 70GB</li><li><span class='font-semibold text-cyan-400'>Area 4:</span> 80GB</li></ul>" },
+                { name: "AKRAB LARGE", price: 110000, desc: "<ul><li><span class='font-semibold text-cyan-400'>Area 1:</span> 88GB</li><li><span class='font-semibold text-cyan-400'>Area 2:</span> 90GB</li><li><span class='font-semibold text-cyan-400'>Area 3:</span> 95GB</li><li><span class='font-semibold text-cyan-400'>Area 4:</span> 105GB</li></ul>" },
+                { name: "BEBAS PUAS 75GB+", price: 105000, desc: "<ul><li>✓ Kuota 75GB (All Area)</li><li>✓ Bonus s/d 90GB</li></ul><p class='text-xs text-gray-400 mt-2 pt-2 border-t border-gray-700'>Paket Garansi Resmi</p>", logo: "xl" },
+                { name: "BEBAS PUAS 234GB+", price: 165000, desc: "<ul><li>✓ Kuota 234GB (All Area)</li><li>✓ Bonus s/d 270GB</li></ul><p class='text-xs text-gray-400 mt-2 pt-2 border-t border-gray-700'>Paket Garansi Resmi</p>", logo: "xl" }
+            ],
+            app: [
+                { name: "Capcut Premium", price: 5000 }, { name: "VPN Premium", price: 5000 },
+                { name: "Joox Premium", price: 5000 }, { name: "Iflix Premium", price: 5000 },
+                { name: "ChatGPT Premium", price: 5000 }, { name: "Telegram Premium", price: 5000 }
+            ]
+        };
+        const logoUrls = { xl: "https://b.top4top.io/p_3569f76th1.png", axis: "https://a.top4top.io/p_3569qb2pj0.jpeg" };
+        
+        function createProductCard(product) {
+            const isAkrab = product.name.includes("AKRAB");
+            const logoHtml = product.logo === "xl" ? `<div class="absolute top-4 right-4 flex gap-2 items-center"><img src="${logoUrls.xl}" alt="Logo XL" class="provider-logo"></div>` : isAkrab ? `<div class="absolute top-4 right-4 flex gap-2 items-center"><img src="${logoUrls.xl}" alt="Logo XL" class="provider-logo"><img src="${logoUrls.axis}" alt="Logo AXIS" class="provider-logo"></div>` : "";
+            const priceHtml = `<p class="text-3xl font-black text-cyan-300 my-3">Rp ${product.price.toLocaleString('id-ID')}<span class="text-xl font-semibold text-gray-400">${product.priceSuffix || ''}</span></p>`;
+            return `<div class="cyber-card product-card p-6 relative">${logoHtml}<div class="flex-grow"><h3 class="text-xl font-bold text-fuchsia-400">${product.name}</h3>${priceHtml}<div class="text-sm text-gray-300 space-y-1">${product.desc || ''}</div></div><button class="buy-button mt-6 w-full cyber-button font-bold py-2 rounded-lg" data-product="${product.name}" data-price="${product.price}">Beli Sekarang</button></div>`;
         }
+        
+        const otpProductContainer = document.getElementById('otp-product-container');
+        otpProductContainer.innerHTML = `
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                ${products.otp.map(createProductCard).join('')}
+            </div>
+            <div class="mt-8">
+                <button class="accordion-header w-full text-left text-2xl font-bold text-yellow-300 p-4 border border-yellow-500 rounded-lg flex justify-between items-center">
+                    <span>🌟 Add On & Paket Spesial 🌟</span>
+                    <svg class="w-6 h-6 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                </button>
+                <div class="accordion-body">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                        ${[...products.masaAktifSpesial, ...products.addOnAplikasi].map(p => createProductCard({...p, logo: 'xl'})).join('')}
+                    </div>
+                </div>
+            </div>`;
 
-        paymentBankBtn.addEventListener('click', () => {
-            resetPaymentSelection();
-            paymentBankBtn.classList.add('active-payment-button');
-            bankDetails.classList.remove('hidden');
-            selectedPaymentMethod = 'Transfer Bank';
-        });
+        document.getElementById('non-otp-product-grid').innerHTML = products.nonOtp.map(createProductCard).join('');
+        document.getElementById('app-product-grid').innerHTML = products.app.map(createProductCard).join('');
 
-        paymentQrisBtn.addEventListener('click', () => {
-            resetPaymentSelection();
-            paymentQrisBtn.classList.add('active-payment-button');
-            qrisDetails.classList.remove('hidden');
-            selectedPaymentMethod = 'QRIS';
-        });
-
-        buyButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                selectedProduct = button.dataset.product;
-                selectedPrice = parseInt(button.dataset.price);
-                
-                // Generate unique code (10-99)
-                uniqueCode = Math.floor(Math.random() * 90) + 10;
-                finalPrice = selectedPrice + uniqueCode;
-
-                // Get current timestamp
-                const now = new Date();
-                orderTime = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-
-
-                modalProductName.textContent = selectedProduct;
-                modalProductPrice.innerHTML = `Rp ${finalPrice.toLocaleString('id-ID')} <br><span class="text-sm text-gray-400 font-normal">(Rp ${selectedPrice.toLocaleString('id-ID')} + kode ${uniqueCode})</span>`;
-
-                phoneNumberInput.value = '';
-                phoneError.classList.add('hidden');
-                resetPaymentSelection();
-                purchaseModal.classList.remove('hidden');
+        const mainMenu = document.getElementById('main-menu'), allSections = document.querySelectorAll('main > section');
+        const navButtons = { 'show-otp-button': 'otp-section', 'show-non-otp-button': 'non-otp-section', 'show-app-button': 'app-section', 'show-history-button': 'history-section' };
+        Object.keys(navButtons).forEach(buttonId => document.getElementById(buttonId).addEventListener('click', () => { allSections.forEach(s => s.classList.add('hidden')); document.getElementById(navButtons[buttonId]).classList.remove('hidden'); if (buttonId === 'show-history-button') tampilkanRiwayat(); }));
+        document.querySelectorAll('.back-button').forEach(button => button.addEventListener('click', () => { allSections.forEach(s => s.classList.add('hidden')); mainMenu.classList.remove('hidden'); }));
+        
+        document.querySelectorAll('.accordion-header').forEach(header => {
+            header.addEventListener('click', () => {
+                const body = header.nextElementSibling;
+                const icon = header.querySelector('svg');
+                body.classList.toggle('open');
+                icon.classList.toggle('rotate-180');
             });
         });
+
+        const paymentModal = document.getElementById('payment-modal'), confirmationModal = document.getElementById('confirmation-modal'), paymentModalProductName = document.getElementById('payment-modal-product-name'), confirmationModalProductName = document.getElementById('confirmation-modal-product-name'), paymentModalPrice = document.getElementById('payment-modal-price'), phoneNumberInput = document.getElementById('phone-number'), phoneNumberLabel = document.getElementById('phone-number-label'), phoneError = document.getElementById('phone-error'), paymentError = document.getElementById('payment-error'), paymentBankBtn = document.getElementById('payment-bank-btn'), paymentQrisBtn = document.getElementById('payment-qris-btn'), bankDetails = document.getElementById('bank-details'), qrisDetails = document.getElementById('qris-details'), paymentCompleteButton = document.getElementById('payment-complete-button'), confirmPurchaseButton = document.getElementById('confirm-purchase-button');
+        let selectedProduct = '', selectedPrice = 0, uniqueCode = 0, finalPrice = 0, orderTime = '', selectedPaymentMethod = '', isAppProduct = false, isOtpProduct = false;
         
-        closeModalButton.addEventListener('click', () => { purchaseModal.classList.add('hidden'); });
+        document.addEventListener('click', e => {
+            if (e.target.matches('.buy-button')) {
+                selectedProduct = e.target.dataset.product; selectedPrice = parseInt(e.target.dataset.price);
+                isAppProduct = e.target.closest('#app-section') !== null;
+                isOtpProduct = e.target.closest('#otp-section') !== null;
+                uniqueCode = Math.floor(Math.random() * 90) + 10; finalPrice = selectedPrice + uniqueCode;
+                orderTime = new Date().toLocaleString('id-ID', { dateStyle: 'short', timeStyle: 'medium' });
+                paymentModalProductName.textContent = selectedProduct;
+                paymentModalPrice.innerHTML = `Rp ${finalPrice.toLocaleString('id-ID')} <br><span class="text-sm text-gray-400 font-normal">(Rp ${selectedPrice.toLocaleString('id-ID')} + kode ${uniqueCode})</span>`;
+                resetPaymentSelection(); paymentModal.classList.remove('hidden');
+            }
+        });
         
-        confirmPurchaseButton.addEventListener('click', () => {
-            const phoneNumber = phoneNumberInput.value;
-            let hasError = false;
-
-            if (!phoneNumber || phoneNumber.trim() === '') {
-                phoneError.classList.remove('hidden');
-                hasError = true;
-            } else {
-                phoneError.classList.add('hidden');
-            }
-
-            if (!selectedPaymentMethod) {
-                paymentError.classList.remove('hidden');
-                hasError = true;
-            } else {
-                paymentError.classList.add('hidden');
-            }
-
-            if (hasError) return;
-            
-            const message = `Halo Admin, saya mau konfirmasi pesanan:\n\n*Waktu Pesanan:* ${orderTime}\n*Produk:* ${selectedProduct}\n*Metode Pembayaran:* ${selectedPaymentMethod}\n*Total Transfer:* Rp ${finalPrice.toLocaleString('id-ID')} (termasuk kode unik ${uniqueCode})\n*Nomor Tujuan:* ${phoneNumber}\n\nBerikut saya kirimkan bukti transfernya. Mohon segera diproses. Terima kasih.`;
-            const encodedMessage = encodeURIComponent(message);
-            const whatsappUrl = `https://wa.me/${adminWhatsAppNumber}?text=${encodedMessage}`;
-            window.open(whatsappUrl, '_blank');
-            purchaseModal.classList.add('hidden');
+        paymentCompleteButton.addEventListener('click', () => {
+            if (!selectedPaymentMethod) { paymentError.classList.remove('hidden'); return; }
+            paymentError.classList.add('hidden');
+            paymentModal.classList.add('hidden');
+            confirmationModalProductName.textContent = selectedProduct;
+            if (isAppProduct) { phoneNumberLabel.textContent = 'Isi Nomor WhatsApp'; phoneNumberInput.placeholder = '08... (untuk kirim link aplikasi)'; }
+            else { phoneNumberLabel.textContent = 'Isi Nomor Tujuan'; phoneNumberInput.placeholder = '08...'; }
+            phoneError.classList.add('hidden');
+            phoneNumberInput.value = '';
+            confirmationModal.classList.remove('hidden');
         });
 
-        purchaseModal.addEventListener('click', (event) => { if (event.target === purchaseModal) { purchaseModal.classList.add('hidden'); } });
-
-        const updateModal = document.getElementById('update-modal');
-        const closeUpdateModalButton = document.getElementById('close-update-modal');
-        if (tampilkanPopupUpdate) {
-            document.getElementById('update-title').textContent = judulUpdate;
-            document.getElementById('update-message').textContent = pesanUpdate;
-            updateModal.classList.remove('hidden');
+        function resetPaymentSelection() {
+            paymentBankBtn.classList.remove('active-payment-button'); paymentQrisBtn.classList.remove('active-payment-button');
+            bankDetails.classList.add('hidden'); qrisDetails.classList.add('hidden');
+            selectedPaymentMethod = ''; paymentError.classList.add('hidden');
         }
-        closeUpdateModalButton.addEventListener('click', () => { updateModal.classList.add('hidden'); });
-        updateModal.addEventListener('click', (event) => { if (event.target === updateModal) { updateModal.classList.add('hidden'); } });
+
+        paymentBankBtn.addEventListener('click', () => { resetPaymentSelection(); paymentBankBtn.classList.add('active-payment-button'); bankDetails.classList.remove('hidden'); selectedPaymentMethod = 'Transfer Bank'; });
+        paymentQrisBtn.addEventListener('click', () => { resetPaymentSelection(); paymentQrisBtn.classList.add('active-payment-button'); qrisDetails.classList.remove('hidden'); selectedPaymentMethod = 'QRIS'; });
+        document.querySelectorAll('.close-modal').forEach(btn => btn.addEventListener('click', () => { paymentModal.classList.add('hidden'); confirmationModal.classList.add('hidden'); }));
+        
+        confirmPurchaseButton.addEventListener('click', () => {
+            const destination = phoneNumberInput.value;
+            if (!destination.trim()) { phoneError.classList.remove('hidden'); return; }
+            phoneError.classList.add('hidden');
+            let message;
+            const targetLabel = isAppProduct ? 'Nomor WhatsApp' : 'Nomor Tujuan';
+            if (isOtpProduct) {
+                message = `Halo Admin, SAYA SUDAH BAYAR untuk pesanan:\n\n*Waktu:* ${orderTime}\n*Produk:* ${selectedProduct}\n*Total Transfer:* Rp ${finalPrice.toLocaleString('id-ID')}\n*Nomor Tujuan:* ${destination}\n\nMohon segera diproses OTP-nya. Berikut bukti transfernya.`;
+            } else {
+                message = `Halo Admin, konfirmasi pesanan:\n\n*Waktu:* ${orderTime}\n*Produk:* ${selectedProduct}\n*Pembayaran:* ${selectedPaymentMethod}\n*Total Transfer:* Rp ${finalPrice.toLocaleString('id-ID')} (kode unik ${uniqueCode})\n*${targetLabel}:* ${destination}\n\nSegera kirim bukti transfer. Thx.`;
+            }
+            simpanTransaksi({ id: Date.now(), waktu: orderTime, produk: selectedProduct, tujuan: destination, total: finalPrice, status: 'Menunggu Pembayaran' });
+            window.open(`https://wa.me/${adminWhatsAppNumber}?text=${encodeURIComponent(message)}`, '_blank');
+            confirmationModal.classList.add('hidden');
+        });
+
+        function simpanTransaksi(transaksi) {
+            let riwayat = JSON.parse(localStorage.getItem('transaksiTStoreCyber')) || [];
+            riwayat.unshift(transaksi);
+            localStorage.setItem('transaksiTStoreCyber', JSON.stringify(riwayat));
+        }
+
+        function tampilkanRiwayat() {
+            const historyListEl = document.getElementById('history-list');
+            const riwayat = JSON.parse(localStorage.getItem('transaksiTStoreCyber')) || [];
+            if (riwayat.length === 0) { historyListEl.innerHTML = `<div class="cyber-card p-6 text-center text-gray-400"><p>Belum ada riwayat transaksi.</p></div>`; return; }
+            historyListEl.innerHTML = riwayat.map(trx => `<div class="cyber-card p-4"><div class="grid grid-cols-2 md:grid-cols-4 gap-4 items-center"><div><p class="text-sm text-gray-400">ID Transaksi</p><p class="font-semibold text-gray-300 break-all">${trx.id}</p></div><div><p class="text-sm text-gray-400">Produk</p><p class="font-bold text-fuchsia-400">${trx.produk}</p></div><div class="mt-2 md:mt-0"><p class="text-sm text-gray-400">Tujuan</p><p class="font-semibold break-all">${trx.tujuan}</p></div><div class="mt-2 md:mt-0 text-left md:text-right"><p class="text-sm text-gray-400">Total Bayar</p><p class="font-bold text-lg text-cyan-300">Rp ${trx.total.toLocaleString('id-ID')}</p></div><div class="col-span-2 md:col-span-4 border-t border-gray-700 mt-2 pt-2 flex justify-between items-center"><p class="text-xs text-gray-500">${trx.waktu}</p><span class="text-xs font-bold py-1 px-3 rounded-full bg-yellow-400/20 text-yellow-300">${trx.status}</span></div></div></div>`).join('');
+        }
     </script>
 </body>
 </html>
