@@ -8,24 +8,36 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Load Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Custom Styles -->
     <style>
-        /* Menggunakan font Inter dari Tailwind default */
+        /* BASE & TYPOGRAPHY */
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f3f4f6; /* Latar belakang abu-abu muda */
+            background-color: #f3f4f6; /* Light background for the overall page */
         }
-        /* Style untuk modal/overlay */
+        
+        /* APP CONTAINER - Simulating mobile screen */
+        #app-container {
+            width: 100%;
+            max-width: 440px; /* Standard mobile/tablet max-width */
+            min-height: 100vh;
+            background-color: white;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        /* MODAL STYLES */
         .modal-backdrop {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background-color: rgba(0, 0, 0, 0.5);
+            background-color: rgba(0, 0, 0, 0.6);
             display: flex;
             align-items: center;
             justify-content: center;
-            z-index: 50;
+            z-index: 9999; /* Higher z-index */
         }
         .modal-content {
             background-color: white;
@@ -33,26 +45,35 @@
             border-radius: 1.5rem;
             max-width: 90%;
             width: 380px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
             animation: fadeInScale 0.3s ease-out;
         }
 
         @keyframes fadeInScale {
             from {
                 opacity: 0;
-                transform: scale(0.9);
+                transform: scale(0.85);
             }
             to {
                 opacity: 1;
                 transform: scale(1);
             }
         }
+
+        /* TRANSITIONS/ANIMATIONS */
+        .animate-fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
     </style>
 </head>
-<body class="min-h-screen bg-gray-200 flex justify-center">
+<body class="flex justify-center">
 
-    <!-- Container utama simulasi HP -->
-    <div id="app-container" class="w-full max-w-md min-h-screen bg-white shadow-2xl overflow-hidden relative">
+    <!-- Primary App Container -->
+    <div id="app-container" class="overflow-hidden">
         
         <!-- Header App -->
         <header id="app-header" class="px-5 py-4 bg-white border-b flex justify-between items-center sticky top-0 z-30 shadow-sm">
@@ -67,14 +88,14 @@
             </div>
         </header>
 
-        <!-- Main Content Area -->
-        <main id="app-content" class="p-4 bg-gray-50 min-h-full pb-24"></main>
+        <!-- Main Content Area - Rendered by JavaScript -->
+        <main id="app-content" class="min-h-full pb-24"></main>
 
         <!-- Custom Modal/Message Box Container -->
         <div id="custom-modal" class="hidden modal-backdrop">
             <div class="modal-content text-center">
-                <div id="modal-icon" class="w-12 h-12 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <i data-lucide="alert-triangle" class="w-6 h-6"></i>
+                <div id="modal-icon" class="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <!-- Icon will be dynamically updated -->
                 </div>
                 <h3 id="modal-title" class="text-lg font-bold text-gray-800 mb-2"></h3>
                 <p id="modal-message" class="text-sm text-gray-600 mb-6"></p>
@@ -86,9 +107,10 @@
 
     </div>
 
+    <!-- Application JavaScript Logic -->
     <script>
-        // --- DATA PRODUK & KATEGORI ---
-        const ADMIN_PHONE = '6287859569780'; // Format internasional tanpa '+' atau '0'
+        // --- CONFIGURATION & DATA ---
+        const ADMIN_PHONE = '6287859569780'; // WhatsApp number for confirmation (International format)
 
         const CATEGORIES = [
           {
@@ -192,12 +214,11 @@
           },
         ];
 
-        // Hanya menyertakan SeaBank sesuai permintaan user
         const PAYMENT_METHODS = [
           { id: 'seabank', name: 'Transfer SeaBank', icon: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/SeaBank_Indonesia_logo.svg/2560px-SeaBank_Indonesia_logo.svg.png' },
         ];
 
-        // --- STATE APLIKASI ---
+        // --- APPLICATION STATE ---
         let view = 'home';
         let selectedCategory = null;
         let selectedPackage = null;
@@ -206,16 +227,25 @@
         let orderId = '';
         let uniqueCode = 0;
         let copied = false;
-        let isAuthReady = true; // Placeholder for Firebase Auth status
+
 
         // --- HELPER FUNCTIONS ---
 
-        // Mengubah ikon Lucide menjadi HTML string
+        /**
+         * Converts Lucide icon name to HTML string.
+         * @param {string} name - Lucide icon name.
+         * @param {string} classes - Tailwind CSS classes.
+         * @returns {string} - HTML string for the icon.
+         */
         const getIconHtml = (name, classes) => {
             return `<i data-lucide="${name}" class="${classes}"></i>`;
         };
 
-        // Format mata uang Rupiah
+        /**
+         * Formats a number to Rupiah currency string.
+         * @param {number} number - The number to format.
+         * @returns {string} - Formatted Rupiah string (e.g., "Rp25.000").
+         */
         const formatRupiah = (number) => {
           return new Intl.NumberFormat('id-ID', {
             style: 'currency',
@@ -224,7 +254,33 @@
           }).format(number);
         };
 
-        // Custom Modal/Message Box
+        /**
+         * Finds a category object by its ID.
+         * @param {number} id - The ID of the category.
+         * @returns {Object|undefined} - The category object.
+         */
+        function getCategoryById(id) {
+            return CATEGORIES.find(cat => cat.id === id);
+        }
+        
+        /**
+         * Finds a package object by its ID within the selected category.
+         * @param {number} id - The ID of the package.
+         * @returns {Object|null} - The package object.
+         */
+        function getPackageById(id) {
+            if (!selectedCategory) return null;
+            return selectedCategory.packages.find(pkg => pkg.id === id);
+        }
+
+        // --- MODAL / MESSAGE BOX FUNCTIONS ---
+
+        /**
+         * Displays a custom modal message.
+         * @param {string} title - The title of the modal.
+         * @param {string} message - The message content.
+         * @param {boolean} [isError=true] - If true, displays error styling; otherwise, success styling.
+         */
         const showModal = (title, message, isError = true) => {
             document.getElementById('modal-title').textContent = title;
             document.getElementById('modal-message').textContent = message;
@@ -242,67 +298,70 @@
             lucide.createIcons(); // Re-render Lucide icons in modal
         };
 
+        /**
+         * Hides the custom modal.
+         */
         const hideModal = () => {
             document.getElementById('custom-modal').classList.add('hidden');
         };
 
-        // Copy to clipboard helper
-        const handleCopy = (text) => {
-            // Menggunakan document.execCommand('copy') untuk kompatibilitas di lingkungan iframe
-            const textarea = document.createElement('textarea');
-            textarea.value = text;
-            document.body.appendChild(textarea);
-            textarea.select();
-            try {
-                document.execCommand('copy');
-                copied = true;
-                renderApp(); // Render ulang untuk menampilkan ikon 'check'
-                setTimeout(() => {
-                    copied = false;
-                    renderApp(); // Render ulang untuk kembali ke ikon 'copy'
-                }, 2000);
-            } catch (err) {
-                console.error('Gagal menyalin:', err);
-            }
-            document.body.removeChild(textarea);
-        };
-
         // --- STATE MUTATORS / ACTIONS ---
 
+        /**
+         * Sets the current view and triggers a re-render.
+         * @param {string} newView - The new view state ('home', 'details', 'payment', 'confirmation').
+         */
         const setView = (newView) => {
             view = newView;
             renderApp();
         };
 
-        const setSelectedCategory = (category) => {
-            selectedCategory = category;
-            selectedPackage = null; // Reset paket saat kategori berubah
-            setView('details');
+        /**
+         * Sets the selected category and resets the package selection.
+         * @param {number} id - The ID of the selected category.
+         */
+        const setSelectedCategory = (id) => {
+            const category = getCategoryById(id);
+            if (category) {
+                selectedCategory = category;
+                selectedPackage = null;
+                setView('details');
+            }
         };
 
-        const setSelectedPackage = (pkg) => {
-            selectedPackage = pkg;
-            renderApp();
+        /**
+         * Sets the selected package.
+         * @param {number} id - The ID of the selected package.
+         */
+        const setSelectedPackage = (id) => {
+            const pkg = getPackageById(id);
+            if (pkg) {
+                selectedPackage = pkg;
+                renderApp();
+            }
         };
 
+        /**
+         * Updates the phone number state, filtering out non-digit characters.
+         * @param {string} val - The raw input value.
+         */
         const setPhoneNumber = (val) => {
-            phoneNumber = val.replace(/\D/g, ''); // Hanya angka
+            phoneNumber = val.replace(/\D/g, ''); // Only digits
             renderApp();
         };
 
-        const setUniqueCode = (code) => {
-            uniqueCode = code;
-        };
-        
+        /**
+         * Updates the loading state.
+         * @param {boolean} loading - The new loading state.
+         */
         const setIsLoading = (loading) => {
             isLoading = loading;
             renderApp();
         };
 
-        const setOrderId = (id) => {
-            orderId = id;
-        };
-
+        /**
+         * Resets all transaction-related state variables.
+         */
         const resetApp = () => {
             view = 'home';
             selectedCategory = null;
@@ -310,21 +369,28 @@
             phoneNumber = '';
             orderId = '';
             uniqueCode = 0;
+            copied = false;
             renderApp();
         };
 
-        // Go to Payment - Generate unique code here
+        /**
+         * Handles the click on the "Lanjut" button in the details view.
+         * Generates a unique code for payment.
+         */
         const proceedToPayment = () => {
             if (!selectedPackage) return;
             
             // Generate random 3-digit unique code (100 to 999)
             const randomCode = Math.floor(Math.random() * 900) + 100;
-            setUniqueCode(randomCode);
+            uniqueCode = randomCode; // Update state directly
             
             setView('payment');
         };
 
-        // Handle Order Generation (leading to Confirmation/Payment)
+        /**
+         * Handles the order generation process (simulated).
+         * Generates a transaction ID and moves to the confirmation view.
+         */
         const handleGenerateOrder = () => {
             if (phoneNumber.length < 9) {
                 showModal("Nomor HP Tidak Valid", "Mohon masukkan nomor HP yang valid (minimal 9 digit) untuk melanjutkan.", true);
@@ -332,16 +398,45 @@
             }
             
             setIsLoading(true);
-            // Simulasi pembuatan ID Order
+            
+            // Simulate API call/Order ID generation delay
             setTimeout(() => {
-                setOrderId(`TRX-${Math.floor(Math.random() * 10000000)}`);
+                // Generate a random transaction ID
+                orderId = `TRX-${Math.floor(Math.random() * 10000000)}`; 
+                
                 setIsLoading(false);
-                // Pindah ke tampilan konfirmasi pembayaran
                 setView('confirmation');
-            }, 1500);
+            }, 1500); // 1.5 seconds delay
+        };
+
+        /**
+         * Handles copying text to the clipboard.
+         * @param {string} text - The text to copy.
+         */
+        const handleCopy = (text) => {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            document.body.appendChild(textarea);
+            textarea.select();
+            try {
+                document.execCommand('copy');
+                copied = true;
+                renderApp(); // Show check icon
+                setTimeout(() => {
+                    copied = false;
+                    renderApp(); // Revert to copy icon
+                }, 2000);
+            } catch (err) {
+                console.error('Gagal menyalin:', err);
+                showModal("Gagal Menyalin", "Browser Anda tidak mendukung penyalinan otomatis.", true);
+            }
+            document.body.removeChild(textarea);
         };
         
-        // Create WhatsApp URL
+        /**
+         * Generates the WhatsApp URL with pre-filled confirmation message.
+         * @returns {string} - The WhatsApp URL.
+         */
         const generateWhatsAppUrl = () => {
             if (!selectedPackage || !phoneNumber || !orderId || uniqueCode === 0) return '#';
 
@@ -364,12 +459,13 @@ Mohon diproses segera setelah pembayaran diverifikasi. Terima kasih.`
             return `https://wa.me/${ADMIN_PHONE}?text=${message}`;
         }
 
+
         // --- RENDER FUNCTIONS ---
 
-        // 1. HOME VIEW
+        /** 1. HOME VIEW */
         const renderHome = () => {
             let html = `
-            <div class="space-y-6 animate-fade-in pb-20">
+            <div class="p-4 space-y-6 animate-fade-in pb-20">
               <!-- Hero Section -->
               <div class="bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl p-6 text-white shadow-xl relative overflow-hidden border border-gray-700">
                 <div class="absolute top-0 right-0 w-40 h-40 bg-blue-500 opacity-20 rounded-full -mr-16 -mt-16 blur-3xl"></div>
@@ -385,7 +481,7 @@ Mohon diproses segera setelah pembayaran diverifikasi. Terima kasih.`
         
               <!-- Grid Menu -->
               <div>
-                <div class="flex items-center justify-between mb-4 px-2">
+                <div class="flex items-center justify-between mb-4 px-1">
                   <h2 class="text-lg font-bold text-gray-800">Daftar Produk</h2>
                   <span class="text-xs text-blue-600 font-semibold bg-blue-50 px-2 py-1 rounded-md">Terlaris</span>
                 </div>
@@ -397,7 +493,7 @@ Mohon diproses segera setelah pembayaran diverifikasi. Terima kasih.`
                 html += `
                 <button
                     onclick="setSelectedCategory(${cat.id})"
-                    class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 hover:shadow-lg hover:border-blue-200 transition-all text-left flex flex-col justify-between h-36 group relative overflow-hidden"
+                    class="bg-white p-4 rounded-2xl shadow-md border border-gray-100 hover:shadow-lg hover:border-blue-200 transition-all text-left flex flex-col justify-between h-36 group relative overflow-hidden"
                 >
                     <!-- Decorative Circle -->
                     <div class="absolute -right-4 -top-4 w-16 h-16 rounded-full opacity-10 ${cat.color}"></div>
@@ -432,13 +528,14 @@ Mohon diproses segera setelah pembayaran diverifikasi. Terima kasih.`
             return html;
         };
 
-        // 2. DETAILS VIEW
+        /** 2. DETAILS VIEW */
         const renderDetails = () => {
             if (!selectedCategory) return '';
 
             let html = `
             <div class="animate-in slide-in-from-right duration-300 pb-24">
-              <div class="sticky top-0 bg-white/90 backdrop-blur-md z-10 py-4 px-2 border-b mb-4 flex items-center gap-3 shadow-sm">
+              <!-- Sticky Header for Back Button and Title -->
+              <div class="sticky top-0 bg-white/95 backdrop-blur-sm z-10 py-4 px-4 border-b mb-4 flex items-center gap-3 shadow-sm">
                 <button onclick="setView('home')" class="p-2 hover:bg-gray-100 rounded-full transition-colors">
                     ${getIconHtml('chevron-left', 'w-6 h-6 text-gray-700')}
                 </button>
@@ -448,10 +545,10 @@ Mohon diproses segera setelah pembayaran diverifikasi. Terima kasih.`
                 </div>
               </div>
         
-              <div class="space-y-4 px-2">
-                 <!-- Keterangan Penting (XL Circle / HiFi Air) -->
+              <div class="space-y-4 px-4">
+                 <!-- Important Notes -->
                 ${selectedCategory.id === 5 || selectedCategory.id === 6 ? `
-                    <div class="bg-orange-50 border-l-4 border-orange-500 p-4 rounded-lg mb-4 text-sm text-gray-700">
+                    <div class="bg-orange-50 border-l-4 border-orange-500 p-4 rounded-lg mb-4 text-sm text-gray-700 shadow-sm">
                         <p class='font-bold flex items-center gap-2 text-orange-700 mb-1'>${getIconHtml('alert-triangle', 'w-4 h-4')} Perhatian Syarat & Ketentuan:</p>
                         <p class="text-xs italic pl-1">${selectedCategory.description}</p>
                     </div>
@@ -459,6 +556,7 @@ Mohon diproses segera setelah pembayaran diverifikasi. Terima kasih.`
 
             `;
 
+            // List of Packages
             selectedCategory.packages.forEach((pkg) => {
                 const isSelected = selectedPackage?.id === pkg.id;
                 html += `
@@ -466,8 +564,8 @@ Mohon diproses segera setelah pembayaran diverifikasi. Terima kasih.`
                     onclick="setSelectedPackage(${pkg.id})"
                     class="cursor-pointer rounded-2xl p-4 border-2 transition-all relative overflow-hidden group ${
                         isSelected 
-                        ? 'border-blue-500 bg-blue-50 shadow-md transform scale-[1.02]' 
-                        : 'border-gray-100 bg-white hover:border-gray-300 hover:bg-gray-50'
+                        ? 'border-blue-500 bg-blue-50 shadow-lg ring-4 ring-blue-100 transform scale-[1.01]' 
+                        : 'border-gray-100 bg-white hover:border-gray-300 hover:bg-gray-50 shadow-md'
                     }"
                 >
                     <div class="flex justify-between items-start mb-2">
@@ -489,11 +587,11 @@ Mohon diproses segera setelah pembayaran diverifikasi. Terima kasih.`
 
             html += `</div>`;
 
-            // Floating Action Button
+            // Floating Action Button (if a package is selected)
             if (selectedPackage) {
                 html += `
                 <div class="fixed bottom-0 left-0 right-0 p-4 bg-white border-t shadow-[0_-5px_20px_rgba(0,0,0,0.1)] max-w-md mx-auto z-20 animate-in slide-in-from-bottom duration-300">
-                   <div class="flex justify-between items-center mb-3 px-1">
+                   <div class="flex justify-between items-center px-1">
                      <div class="text-sm">
                        <span class="text-gray-500 block">Total Bayar</span>
                        <span class="font-bold text-lg text-gray-900">${formatRupiah(selectedPackage.price)}</span>
@@ -513,7 +611,7 @@ Mohon diproses segera setelah pembayaran diverifikasi. Terima kasih.`
             return html;
         };
 
-        // 3. PAYMENT VIEW
+        /** 3. PAYMENT VIEW */
         const renderPayment = () => {
             if (!selectedPackage) return '';
             
@@ -522,17 +620,17 @@ Mohon diproses segera setelah pembayaran diverifikasi. Terima kasih.`
             let html = `
             <div class="animate-in slide-in-from-right duration-300 pb-24">
               <!-- Header -->
-              <div class="sticky top-0 bg-white z-10 py-4 px-2 border-b mb-4 flex items-center gap-3">
+              <div class="sticky top-0 bg-white z-10 py-4 px-4 border-b mb-4 flex items-center gap-3 shadow-sm">
                 <button onclick="setView('details')" class="p-2 hover:bg-gray-100 rounded-full transition-colors">
                   ${getIconHtml('chevron-left', 'w-6 h-6 text-gray-700')}
                 </button>
                 <h2 class="font-bold text-lg text-gray-800">Checkout</h2>
               </div>
         
-              <div class="px-3 space-y-6">
+              <div class="px-4 space-y-6">
                 
-                <!-- Ringkasan Produk -->
-                <div class="bg-gradient-to-r from-blue-50 to-white p-4 rounded-xl border border-blue-100 shadow-sm">
+                <!-- Product Summary -->
+                <div class="bg-gradient-to-r from-blue-50 to-white p-4 rounded-xl border border-blue-100 shadow-md">
                   <div class="flex items-start gap-3">
                     <div class="bg-blue-100 p-2 rounded-lg text-blue-600">
                       ${getIconHtml('shopping-bag', 'w-5 h-5')}
@@ -543,7 +641,7 @@ Mohon diproses segera setelah pembayaran diverifikasi. Terima kasih.`
                        <p class="text-xs text-gray-500 mb-2">${selectedCategory.provider} - ${selectedCategory.title}</p>
                        <div class="h-px bg-blue-100 w-full my-2"></div>
                        <div class="flex justify-between items-center">
-                         <span class="text-xs font-medium text-gray-600">Harga Paket</span>
+                         <span class="text-sm font-medium text-gray-600">Harga Paket</span>
                          <p class="font-bold text-gray-600 text-lg">${formatRupiah(selectedPackage.price)}</p>
                        </div>
                        <div class="flex justify-between items-center border-t border-dashed border-blue-200 mt-2 pt-2">
@@ -557,15 +655,15 @@ Mohon diproses segera setelah pembayaran diverifikasi. Terima kasih.`
                   </div>
                 </div>
         
-                <!-- Input Nomor HP -->
+                <!-- Phone Number Input -->
                 <div class="space-y-2">
-                  <label class="block text-sm font-bold text-gray-800 flex items-center gap-2">
+                  <label for="phone-input-id" class="block text-sm font-bold text-gray-800 flex items-center gap-2">
                     ${getIconHtml('smartphone', 'w-4 h-4 text-blue-600')}
                     Nomor Tujuan
                   </label>
                   <div class="relative group">
                      <input
-                       id="phone-input"
+                       id="phone-input-id"
                        type="tel"
                        placeholder="08xxxxxxxxxx"
                        value="${phoneNumber}"
@@ -584,6 +682,7 @@ Mohon diproses segera setelah pembayaran diverifikasi. Terima kasih.`
                             }"
                             alt="Provider"
                             class="h-6 w-auto object-contain drop-shadow-sm"
+                            onerror="this.onerror=null;this.src='https://placehold.co/40x24/cccccc/666666?text=SIM'"
                          />
                        ` : `
                           <span class="text-gray-300 text-xs">Provider</span>
@@ -593,15 +692,15 @@ Mohon diproses segera setelah pembayaran diverifikasi. Terima kasih.`
                   <p class="text-[11px] text-red-500 italic ml-1">*Pastikan nomor benar, kesalahan input bukan tanggung jawab kami.</p>
                 </div>
         
-                <!-- Metode Pembayaran (SeaBank ONLY) -->
+                <!-- Payment Method (SeaBank ONLY) -->
                 <div class="space-y-3">
                   <label class="block text-sm font-bold text-gray-800 flex items-center gap-2 mb-4">
                     ${getIconHtml('credit-card', 'w-4 h-4 text-blue-600')}
                     Metode Pembayaran
                   </label>
         
-                  <!-- Opsi Pembayaran Tunggal: SeaBank -->
-                  <div class="flex items-center p-3.5 rounded-xl border-2 border-blue-500 bg-blue-50 ring-1 ring-blue-500">
+                  <!-- Single Payment Option: SeaBank -->
+                  <div class="flex items-center p-3.5 rounded-xl border-2 border-blue-500 bg-blue-50 ring-1 ring-blue-500 shadow-md">
                     <div class="w-14 h-9 mr-4 flex items-center justify-center bg-white rounded-md border border-gray-200 p-1 shadow-sm">
                        <img src="${PAYMENT_METHODS[0].icon}" alt="${PAYMENT_METHODS[0].name}" class="max-h-full max-w-full object-contain" />
                     </div>
@@ -614,8 +713,8 @@ Mohon diproses segera setelah pembayaran diverifikasi. Terima kasih.`
                     </div>
                   </div>
         
-                  <!-- DETAIL REKENING SEABANK (GAGAT GINATA) -->
-                  <div class="mt-2 bg-orange-50 border border-orange-200 rounded-xl p-4 animate-in slide-in-from-top fade-in relative overflow-hidden">
+                  <!-- SEABANK ACCOUNT DETAILS -->
+                  <div class="mt-2 bg-orange-50 border border-orange-200 rounded-xl p-4 animate-in slide-in-from-top fade-in relative overflow-hidden shadow-inner">
                      <div class="flex justify-between items-center mb-3">
                        <span class="text-xs text-orange-800 font-semibold uppercase tracking-wide">Rekening Tujuan</span>
                        <div class="bg-orange-100 px-2 py-0.5 rounded text-[10px] text-orange-700 font-bold">Wajib Dicek</div>
@@ -629,7 +728,7 @@ Mohon diproses segera setelah pembayaran diverifikasi. Terima kasih.`
                         <div>
                            <span class="text-sm text-gray-600 block mb-1">Nomor Rekening</span>
                            <div class="flex items-center gap-2">
-                              <!-- Nomor Rekening GAGAT GINATA -->
+                              <!-- GAGAT GINATA's Account Number -->
                               <span class="text-lg font-mono font-bold text-gray-900 tracking-wide">901030212504</span>
                               <button 
                                 onclick="handleCopy('901030212504')"
@@ -641,7 +740,6 @@ Mohon diproses segera setelah pembayaran diverifikasi. Terima kasih.`
                         </div>
                         <div class="flex justify-between border-t border-orange-200/50 pt-2">
                            <span class="text-sm text-gray-600">Atas Nama</span>
-                           <!-- Nama GAGAT GINATA -->
                            <span class="text-sm font-bold text-gray-900">GAGAT GINATA</span>
                         </div>
                      </div>
@@ -649,7 +747,7 @@ Mohon diproses segera setelah pembayaran diverifikasi. Terima kasih.`
                 </div>
               </div>
         
-              <!-- Bottom Bar - Updated to show finalPrice -->
+              <!-- Bottom Bar - Final Amount and Order Button -->
               <div class="fixed bottom-0 left-0 right-0 bg-white border-t p-4 shadow-[0_-5px_20px_rgba(0,0,0,0.1)] max-w-md mx-auto z-20">
                  <div class="flex justify-between items-center mb-3">
                    <span class="text-gray-600 font-medium text-sm">Total Tagihan (Wajib Transfer)</span>
@@ -673,14 +771,14 @@ Mohon diproses segera setelah pembayaran diverifikasi. Terima kasih.`
             return html;
         };
 
-        // 4. CONFIRMATION/PAYMENT VIEW
+        /** 4. CONFIRMATION/PAYMENT VIEW */
         const renderConfirmation = () => {
             if (!selectedPackage || !orderId) return '';
 
             const finalPrice = selectedPackage.price + uniqueCode;
 
             let html = `
-            <div class="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-6 text-center animate-in zoom-in duration-300">
+            <div class="min-h-screen bg-gray-50 flex flex-col items-center justify-start pt-10 p-4 text-center animate-in zoom-in duration-300">
               <div class="bg-white p-6 rounded-3xl shadow-xl w-full max-w-sm relative overflow-hidden">
                 <!-- Ticket Header -->
                 <div class="border-b-2 border-dashed border-gray-200 pb-6 mb-6 relative">
@@ -695,23 +793,23 @@ Mohon diproses segera setelah pembayaran diverifikasi. Terima kasih.`
                 </div>
                 
                 <!-- Instruction Card -->
-                <div class="bg-red-50 border-l-4 border-red-500 p-4 rounded-lg text-left mb-6">
+                <div class="bg-red-50 border-l-4 border-red-500 p-4 rounded-lg text-left mb-6 shadow-sm">
                     <p class="text-sm font-bold text-red-700 mb-2">PENTING!</p>
                     <ol class="list-decimal list-inside text-xs text-gray-700 space-y-1 pl-1">
-                        <li>Segera lakukan transfer sebesar **${formatRupiah(finalPrice)}** ke rekening di bawah.</li>
-                        <li>Pastikan nominal transfer **SAMA PERSIS** (termasuk kode unik) agar mudah diverifikasi.</li>
-                        <li>Setelah transfer, klik tombol WhatsApp di bawah untuk konfirmasi ke Admin.</li>
+                        <li>Segera transfer **SAMA PERSIS** nominal total (${formatRupiah(finalPrice)}).</li>
+                        <li>Gunakan **Kode Unik ${uniqueCode}** agar transfer Anda mudah diverifikasi.</li>
+                        <li>**WAJIB** Konfirmasi ke Admin via WhatsApp setelah transfer.</li>
                     </ol>
                 </div>
         
                 <!-- Payment Detail Reminder -->
-                <div class="space-y-4 text-left border border-gray-200 rounded-xl p-4 mb-6">
+                <div class="space-y-4 text-left border border-gray-200 rounded-xl p-4 mb-6 bg-gray-50">
                     <h3 class="text-sm font-bold text-gray-700 flex items-center gap-2 mb-2">
-                        ${getIconHtml('credit-card', 'w-4 h-4 text-blue-600')}
-                        Detail Pembayaran Anda
+                        ${getIconHtml('file-text', 'w-4 h-4 text-blue-600')}
+                        Ringkasan Transaksi
                     </h3>
                     
-                    <div class="flex justify-between">
+                    <div class="flex justify-between border-b border-gray-200 pb-2">
                         <span class="text-xs text-gray-500">ID Transaksi</span>
                         <span class="text-xs font-mono font-bold text-gray-800 bg-gray-100 px-2 py-0.5 rounded">${orderId}</span>
                     </div>
@@ -719,21 +817,21 @@ Mohon diproses segera setelah pembayaran diverifikasi. Terima kasih.`
                     <!-- Price Breakdown -->
                     <div class="pt-2 space-y-1">
                         <div class="flex justify-between text-sm text-gray-600">
-                            <span>Harga Paket</span>
+                            <span>Harga Paket (${selectedPackage.name})</span>
                             <span>${formatRupiah(selectedPackage.price)}</span>
                         </div>
                         <div class="flex justify-between text-sm font-bold text-green-600">
                             <span>Kode Unik (Wajib Ditransfer)</span>
                             <span>+${uniqueCode}</span>
                         </div>
-                        <div class="border-t border-blue-100 pt-2 flex justify-between items-center">
+                        <div class="border-t border-blue-100 pt-3 flex justify-between items-center">
                             <span class="text-sm font-bold text-gray-800">TOTAL BAYAR</span>
                             <span class="text-2xl font-extrabold text-blue-600">${formatRupiah(finalPrice)}</span>
                         </div>
                     </div>
                     
-                    <div class="border-t border-gray-100 pt-2">
-                        <span class="text-xs text-gray-500 block mb-1">Nomor Rekening SeaBank</span>
+                    <div class="border-t border-gray-100 pt-3">
+                        <span class="text-xs text-gray-500 block mb-1">Rekening Tujuan SeaBank</span>
                         <div class="flex items-center justify-between">
                            <span class="text-lg font-mono font-bold text-gray-900 tracking-wide">901030212504</span>
                            <button 
@@ -772,7 +870,11 @@ Mohon diproses segera setelah pembayaran diverifikasi. Terima kasih.`
         };
 
 
-        // --- MAIN RENDER FUNCTION ---
+        // --- MAIN RENDER LOOP ---
+
+        /**
+         * Main function to render the current view.
+         */
         const renderApp = () => {
             const content = document.getElementById('app-content');
             let htmlContent = '';
@@ -795,27 +897,23 @@ Mohon diproses segera setelah pembayaran diverifikasi. Terima kasih.`
             }
 
             content.innerHTML = htmlContent;
-            lucide.createIcons(); // Inisialisasi ikon Lucide setelah konten di-render
+            
+            // Re-initialize Lucide icons after content is rendered
+            lucide.createIcons(); 
+
+            // Focus on phone input if in payment view
+            if (view === 'payment') {
+                const phoneInput = document.getElementById('phone-input-id');
+                if (phoneInput) {
+                    phoneInput.focus();
+                }
+            }
         };
 
-        // Helper untuk mencari objek berdasarkan ID
-        function getCategoryById(id) {
-            return CATEGORIES.find(cat => cat.id === id);
-        }
-        function getPackageById(id) {
-            if (!selectedCategory) return null;
-            return selectedCategory.packages.find(pkg => pkg.id === id);
-        }
-        
-        // Overwrite functions called from HTML to update state before rendering
-        window.setSelectedCategory = (id) => {
-            const category = getCategoryById(id);
-            if (category) setSelectedCategory(category);
-        };
-        window.setSelectedPackage = (id) => {
-            const pkg = getPackageById(id);
-            if (pkg) setSelectedPackage(pkg);
-        };
+        // --- GLOBAL EXPOSURE (REQUIRED FOR HTML INLINE HANDLERS) ---
+        // Expose functions to the global window object so they can be called from onclick attributes
+        window.setSelectedCategory = setSelectedCategory;
+        window.setSelectedPackage = setSelectedPackage;
         window.setPhoneNumber = setPhoneNumber;
         window.setView = setView;
         window.proceedToPayment = proceedToPayment;
@@ -825,7 +923,7 @@ Mohon diproses segera setelah pembayaran diverifikasi. Terima kasih.`
         window.showModal = showModal;
         window.hideModal = hideModal;
 
-        // Initial render
+        // Initial render when the document is fully loaded
         document.addEventListener('DOMContentLoaded', renderApp);
 
     </script>
