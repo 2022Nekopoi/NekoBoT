@@ -600,6 +600,85 @@ Mohon diproses segera setelah pembayaran diverifikasi. Terima kasih.`
                   <p class="text-xs text-gray-600">Diskon spesial untuk pengguna baru T-STORE.</p>
                 </div>
               </div>
+
+              <!-- NEW: ABOUT US & RULES SECTION -->
+              <div class="space-y-6">
+                
+                <!-- Tentang Kami Section -->
+                <div class="bg-white rounded-2xl p-5 shadow-xl border border-gray-100">
+                    <div class="flex items-center justify-center mb-4">
+                        <div class="bg-blue-600 text-white font-extrabold text-lg px-4 py-2 rounded-full shadow-lg shadow-blue-200 tracking-wider">
+                            T-STORE OFFICIAL
+                        </div>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-3 flex items-center justify-center gap-2">
+                        ${getIconHtml('info', 'w-5 h-5 text-blue-600')} Tentang Kami
+                    </h3>
+                    <div class="space-y-3 text-sm text-gray-600 text-justify">
+                        <p class="border-b border-dashed pb-2">
+                           T-STORE adalah destinasi terbaik untuk semua kebutuhan Kuota Internet Anda. Kami menawarkan berbagai pilihan untuk memenuhi kebutuhan data Anda, baik untuk *browsing*, *streaming*, atau bermain *game*. Tujuan kami adalah menyediakan Kuota Internet yang handal dan terjangkau untuk memastikan Anda tetap terhubung.
+                        </p>
+                        <p class="border-b border-dashed pb-2">
+                           Kami di T-STORE berkomitmen untuk kepuasan pelanggan. Tim kami siap memberikan layanan terbaik dan membantu Anda menemukan paket Kuota Internet yang sempurna. Kami juga menyediakan opsi pembayaran yang cepat dan aman untuk pengalaman belanja yang lancar.
+                        </p>
+                        <p class="font-semibold text-gray-700">
+                           Belanjalah dengan percaya diri di T-STORE dan nikmati pengalaman belanja *online* yang menyenangkan untuk semua kebutuhan Kuota Internet Anda.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Syarat & Ketentuan Section -->
+                <div class="bg-red-50 rounded-2xl p-5 shadow-xl border border-red-200">
+                    <h3 class="text-xl font-bold text-red-700 mb-3 flex items-center justify-center gap-2">
+                        ${getIconHtml('alert-triangle', 'w-5 h-5 text-red-700')} Syarat & Ketentuan
+                    </h3>
+                    <div class="space-y-3">
+                        <div class="bg-white p-3 rounded-lg border border-red-300 text-sm shadow-inner">
+                            <p class="font-extrabold text-red-800 text-center mb-1">❗ Membeli = Setuju, No Refund ❗</p>
+                            <p class="text-xs text-gray-600 text-center">⚠ Pastikan kartu tidak dalam masa tenggang & Langsung cek kuota bila sudah *Done*, no komplain...!!!!</p>
+                            <p class="text-xs text-gray-600 text-center font-semibold mt-2">❗ Baca rules sebelum order ❗</p>
+                        </div>
+                        
+                        <!-- Grup & Channel Links -->
+                        <div class="space-y-2 pt-2">
+                            <div class="flex items-center bg-white p-3 rounded-lg shadow-sm border border-gray-100">
+                                ${getIconHtml('message-circle', 'w-5 h-5 text-green-500 mr-3')}
+                                <a 
+                                    href="https://chat.whatsapp.com/HKZHkhcgfzn0ulXYJFWWC3?mode=ems_copy_t" 
+                                    target="_blank" 
+                                    rel="noopener noreferrer" 
+                                    class="text-sm font-semibold text-green-600 hover:text-green-700 transition-colors"
+                                >
+                                    Gabung Grup Resmi (Diskusi)
+                                </a>
+                            </div>
+                            <div class="flex items-center bg-white p-3 rounded-lg shadow-sm border border-gray-100">
+                                ${getIconHtml('volume-2', 'w-5 h-5 text-blue-500 mr-3')}
+                                <a 
+                                    href="https://whatsapp.com/channel/0029VaEzxYuKAwEq152b9c03" 
+                                    target="_blank" 
+                                    rel="noopener noreferrer" 
+                                    class="text-sm font-semibold text-blue-600 hover:text-blue-700 transition-colors"
+                                >
+                                    Ikuti Channel (Update Info)
+                                </a>
+                            </div>
+                            <div class="flex items-center bg-white p-3 rounded-lg shadow-sm border border-gray-100">
+                                ${getIconHtml('globe', 'w-5 h-5 text-purple-500 mr-3')}
+                                <a 
+                                    href="https://tstore-one.vercel.app/" 
+                                    target="_blank" 
+                                    rel="noopener noreferrer" 
+                                    class="text-sm font-semibold text-purple-600 hover:text-purple-700 transition-colors"
+                                >
+                                    Lihat Website Resmi
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+              </div>
+              <!-- END: ABOUT US & RULES SECTION -->
             </div>
             `;
             return html;
