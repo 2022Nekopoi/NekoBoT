@@ -212,7 +212,25 @@
         const PAYMENT_METHODS = [
           { id: 'seabank', name: 'Transfer SeaBank', icon: 'https://a.top4top.io/p_3622i9ecc1.png' },
         ];
-        // END: Update menggunakan link gambar SeaBank dari user
+          
+        // --- NEW CONFIGURATION FOR EXTERNAL TOOLS ---
+        const EXTERNAL_TOOLS = [
+          { 
+            name: "Cek Stok Akrab XL", 
+            description: "Lihat ketersediaan Paket Akrab sebelum membeli.", 
+            icon: "package-open", 
+            color: "bg-purple-100 text-purple-600",
+            url: "https://xlstock.serversaya.site/"
+          },
+          {
+            name: "Cek Kuota XL/AXIS",
+            description: "Cek sisa kuota Anda melalui portal resmi.",
+            icon: "database-zap",
+            color: "bg-orange-100 text-orange-600",
+            url: "https://jeelsboobz.store/sidompul"
+          }
+        ];
+
 
         // --- APPLICATION STATE ---
         let view = 'home';
