@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>T-STORE: TOKO PENYEDIA PAKET ANDA</title>
+    <title>T-STORE: TOKO PENYEDIA DATA INTERNET ANDA</title>
     <!-- Load Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Load Lucide Icons -->
@@ -137,12 +137,12 @@
             icon: "users",
             description: "Kuota keluarga bisa dibagi-bagi.",
             packages: [
-              { id: 204, name: "Akrab SuperMini", price: 60000, desc: "Kuota Shared Area 1: 13-15GB, Area 4: 30-32GB. Official & Bergaransi." },
-              { id: 205, name: "Akrab Mini", price: 70000, desc: "Kuota Shared Area 1: 31.75-33.75GB, Area 4: 48.75-50.75GB. Official & Bergaransi." },
-              { id: 206, name: "Akrab Big", price: 75000, desc: "Kuota Shared Area 1: 38-40GB, Area 4: 55-57GB. Official & Bergaransi." },
-              { id: 207, name: "Akrab Jumbo V2", price: 95000, desc: "Kuota Shared Area 1: 50.5-52.5GB, Area 4: 67.5-69.5GB. Official & Bergaransi." },
-              { id: 208, name: "Akrab Jumbo", price: 100000, desc: "Kuota Shared Area 1: 65GB, Area 4: 123GB. Official & Bergaransi." },
-              { id: 209, name: "Akrab MegaBig", price: 130000, desc: "Kuota Shared Area 1: 88-90GB, Area 4: 105-107GB. Official & Bergaransi." },
+              { id: 204, name: "Akrab SuperMini", price: 60000, desc: "TOTAL KUOTA 13-15GB - 30-32GB. Official & Bergaransi." },
+              { id: 205, name: "Akrab Mini", price: 70000, desc: "TOTAL KUOTA : 31.75-33.75GB - 48.75-50.75GB. Official & Bergaransi." },
+              { id: 206, name: "Akrab Big", price: 75000, desc: "TOTAL KUOTA : 38-40GB - 55-57GB. Official & Bergaransi." },
+              { id: 207, name: "Akrab Jumbo V2", price: 95000, desc: "TOTAL KUOTA : 50.5-52.5GB - 67.5-69.5GB. Official & Bergaransi." },
+              { id: 208, name: "Akrab Jumbo", price: 100000, desc: "TOTAL KUOTA : 65GB - 123GB. Official & Bergaransi." },
+              { id: 209, name: "Akrab MegaBig", price: 130000, desc: "TOTAL KUOTA : 88-90GB - 105-107GB. Official & Bergaransi." },
             ]
           },
           {
@@ -490,7 +490,7 @@ Mohon diproses segera setelah pembayaran diverifikasi. Terima kasih.`
           if (view !== 'home' && view !== 'confirmation') {
             html = `
               <button onclick="setView('home')" class="bg-gray-50 border border-gray-100 p-2 rounded-full cursor-pointer hover:bg-gray-100 transition-colors">
-                  ${getIconHtml('home', 'w-4 h-4 text-gray-600')}
+                  ${getIconHtml('chevron-left', 'w-4 h-4 text-gray-600')}
               </button>
             `;
           } else {
@@ -509,7 +509,7 @@ Mohon diproses segera setelah pembayaran diverifikasi. Terima kasih.`
         /** 1. HOME VIEW */
         const renderHome = () => {
             let html = `
-            <div class="p-4 space-y-6 animate-fade-in pb-20">
+            <div class="p-4 space-y-8 animate-fade-in pb-20">
               <!-- Hero Section -->
               <div class="bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl p-6 text-white shadow-xl relative overflow-hidden border border-gray-700">
                 <div class="absolute top-0 right-0 w-40 h-40 bg-blue-500 opacity-20 rounded-full -mr-16 -mt-16 blur-3xl"></div>
@@ -523,7 +523,7 @@ Mohon diproses segera setelah pembayaran diverifikasi. Terima kasih.`
                 </div>
               </div>
               
-              <!-- NEW: EXTERNAL TOOLS SECTION -->
+              <!-- EXTERNAL TOOLS SECTION -->
               <div>
                 <h2 class="text-lg font-bold text-gray-800 mb-3 px-1">Layanan Ekstra</h2>
                 <div class="space-y-3">
