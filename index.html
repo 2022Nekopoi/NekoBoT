@@ -1,270 +1,355 @@
-import React, { useState, useEffect } from 'react';
-import { 
-  Smartphone, 
-  Wifi, 
-  Users, 
-  Zap, 
-  CreditCard, 
-  ChevronLeft, 
-  CheckCircle2, 
-  Copy,
-  LayoutGrid,
-  Signal,
-  ArrowRight,
-  ShieldCheck,
-  ShoppingBag,
-  Send,
-  AlertTriangle
-} from 'lucide-react';
-
-// --- ADMIN WHATSAPP NUMBER ---
-const ADMIN_PHONE = '6287859569780'; // Format internasional tanpa '+' atau '0'
-
-// --- DATA PRODUK & KATEGORI ---
-const CATEGORIES = [
-  {
-    id: 1,
-    title: "PAKET BEBAS PUAS XL",
-    provider: "XL",
-    color: "bg-blue-600",
-    icon: <Signal className="w-6 h-6 text-white" />,
-    description: "Kuota fleksibel, aktif 24 jam.",
-    packages: [
-      { id: 104, name: "XL Double Kuota 56GB", price: 100000, desc: "56GB Total Kuota, Aktif 28 Hari (MURAH)" },
-      { id: 105, name: "XL Double Kuota 168GB", price: 185000, desc: "168GB Total Kuota, Aktif 28 Hari (MURAH)" },
-    ]
-  },
-  {
-    id: 2,
-    title: "PAKET AKRAB XL AXIS",
-    provider: "XL/AXIS",
-    color: "bg-purple-600",
-    icon: <Users className="w-6 h-6 text-white" />,
-    description: "Kuota keluarga bisa dibagi-bagi.",
-    packages: [
-      // --- PAKET BARU AKRAB DITAMBAHKAN DI SINI ---
-      { 
-        id: 204, 
-        name: "Akrab SuperMini", 
-        price: 60000, 
-        desc: "Kuota Shared Area 1: 13-15GB, Area 4: 30-32GB. Official & Bergaransi." 
-      },
-      { 
-        id: 205, 
-        name: "Akrab Mini", 
-        price: 70000, 
-        desc: "Kuota Shared Area 1: 31.75-33.75GB, Area 4: 48.75-50.75GB. Official & Bergaransi." 
-      },
-      { 
-        id: 206, 
-        name: "Akrab Big", 
-        price: 75000, 
-        desc: "Kuota Shared Area 1: 38-40GB, Area 4: 55-57GB. Official & Bergaransi." 
-      },
-      { 
-        id: 207, 
-        name: "Akrab Jumbo V2", 
-        price: 95000, 
-        desc: "Kuota Shared Area 1: 50.5-52.5GB, Area 4: 67.5-69.5GB. Official & Bergaransi." 
-      },
-      { 
-        id: 208, 
-        name: "Akrab Jumbo", 
-        price: 100000, 
-        desc: "Kuota Shared Area 1: 65GB, Area 4: 123GB. Official & Bergaransi." 
-      },
-      { 
-        id: 209, 
-        name: "Akrab MegaBig", 
-        price: 130000, 
-        desc: "Kuota Shared Area 1: 88-90GB, Area 4: 105-107GB. Official & Bergaransi." 
-      },
-      // --- END PAKET BARU AKRAB ---
-      
-      // Paket lama (dipertahankan atau dihapus sesuai kebutuhan, di sini saya pertahankan)
-      { id: 201, name: "Akrab Mini 10GB (Lama)", price: 30000, desc: "10GB Shared + Unlimited WhatsApp, 2 Anggota" },
-      { id: 202, name: "Akrab Big 50GB (Lama)", price: 85000, desc: "50GB Shared + Unlimited Apps, 3 Anggota" },
-      { id: 203, name: "Akrab Jumbo 100GB (Lama)", price: 150000, desc: "100GB Shared + Bonus Pribadi, 5 Anggota" },
-    ]
-  },
-  {
-    id: 3,
-    title: "PAKET TELKOMSEL ORBIT",
-    provider: "Telkomsel",
-    color: "bg-red-600",
-    icon: <Wifi className="w-6 h-6 text-white" />,
-    description: "Internet rumah tanpa kabel.",
-    packages: [
-      { id: 304, name: "Data Orbit 15GB", price: 55000, desc: "15GB, Masa aktif 7 Hari" },
-      { id: 305, name: "Data Orbit 25GB", price: 75300, desc: "25GB, Masa aktif 14 Hari" },
-      { id: 306, name: "Data Orbit 175GB", price: 410000, desc: "175GB, Masa aktif 30 Hari" },
-      { id: 307, name: "Data Orbit 300GB", price: 600000, desc: "300GB, Masa aktif 30 Hari" },
-    ]
-  },
-  {
-    id: 4,
-    title: "PAKET INDOSAT SPESIAL",
-    provider: "Indosat",
-    color: "bg-yellow-500",
-    icon: <Smartphone className="w-6 h-6 text-white" />,
-    description: "Data Spesial & Promo Freedom, Masa aktif 30 Hari.",
-    packages: [
-      { id: 401, name: "DATA SPESIAL 30GB", price: 55000, desc: "30GB Full 24 Jam, Masa aktif 30 Hari" },
-      { id: 402, name: "DATA SPESIAL 60GB", price: 100000, desc: "60GB Full 24 Jam, Masa aktif 30 Hari" },
-      { id: 403, name: "PROMO FREEDOM SENSASI 50GB", price: 110000, desc: "50GB Full 24 Jam, Masa aktif 30 Hari" },
-      { id: 404, name: "PROMO FREEDOM NET 42GB", price: 100000, desc: "42GB Full 24 Jam, Masa aktif 30 Hari" },
-      { id: 405, name: "PROMO FREEDOM SENSASI 70GB", price: 130000, desc: "70GB Full 24 Jam, Masa aktif 30 Hari (BEST VALUE)" },
-    ]
-  },
-  {
-    id: 5,
-    title: "PAKET XL CIRCLE",
-    provider: "XL",
-    color: "bg-green-600",
-    icon: <LayoutGrid className="w-6 h-6 text-white" />,
-    // --- DESKRIPSI BARU SESUAI PERMINTAAN USER ---
-    description: "Paket komunitas hemat (Masa aktif 30 Hari). Syarat: Kartu aktif >60 Hari, Maksimal beli 1x/bulan. Jika keluar dari anggota, tidak bisa di-invite kembali.",
-    packages: [
-      { id: 501, name: "Circle 7GB", price: 25000, desc: "7GB Full 24 Jam, Masa aktif 30 Hari" },
-      { id: 502, name: "Circle 10GB", price: 35000, desc: "10GB Full 24 Jam, Masa aktif 30 Hari" },
-      { id: 503, name: "Circle 12GB", price: 35000, desc: "12GB Full 24 Jam, Masa aktif 30 Hari" },
-      { id: 504, name: "Circle 15GB", price: 45000, desc: "15GB Full 24 Jam, Masa aktif 30 Hari" },
-      { id: 505, name: "Circle 17GB", price: 45000, desc: "17GB Full 24 Jam, Masa aktif 30 Hari" },
-      { id: 506, name: "Circle 20GB", price: 45000, desc: "20GB Full 24 Jam, Masa aktif 30 Hari" },
-      { id: 507, name: "Circle 22GB", price: 55000, desc: "22GB Full 24 Jam, Masa aktif 30 Hari" },
-      { id: 508, name: "Circle 25GB", price: 55000, desc: "25GB Full 24 Jam, Masa aktif 30 Hari" },
-      { id: 509, name: "Circle 27GB", price: 55000, desc: "27GB Full 24 Jam, Masa aktif 30 Hari (Best Value 55k)" },
-      { id: 510, name: "Circle 33GB", price: 75000, desc: "33GB Full 24 Jam, Masa aktif 30 Hari (Best Value)" }
-    ]
-  },
-  {
-    // --- START: PAKET CUAN HIFI AIR DIGANTI KE INDOSAT HIFI AIR ---
-    id: 6,
-    title: "PAKET HIFI AIR INDOSAT",
-    provider: "Indosat",
-    color: "bg-cyan-500",
-    icon: <Zap className="w-6 h-6 text-white" />,
-    description: "Khusus untuk Modem Indosat HiFi Air. Pembelian ke nomor yang bukan HiFi Air akan gagal.",
-    packages: [
-      // Booster / Add-On
-      { id: 601, name: "Booster 20 GB", price: 35000, desc: "20GB Add-On (Harus ada paket aktif), Masa aktif ikut paket utama" },
-      { id: 602, name: "Booster 50 GB", price: 55000, desc: "50GB Add-On (Harus ada paket aktif), Masa aktif ikut paket utama" },
-      
-      // Paket Utama HiFi Air
-      { id: 603, name: "Data HiFi Air 75GB", price: 65000, desc: "75GB, Masa aktif 30 Hari" },
-      { id: 604, name: "Data HiFi Air 125GB", price: 100000, desc: "125GB, Masa aktif 30 Hari" },
-      { id: 605, name: "Data HiFi Air 200GB", price: 185000, desc: "200GB, Masa aktif 30 Hari" },
-      { id: 606, name: "Data HiFi Air 500GB", price: 385000, desc: "500GB, Masa aktif 30 Hari (BEST VALUE)" },
-    ]
-    // --- END: PAKET HIFI AIR INDOSAT ---
-  },
-];
-
-// Hanya menyertakan SeaBank sesuai permintaan user
-const PAYMENT_METHODS = [
-  { id: 'seabank', name: 'Transfer SeaBank', icon: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/SeaBank_Indonesia_logo.svg/2560px-SeaBank_Indonesia_logo.svg.png' },
-];
-
-// --- COMPONENT HELPER: FORMAT CURRENCY ---
-const formatRupiah = (number) => {
-  return new Intl.NumberFormat('id-ID', {
-    style: 'currency',
-    currency: 'IDR',
-    minimumFractionDigits: 0
-  }).format(number);
-};
-
-// --- MAIN COMPONENT ---
-export default function App() {
-  const [view, setView] = useState('home'); // home, details, payment, confirmation, success
-  const [selectedCategory, setSelectedCategory] = useState(null);
-  const [selectedPackage, setSelectedPackage] = useState(null);
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const [paymentMethod, setPaymentMethod] = useState('seabank'); 
-  const [isLoading, setIsLoading] = useState(false);
-  const [orderId, setOrderId] = useState('');
-  const [copied, setCopied] = useState(false);
-  const [uniqueCode, setUniqueCode] = useState(0); // State baru untuk kode unik
-
-  // Nilai terhitung: Total harga paket + kode unik
-  const finalPrice = selectedPackage && uniqueCode > 0 
-    ? selectedPackage.price + uniqueCode 
-    : (selectedPackage ? selectedPackage.price : 0);
-
-  // Handle Category Click
-  const handleCategoryClick = (category) => {
-    setSelectedCategory(category);
-    setView('details');
-  };
-
-  // Handle Package Selection
-  const handlePackageSelect = (pkg) => {
-    setSelectedPackage(pkg);
-  };
-
-  // Go to Payment - Generate unique code here
-  const proceedToPayment = () => {
-    if (!selectedPackage) return;
-    
-    // Generate random 3-digit unique code (100 to 999)
-    const randomCode = Math.floor(Math.random() * 900) + 100;
-    setUniqueCode(randomCode);
-    
-    setView('payment');
-  };
-
-  // Copy to clipboard helper
-  const handleCopy = (text) => {
-    // Menggunakan document.execCommand('copy') untuk kompatibilitas yang lebih baik di lingkungan iframe
-    if (document.execCommand) {
-        const textarea = document.createElement('textarea');
-        textarea.value = text;
-        document.body.appendChild(textarea);
-        textarea.select();
-        try {
-            document.execCommand('copy');
-            setCopied(true);
-            setTimeout(() => setCopied(false), 2000);
-        } catch (err) {
-            console.error('Gagal menyalin:', err);
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>T-STORE: Toko TopUp Online</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Load Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* Menggunakan font Inter dari Tailwind default */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6; /* Latar belakang abu-abu muda */
         }
-        document.body.removeChild(textarea);
-    } else {
-        console.error('Copy command not supported in this environment.');
-    }
-  };
+        /* Style untuk modal/overlay */
+        .modal-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 50;
+        }
+        .modal-content {
+            background-color: white;
+            padding: 1.5rem;
+            border-radius: 1.5rem;
+            max-width: 90%;
+            width: 380px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            animation: fadeInScale 0.3s ease-out;
+        }
 
-  // Custom alert/message box function since native alert() is forbidden
-  const showMessage = (message) => {
-    console.log("ALERT:", message); 
-  };
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-gray-200 flex justify-center">
 
-  // Handle Order Generation (leading to Confirmation/Payment)
-  const handleGenerateOrder = () => {
-    if (phoneNumber.length < 9) {
-      showMessage("Mohon masukkan nomor HP yang valid (min 9 digit)");
-      return;
-    }
-    
-    setIsLoading(true);
-    // Simulasi pembuatan ID Order
-    setTimeout(() => {
-      setOrderId(`TRX-${Math.floor(Math.random() * 10000000)}`);
-      setIsLoading(false);
-      // Pindah ke tampilan konfirmasi pembayaran (sebelumnya 'success')
-      setView('confirmation');
-    }, 1500);
-  };
-  
-  // Create WhatsApp URL
-  const generateWhatsAppUrl = () => {
-    if (!selectedPackage || !phoneNumber || !orderId || uniqueCode === 0) return '#';
+    <!-- Container utama simulasi HP -->
+    <div id="app-container" class="w-full max-w-md min-h-screen bg-white shadow-2xl overflow-hidden relative">
+        
+        <!-- Header App -->
+        <header id="app-header" class="px-5 py-4 bg-white border-b flex justify-between items-center sticky top-0 z-30 shadow-sm">
+            <div class="flex items-center gap-2">
+                <div class="w-9 h-9 bg-blue-600 rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-blue-200 shadow-md">
+                    T
+                </div>
+                <span class="text-xl font-extrabold tracking-tighter text-gray-800">T-<span class="text-blue-600">STORE</span></span>
+            </div>
+            <div class="bg-gray-50 border border-gray-100 p-2 rounded-full cursor-pointer hover:bg-gray-100">
+                <i data-lucide="users" class="w-4 h-4 text-gray-600"></i>
+            </div>
+        </header>
 
-    // Gunakan finalPrice yang sudah dihitung
-    const formattedFinalAmount = formatRupiah(finalPrice); 
+        <!-- Main Content Area -->
+        <main id="app-content" class="p-4 bg-gray-50 min-h-full pb-24"></main>
 
-    const message = encodeURIComponent(
-      `*KONFIRMASI PEMBAYARAN T-STORE*
+        <!-- Custom Modal/Message Box Container -->
+        <div id="custom-modal" class="hidden modal-backdrop">
+            <div class="modal-content text-center">
+                <div id="modal-icon" class="w-12 h-12 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i data-lucide="alert-triangle" class="w-6 h-6"></i>
+                </div>
+                <h3 id="modal-title" class="text-lg font-bold text-gray-800 mb-2"></h3>
+                <p id="modal-message" class="text-sm text-gray-600 mb-6"></p>
+                <button onclick="hideModal()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl transition-colors">
+                    Mengerti
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // --- DATA PRODUK & KATEGORI ---
+        const ADMIN_PHONE = '6287859569780'; // Format internasional tanpa '+' atau '0'
+
+        const CATEGORIES = [
+          {
+            id: 1,
+            title: "PAKET BEBAS PUAS XL",
+            provider: "XL",
+            color: "bg-blue-600",
+            icon: "signal",
+            description: "Kuota fleksibel, aktif 24 jam.",
+            packages: [
+              { id: 101, name: "Bebas Puas 10GB", price: 25000, desc: "10GB Full 24 Jam, Masa aktif 10 Hari" },
+              { id: 102, name: "Bebas Puas 20GB", price: 45000, desc: "20GB Full 24 Jam, Masa aktif 30 Hari" },
+              { id: 103, name: "Bebas Puas 30GB", price: 65000, desc: "30GB Full 24 Jam, Masa aktif 30 Hari" },
+              { id: 104, name: "XL Double Kuota 56GB", price: 100000, desc: "56GB Total Kuota, Aktif 28 Hari (MURAH)" },
+              { id: 105, name: "XL Double Kuota 168GB", price: 185000, desc: "168GB Total Kuota, Aktif 28 Hari (MURAH)" },
+            ]
+          },
+          {
+            id: 2,
+            title: "PAKET AKRAB XL AXIS",
+            provider: "XL/AXIS",
+            color: "bg-purple-600",
+            icon: "users",
+            description: "Kuota keluarga bisa dibagi-bagi.",
+            packages: [
+              { id: 204, name: "Akrab SuperMini", price: 60000, desc: "Kuota Shared Area 1: 13-15GB, Area 4: 30-32GB. Official & Bergaransi." },
+              { id: 205, name: "Akrab Mini", price: 70000, desc: "Kuota Shared Area 1: 31.75-33.75GB, Area 4: 48.75-50.75GB. Official & Bergaransi." },
+              { id: 206, name: "Akrab Big", price: 75000, desc: "Kuota Shared Area 1: 38-40GB, Area 4: 55-57GB. Official & Bergaransi." },
+              { id: 207, name: "Akrab Jumbo V2", price: 95000, desc: "Kuota Shared Area 1: 50.5-52.5GB, Area 4: 67.5-69.5GB. Official & Bergaransi." },
+              { id: 208, name: "Akrab Jumbo", price: 100000, desc: "Kuota Shared Area 1: 65GB, Area 4: 123GB. Official & Bergaransi." },
+              { id: 209, name: "Akrab MegaBig", price: 130000, desc: "Kuota Shared Area 1: 88-90GB, Area 4: 105-107GB. Official & Bergaransi." },
+            ]
+          },
+          {
+            id: 3,
+            title: "PAKET TELKOMSEL ORBIT",
+            provider: "Telkomsel",
+            color: "bg-red-600",
+            icon: "wifi",
+            description: "Internet rumah tanpa kabel.",
+            packages: [
+              { id: 301, name: "Orbit 10GB", price: 21000, desc: "10GB, Masa aktif 7 Hari" },
+              { id: 304, name: "Data Orbit 15GB", price: 55000, desc: "15GB, Masa aktif 7 Hari" },
+              { id: 305, name: "Data Orbit 25GB", price: 75300, desc: "25GB, Masa aktif 14 Hari" },
+              { id: 302, name: "Orbit 35GB", price: 81000, desc: "35GB, Masa aktif 30 Hari" },
+              { id: 303, name: "Orbit 70GB", price: 131000, desc: "70GB, Masa aktif 30 Hari" },
+              { id: 306, name: "Data Orbit 175GB", price: 410000, desc: "175GB, Masa aktif 30 Hari" },
+              { id: 307, name: "Data Orbit 300GB", price: 600000, desc: "300GB, Masa aktif 30 Hari" },
+            ]
+          },
+          {
+            id: 4,
+            title: "PAKET INDOSAT SPESIAL",
+            provider: "Indosat",
+            color: "bg-yellow-500",
+            icon: "smartphone",
+            description: "Data Spesial & Promo Freedom, Masa aktif 30 Hari.",
+            packages: [
+              { id: 401, name: "DATA SPESIAL 30GB", price: 55000, desc: "30GB Full 24 Jam, Masa aktif 30 Hari" },
+              { id: 402, name: "DATA SPESIAL 60GB", price: 100000, desc: "60GB Full 24 Jam, Masa aktif 30 Hari" },
+              { id: 403, name: "PROMO FREEDOM SENSASI 50GB", price: 110000, desc: "50GB Full 24 Jam, Masa aktif 30 Hari" },
+              { id: 404, name: "PROMO FREEDOM NET 42GB", price: 100000, desc: "42GB Full 24 Jam, Masa aktif 30 Hari" },
+              { id: 405, name: "PROMO FREEDOM SENSASI 70GB", price: 130000, desc: "70GB Full 24 Jam, Masa aktif 30 Hari (BEST VALUE)" },
+            ]
+          },
+          {
+            id: 5,
+            title: "PAKET XL CIRCLE",
+            provider: "XL",
+            color: "bg-green-600",
+            icon: "layout-grid",
+            description: "Paket komunitas hemat (Masa aktif 30 Hari). Syarat: Kartu aktif >60 Hari, Maksimal beli 1x/bulan. Jika keluar dari anggota, tidak bisa di-invite kembali.",
+            packages: [
+              { id: 501, name: "Circle 7GB", price: 25000, desc: "7GB Full 24 Jam, Masa aktif 30 Hari" },
+              { id: 502, name: "Circle 10GB", price: 35000, desc: "10GB Full 24 Jam, Masa aktif 30 Hari" },
+              { id: 503, name: "Circle 12GB", price: 35000, desc: "12GB Full 24 Jam, Masa aktif 30 Hari" },
+              { id: 504, name: "Circle 15GB", price: 45000, desc: "15GB Full 24 Jam, Masa aktif 30 Hari" },
+              { id: 505, name: "Circle 17GB", price: 45000, desc: "17GB Full 24 Jam, Masa aktif 30 Hari" },
+              { id: 506, name: "Circle 20GB", price: 45000, desc: "20GB Full 24 Jam, Masa aktif 30 Hari" },
+              { id: 507, name: "Circle 22GB", price: 55000, desc: "22GB Full 24 Jam, Masa aktif 30 Hari" },
+              { id: 508, name: "Circle 25GB", price: 55000, desc: "25GB Full 24 Jam, Masa aktif 30 Hari" },
+              { id: 509, name: "Circle 27GB", price: 55000, desc: "27GB Full 24 Jam, Masa aktif 30 Hari (Best Value 55k)" },
+              { id: 510, name: "Circle 33GB", price: 75000, desc: "33GB Full 24 Jam, Masa aktif 30 Hari (Best Value)" }
+            ]
+          },
+          {
+            id: 6,
+            title: "PAKET HIFI AIR INDOSAT",
+            provider: "Indosat",
+            color: "bg-cyan-500",
+            icon: "zap",
+            description: "Khusus untuk Modem Indosat HiFi Air. Pembelian ke nomor yang bukan HiFi Air akan gagal.",
+            packages: [
+              { id: 601, name: "Booster 20 GB", price: 35000, desc: "20GB Add-On (Harus ada paket aktif), Masa aktif ikut paket utama" },
+              { id: 602, name: "Booster 50 GB", price: 55000, desc: "50GB Add-On (Harus ada paket aktif), Masa aktif ikut paket utama" },
+              { id: 603, name: "Data HiFi Air 75GB", price: 65000, desc: "75GB, Masa aktif 30 Hari" },
+              { id: 604, name: "Data HiFi Air 125GB", price: 100000, desc: "125GB, Masa aktif 30 Hari" },
+              { id: 605, name: "Data HiFi Air 200GB", price: 185000, desc: "200GB, Masa aktif 30 Hari" },
+              { id: 606, name: "Data HiFi Air 500GB", price: 385000, desc: "500GB, Masa aktif 30 Hari (BEST VALUE)" },
+            ]
+          },
+        ];
+
+        // Hanya menyertakan SeaBank sesuai permintaan user
+        const PAYMENT_METHODS = [
+          { id: 'seabank', name: 'Transfer SeaBank', icon: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/SeaBank_Indonesia_logo.svg/2560px-SeaBank_Indonesia_logo.svg.png' },
+        ];
+
+        // --- STATE APLIKASI ---
+        let view = 'home';
+        let selectedCategory = null;
+        let selectedPackage = null;
+        let phoneNumber = '';
+        let isLoading = false;
+        let orderId = '';
+        let uniqueCode = 0;
+        let copied = false;
+        let isAuthReady = true; // Placeholder for Firebase Auth status
+
+        // --- HELPER FUNCTIONS ---
+
+        // Mengubah ikon Lucide menjadi HTML string
+        const getIconHtml = (name, classes) => {
+            return `<i data-lucide="${name}" class="${classes}"></i>`;
+        };
+
+        // Format mata uang Rupiah
+        const formatRupiah = (number) => {
+          return new Intl.NumberFormat('id-ID', {
+            style: 'currency',
+            currency: 'IDR',
+            minimumFractionDigits: 0
+          }).format(number);
+        };
+
+        // Custom Modal/Message Box
+        const showModal = (title, message, isError = true) => {
+            document.getElementById('modal-title').textContent = title;
+            document.getElementById('modal-message').textContent = message;
+            const iconDiv = document.getElementById('modal-icon');
+            
+            if (isError) {
+                iconDiv.className = 'w-12 h-12 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto mb-4';
+                iconDiv.innerHTML = getIconHtml('alert-triangle', 'w-6 h-6');
+            } else {
+                iconDiv.className = 'w-12 h-12 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-4';
+                iconDiv.innerHTML = getIconHtml('check-circle-2', 'w-6 h-6');
+            }
+
+            document.getElementById('custom-modal').classList.remove('hidden');
+            lucide.createIcons(); // Re-render Lucide icons in modal
+        };
+
+        const hideModal = () => {
+            document.getElementById('custom-modal').classList.add('hidden');
+        };
+
+        // Copy to clipboard helper
+        const handleCopy = (text) => {
+            // Menggunakan document.execCommand('copy') untuk kompatibilitas di lingkungan iframe
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            document.body.appendChild(textarea);
+            textarea.select();
+            try {
+                document.execCommand('copy');
+                copied = true;
+                renderApp(); // Render ulang untuk menampilkan ikon 'check'
+                setTimeout(() => {
+                    copied = false;
+                    renderApp(); // Render ulang untuk kembali ke ikon 'copy'
+                }, 2000);
+            } catch (err) {
+                console.error('Gagal menyalin:', err);
+            }
+            document.body.removeChild(textarea);
+        };
+
+        // --- STATE MUTATORS / ACTIONS ---
+
+        const setView = (newView) => {
+            view = newView;
+            renderApp();
+        };
+
+        const setSelectedCategory = (category) => {
+            selectedCategory = category;
+            selectedPackage = null; // Reset paket saat kategori berubah
+            setView('details');
+        };
+
+        const setSelectedPackage = (pkg) => {
+            selectedPackage = pkg;
+            renderApp();
+        };
+
+        const setPhoneNumber = (val) => {
+            phoneNumber = val.replace(/\D/g, ''); // Hanya angka
+            renderApp();
+        };
+
+        const setUniqueCode = (code) => {
+            uniqueCode = code;
+        };
+        
+        const setIsLoading = (loading) => {
+            isLoading = loading;
+            renderApp();
+        };
+
+        const setOrderId = (id) => {
+            orderId = id;
+        };
+
+        const resetApp = () => {
+            view = 'home';
+            selectedCategory = null;
+            selectedPackage = null;
+            phoneNumber = '';
+            orderId = '';
+            uniqueCode = 0;
+            renderApp();
+        };
+
+        // Go to Payment - Generate unique code here
+        const proceedToPayment = () => {
+            if (!selectedPackage) return;
+            
+            // Generate random 3-digit unique code (100 to 999)
+            const randomCode = Math.floor(Math.random() * 900) + 100;
+            setUniqueCode(randomCode);
+            
+            setView('payment');
+        };
+
+        // Handle Order Generation (leading to Confirmation/Payment)
+        const handleGenerateOrder = () => {
+            if (phoneNumber.length < 9) {
+                showModal("Nomor HP Tidak Valid", "Mohon masukkan nomor HP yang valid (minimal 9 digit) untuk melanjutkan.", true);
+                return;
+            }
+            
+            setIsLoading(true);
+            // Simulasi pembuatan ID Order
+            setTimeout(() => {
+                setOrderId(`TRX-${Math.floor(Math.random() * 10000000)}`);
+                setIsLoading(false);
+                // Pindah ke tampilan konfirmasi pembayaran
+                setView('confirmation');
+            }, 1500);
+        };
+        
+        // Create WhatsApp URL
+        const generateWhatsAppUrl = () => {
+            if (!selectedPackage || !phoneNumber || !orderId || uniqueCode === 0) return '#';
+
+            const finalPrice = selectedPackage.price + uniqueCode;
+            const formattedFinalAmount = formatRupiah(finalPrice); 
+
+            const message = encodeURIComponent(
+              `*KONFIRMASI PEMBAYARAN T-STORE*
 
 Halo Admin, saya sudah melakukan transfer. Berikut detail pesanan saya:
 
@@ -274,422 +359,475 @@ Nomor Tujuan: ${phoneNumber}
 Total Bayar: ${formattedFinalAmount} (Termasuk Kode Unik ${uniqueCode})
 
 Mohon diproses segera setelah pembayaran diverifikasi. Terima kasih.`
-    );
-    
-    return `https://wa.me/${ADMIN_PHONE}?text=${message}`;
-  }
+            );
+            
+            return `https://wa.me/${ADMIN_PHONE}?text=${message}`;
+        }
 
-  const resetApp = () => {
-    setView('home');
-    setSelectedCategory(null);
-    setSelectedPackage(null);
-    setPhoneNumber('');
-    setPaymentMethod('seabank'); 
-    setOrderId('');
-    setUniqueCode(0); // Reset kode unik
-  };
+        // --- RENDER FUNCTIONS ---
 
-  // --- RENDER VIEWS ---
-
-  // 1. HOME VIEW (Unchanged)
-  const renderHome = () => (
-    <div className="space-y-6 animate-fade-in pb-20">
-      {/* Hero Section */}
-      <div className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl p-6 text-white shadow-xl relative overflow-hidden border border-gray-700">
-        <div className="absolute top-0 right-0 w-40 h-40 bg-blue-500 opacity-20 rounded-full -mr-16 -mt-16 blur-3xl"></div>
-        <div className="absolute bottom-0 left-0 w-32 h-32 bg-purple-500 opacity-20 rounded-full -ml-10 -mb-10 blur-3xl"></div>
-        
-        <h1 className="text-3xl font-extrabold mb-2 tracking-tight">Selamat Datang di <br/><span className="text-blue-400">T-STORE</span></h1>
-        <p className="text-gray-300 text-sm mb-4">Pusat paket data termurah & terpercaya.</p>
-        <div className="bg-white/10 backdrop-blur-md rounded-lg p-3 inline-flex items-center gap-2 border border-white/10">
-          <ShieldCheck className="w-5 h-5 text-green-400" />
-          <span className="text-xs font-medium text-gray-200">Transaksi Aman & Otomatis</span>
-        </div>
-      </div>
-
-      {/* Grid Menu */}
-      <div>
-        <div className="flex items-center justify-between mb-4 px-2">
-          <h2 className="text-lg font-bold text-gray-800">Daftar Produk</h2>
-          <span className="text-xs text-blue-600 font-semibold bg-blue-50 px-2 py-1 rounded-md">Terlaris</span>
-        </div>
-        
-        <div className="grid grid-cols-2 gap-4">
-          {CATEGORIES.map((cat) => (
-            <button
-              key={cat.id}
-              onClick={() => handleCategoryClick(cat)}
-              className="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 hover:shadow-lg hover:border-blue-200 transition-all text-left flex flex-col justify-between h-36 group relative overflow-hidden"
-            >
-              {/* Decorative Circle */}
-              <div className={`absolute -right-4 -top-4 w-16 h-16 rounded-full opacity-10 ${cat.color}`}></div>
-              
-              <div className={`${cat.color} w-12 h-12 rounded-xl flex items-center justify-center shadow-md group-hover:scale-110 transition-transform duration-300`}>
-                {cat.icon}
-              </div>
-              <div className="mt-3">
-                <h3 className="font-bold text-gray-800 text-sm leading-tight mb-1 group-hover:text-blue-600 transition-colors">{cat.title}</h3>
-                <p className="text-[10px] text-gray-400 line-clamp-2">{cat.description}</p>
-              </div>
-            </button>
-          ))}
-        </div>
-      </div>
-      
-      {/* Promo Banner */}
-      <div className="bg-gradient-to-r from-orange-100 to-yellow-50 rounded-xl p-4 border border-orange-200 flex items-center gap-3 shadow-sm">
-        <div className="bg-orange-500 p-2.5 rounded-full text-white shadow-md">
-          <Zap size={20} fill="currentColor" />
-        </div>
-        <div>
-          <h4 className="font-bold text-gray-800 text-sm">Flash Sale Harian!</h4>
-          <p className="text-xs text-gray-600">Diskon spesial untuk pengguna baru T-STORE.</p>
-        </div>
-      </div>
-    </div>
-  );
-
-  // 2. DETAILS VIEW (Unchanged)
-  const renderDetails = () => (
-    <div className="animate-in slide-in-from-right duration-300 pb-24">
-      <div className="sticky top-0 bg-white/90 backdrop-blur-md z-10 py-4 px-2 border-b mb-4 flex items-center gap-3 shadow-sm">
-        <button onClick={() => setView('home')} className="p-2 hover:bg-gray-100 rounded-full transition-colors">
-          <ChevronLeft className="text-gray-700" />
-        </button>
-        <div>
-          <h2 className="font-bold text-lg text-gray-800">{selectedCategory.title}</h2>
-          <p className="text-xs text-gray-500">Pilih nominal paket</p>
-        </div>
-      </div>
-
-      <div className="space-y-4 px-2">
-         {/* Tambahkan keterangan penting di atas daftar paket, terutama untuk HiFi Air */}
-        {selectedCategory.id === 6 && (
-            <div className="bg-orange-50 border-l-4 border-orange-500 p-4 rounded-lg mb-4 text-sm text-gray-700">
-                <p className='font-bold flex items-center gap-2 text-orange-700 mb-1'><AlertTriangle size={16} /> Perhatian Syarat & Ketentuan:</p>
-                <p className="text-xs italic pl-1">Produk ini hanya berlaku untuk **Modem Indosat HiFi Air**. Pembelian ke nomor reguler akan gagal.</p>
-            </div>
-        )}
-        
-        {selectedCategory.packages.map((pkg) => (
-          <div 
-            key={pkg.id}
-            onClick={() => handlePackageSelect(pkg)}
-            className={`cursor-pointer rounded-2xl p-4 border-2 transition-all relative overflow-hidden group ${
-              selectedPackage?.id === pkg.id 
-              ? 'border-blue-500 bg-blue-50 shadow-md transform scale-[1.02]' 
-              : 'border-gray-100 bg-white hover:border-gray-300 hover:bg-gray-50'
-            }`}
-          >
-            <div className="flex justify-between items-start mb-2">
-              <h3 className="font-bold text-gray-800 text-lg group-hover:text-blue-700">{pkg.name}</h3>
-              {selectedPackage?.id === pkg.id && (
-                <div className="bg-blue-600 text-white rounded-full p-1 animate-in zoom-in">
-                  <CheckCircle2 size={16} />
+        // 1. HOME VIEW
+        const renderHome = () => {
+            let html = `
+            <div class="space-y-6 animate-fade-in pb-20">
+              <!-- Hero Section -->
+              <div class="bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl p-6 text-white shadow-xl relative overflow-hidden border border-gray-700">
+                <div class="absolute top-0 right-0 w-40 h-40 bg-blue-500 opacity-20 rounded-full -mr-16 -mt-16 blur-3xl"></div>
+                <div class="absolute bottom-0 left-0 w-32 h-32 bg-purple-500 opacity-20 rounded-full -ml-10 -mb-10 blur-3xl"></div>
+                
+                <h1 class="text-3xl font-extrabold mb-2 tracking-tight">Selamat Datang di <br/><span class="text-blue-400">T-STORE</span></h1>
+                <p class="text-gray-300 text-sm mb-4">Pusat paket data termurah & terpercaya.</p>
+                <div class="bg-white/10 backdrop-blur-md rounded-lg p-3 inline-flex items-center gap-2 border border-white/10">
+                  ${getIconHtml('shield-check', 'w-5 h-5 text-green-400')}
+                  <span class="text-xs font-medium text-gray-200">Transaksi Aman & Otomatis</span>
                 </div>
-              )}
-            </div>
-            <p className="text-gray-500 text-sm mb-4 leading-relaxed">{pkg.desc}</p>
-            <div className="flex justify-between items-center border-t pt-3 border-dashed border-gray-200">
-              <span className="text-xs text-gray-400 font-medium">HARGA</span>
-              <p className="font-extrabold text-xl text-blue-600">{formatRupiah(pkg.price)}</p>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* Floating Action Button */}
-      {selectedPackage && (
-        <div className="fixed bottom-0 left-0 right-0 p-4 bg-white border-t shadow-[0_-5px_20px_rgba(0,0,0,0.1)] max-w-md mx-auto z-20 animate-in slide-in-from-bottom duration-300">
-           <div className="flex justify-between items-center mb-3 px-1">
-             <div className="text-sm">
-               <span className="text-gray-500 block">Total Bayar</span>
-               {/* Di sini masih menampilkan harga paket karena kode unik baru dihitung di langkah berikutnya */}
-               <span className="font-bold text-lg text-gray-900">{formatRupiah(selectedPackage.price)}</span>
-             </div>
-             <button 
-               onClick={proceedToPayment}
-               className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-xl shadow-lg shadow-blue-300 transition-all active:scale-95 flex items-center gap-2"
-             >
-               Lanjut <ArrowRight size={18} />
-             </button>
-           </div>
-        </div>
-      )}
-    </div>
-  );
-
-  // 3. PAYMENT VIEW (Updated to show finalPrice)
-  const renderPayment = () => (
-    <div className="animate-in slide-in-from-right duration-300 pb-24">
-      {/* Header */}
-      <div className="sticky top-0 bg-white z-10 py-4 px-2 border-b mb-4 flex items-center gap-3">
-        <button onClick={() => setView('details')} className="p-2 hover:bg-gray-100 rounded-full transition-colors">
-          <ChevronLeft className="text-gray-700" />
-        </button>
-        <h2 className="font-bold text-lg text-gray-800">Checkout</h2>
-      </div>
-
-      <div className="px-3 space-y-6">
+              </div>
         
-        {/* Ringkasan Produk */}
-        <div className="bg-gradient-to-r from-blue-50 to-white p-4 rounded-xl border border-blue-100 shadow-sm">
-          <div className="flex items-start gap-3">
-            <div className="bg-blue-100 p-2 rounded-lg text-blue-600">
-              <ShoppingBag size={20} />
-            </div>
-            <div className="flex-1">
-               <p className="text-xs text-gray-500 uppercase font-semibold tracking-wider">Item Details</p>
-               <h3 className="font-bold text-gray-800 text-lg">{selectedPackage.name}</h3>
-               <p className="text-xs text-gray-500 mb-2">{selectedCategory.provider} - {selectedCategory.title}</p>
-               <div className="h-px bg-blue-100 w-full my-2"></div>
-               <div className="flex justify-between items-center">
-                 <span className="text-xs font-medium text-gray-600">Harga Paket</span>
-                 <p className="font-bold text-gray-600 text-lg">{formatRupiah(selectedPackage.price)}</p>
-               </div>
-               <div className="flex justify-between items-center border-t border-dashed border-blue-200 mt-2 pt-2">
-                 <span className="text-sm font-bold text-green-600">Kode Unik</span>
-                 <p className="font-bold text-green-600 text-lg">+{uniqueCode}</p>
-               </div>
-            </div>
-          </div>
-        </div>
+              <!-- Grid Menu -->
+              <div>
+                <div class="flex items-center justify-between mb-4 px-2">
+                  <h2 class="text-lg font-bold text-gray-800">Daftar Produk</h2>
+                  <span class="text-xs text-blue-600 font-semibold bg-blue-50 px-2 py-1 rounded-md">Terlaris</span>
+                </div>
+                
+                <div class="grid grid-cols-2 gap-4">
+            `;
 
-        {/* Input Nomor HP */}
-        <div className="space-y-2">
-          <label className="block text-sm font-bold text-gray-800 flex items-center gap-2">
-            <Smartphone size={16} className="text-blue-600" />
-            Nomor Tujuan
-          </label>
-          <div className="relative group">
-             <input
-               type="tel"
-               placeholder="08xxxxxxxxxx"
-               value={phoneNumber}
-               onChange={(e) => {
-                 const val = e.target.value.replace(/\D/g, ''); // Hanya angka
-                 setPhoneNumber(val);
-               }}
-               className="w-full pl-4 pr-12 py-3.5 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none transition-all font-mono text-xl font-bold tracking-wider text-gray-800 bg-gray-50 focus:bg-white"
-             />
-             <div className="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
-               {phoneNumber.length >= 4 ? (
-                 <img 
-                    src={
-                      phoneNumber.startsWith('081') || phoneNumber.startsWith('082') ? "https://upload.wikimedia.org/wikipedia/commons/b/bc/Telkomsel_2021_icon.svg" :
-                      phoneNumber.startsWith('083') || phoneNumber.startsWith('085') ? "https://upload.wikimedia.org/wikipedia/commons/a/a2/Indosat_Ooredoo_Hutchison.svg" :
-                      phoneNumber.startsWith('087') || phoneNumber.startsWith('0859') || phoneNumber.startsWith('0817') ? "https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Axis_logo_2015.svg/2560px-Axis_logo_2015.svg.png" :
-                      "https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/XL_Axiata_2016_icon.svg/2048px-XL_Axiata_2016_icon.svg.png"
-                    }
-                    alt="Provider"
-                    className="h-6 w-auto object-contain drop-shadow-sm"
-                 />
-               ) : (
-                  <span className="text-gray-300 text-xs">Provider</span>
-               )}
-             </div>
-          </div>
-          <p className="text-[11px] text-red-500 italic ml-1">*Pastikan nomor benar, kesalahan input bukan tanggung jawab kami.</p>
-        </div>
+            CATEGORIES.forEach((cat) => {
+                html += `
+                <button
+                    onclick="setSelectedCategory(${cat.id})"
+                    class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 hover:shadow-lg hover:border-blue-200 transition-all text-left flex flex-col justify-between h-36 group relative overflow-hidden"
+                >
+                    <!-- Decorative Circle -->
+                    <div class="absolute -right-4 -top-4 w-16 h-16 rounded-full opacity-10 ${cat.color}"></div>
+                    
+                    <div class="${cat.color} w-12 h-12 rounded-xl flex items-center justify-center shadow-md group-hover:scale-110 transition-transform duration-300">
+                        ${getIconHtml(cat.icon, 'w-6 h-6 text-white')}
+                    </div>
+                    <div class="mt-3">
+                        <h3 class="font-bold text-gray-800 text-sm leading-tight mb-1 group-hover:text-blue-600 transition-colors">${cat.title}</h3>
+                        <p class="text-[10px] text-gray-400 line-clamp-2">${cat.description}</p>
+                    </div>
+                </button>
+                `;
+            });
 
-        {/* Metode Pembayaran (SeaBank ONLY) */}
-        <div className="space-y-3">
-          <label className="block text-sm font-bold text-gray-800 flex items-center gap-2 mb-4">
-            <CreditCard size={16} className="text-blue-600" />
-            Metode Pembayaran
-          </label>
-
-          {/* Opsi Pembayaran Tunggal: SeaBank */}
-          <div
-            className={`flex items-center p-3.5 rounded-xl border-2 cursor-default border-blue-500 bg-blue-50 ring-1 ring-blue-500`}
-          >
-            <div className="w-14 h-9 mr-4 flex items-center justify-center bg-white rounded-md border border-gray-200 p-1 shadow-sm">
-               <img src={PAYMENT_METHODS[0].icon} alt={PAYMENT_METHODS[0].name} className="max-h-full max-w-full object-contain" />
-            </div>
-            <div className="flex-1">
-              <p className="text-sm font-bold text-gray-800">Transfer SeaBank</p>
-              <p className="text-[10px] text-gray-500 font-medium">Metode Pembayaran Utama</p>
-            </div>
-            <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center border-blue-600`}>
-              <div className="w-2.5 h-2.5 bg-blue-600 rounded-full animate-in zoom-in" />
-            </div>
-          </div>
-
-          {/* DETAIL REKENING SEABANK (GAGAT GINATA) - Selalu tampil */}
-          <div className="mt-2 bg-orange-50 border border-orange-200 rounded-xl p-4 animate-in slide-in-from-top fade-in relative overflow-hidden">
-             <div className="flex justify-between items-center mb-3">
-               <span className="text-xs text-orange-800 font-semibold uppercase tracking-wide">Rekening Tujuan</span>
-               <div className="bg-orange-100 px-2 py-0.5 rounded text-[10px] text-orange-700 font-bold">Wajib Dicek</div>
-             </div>
-             
-             <div className="space-y-3">
-                <div className="flex justify-between border-b border-orange-200/50 pb-2">
-                   <span className="text-sm text-gray-600">Bank Tujuan</span>
-                   <span className="text-sm font-bold text-gray-900">SEABANK</span>
+            html += `
+                </div>
+              </div>
+              
+              <!-- Promo Banner -->
+              <div class="bg-gradient-to-r from-orange-100 to-yellow-50 rounded-xl p-4 border border-orange-200 flex items-center gap-3 shadow-sm">
+                <div class="bg-orange-500 p-2.5 rounded-full text-white shadow-md">
+                  ${getIconHtml('zap', 'w-5 h-5')}
                 </div>
                 <div>
-                   <span className="text-sm text-gray-600 block mb-1">Nomor Rekening</span>
-                   <div className="flex items-center gap-2">
-                      {/* Nomor Rekening GAGAT GINATA */}
-                      <span className="text-lg font-mono font-bold text-gray-900 tracking-wide">901030212504</span>
-                      <button 
-                        onClick={() => handleCopy('901030212504')}
-                        className="p-1.5 bg-white border border-orange-200 rounded-lg hover:bg-orange-100 transition-colors"
-                      >
-                         {copied ? <CheckCircle2 size={16} className="text-green-600"/> : <Copy size={16} className="text-orange-500"/>}
-                      </button>
+                  <h4 class="font-bold text-gray-800 text-sm">Flash Sale Harian!</h4>
+                  <p class="text-xs text-gray-600">Diskon spesial untuk pengguna baru T-STORE.</p>
+                </div>
+              </div>
+            </div>
+            `;
+            return html;
+        };
+
+        // 2. DETAILS VIEW
+        const renderDetails = () => {
+            if (!selectedCategory) return '';
+
+            let html = `
+            <div class="animate-in slide-in-from-right duration-300 pb-24">
+              <div class="sticky top-0 bg-white/90 backdrop-blur-md z-10 py-4 px-2 border-b mb-4 flex items-center gap-3 shadow-sm">
+                <button onclick="setView('home')" class="p-2 hover:bg-gray-100 rounded-full transition-colors">
+                    ${getIconHtml('chevron-left', 'w-6 h-6 text-gray-700')}
+                </button>
+                <div>
+                  <h2 class="font-bold text-lg text-gray-800">${selectedCategory.title}</h2>
+                  <p class="text-xs text-gray-500">Pilih nominal paket</p>
+                </div>
+              </div>
+        
+              <div class="space-y-4 px-2">
+                 <!-- Keterangan Penting (XL Circle / HiFi Air) -->
+                ${selectedCategory.id === 5 || selectedCategory.id === 6 ? `
+                    <div class="bg-orange-50 border-l-4 border-orange-500 p-4 rounded-lg mb-4 text-sm text-gray-700">
+                        <p class='font-bold flex items-center gap-2 text-orange-700 mb-1'>${getIconHtml('alert-triangle', 'w-4 h-4')} Perhatian Syarat & Ketentuan:</p>
+                        <p class="text-xs italic pl-1">${selectedCategory.description}</p>
+                    </div>
+                ` : ''}
+
+            `;
+
+            selectedCategory.packages.forEach((pkg) => {
+                const isSelected = selectedPackage?.id === pkg.id;
+                html += `
+                <div 
+                    onclick="setSelectedPackage(${pkg.id})"
+                    class="cursor-pointer rounded-2xl p-4 border-2 transition-all relative overflow-hidden group ${
+                        isSelected 
+                        ? 'border-blue-500 bg-blue-50 shadow-md transform scale-[1.02]' 
+                        : 'border-gray-100 bg-white hover:border-gray-300 hover:bg-gray-50'
+                    }"
+                >
+                    <div class="flex justify-between items-start mb-2">
+                      <h3 class="font-bold text-gray-800 text-lg group-hover:text-blue-700">${pkg.name}</h3>
+                      ${isSelected ? `
+                        <div class="bg-blue-600 text-white rounded-full p-1 animate-in zoom-in">
+                            ${getIconHtml('check-circle-2', 'w-4 h-4')}
+                        </div>
+                      ` : ''}
+                    </div>
+                    <p class="text-gray-500 text-sm mb-4 leading-relaxed">${pkg.desc}</p>
+                    <div class="flex justify-between items-center border-t pt-3 border-dashed border-gray-200">
+                      <span class="text-xs text-gray-400 font-medium">HARGA</span>
+                      <p class="font-extrabold text-xl text-blue-600">${formatRupiah(pkg.price)}</p>
+                    </div>
+                </div>
+                `;
+            });
+
+            html += `</div>`;
+
+            // Floating Action Button
+            if (selectedPackage) {
+                html += `
+                <div class="fixed bottom-0 left-0 right-0 p-4 bg-white border-t shadow-[0_-5px_20px_rgba(0,0,0,0.1)] max-w-md mx-auto z-20 animate-in slide-in-from-bottom duration-300">
+                   <div class="flex justify-between items-center mb-3 px-1">
+                     <div class="text-sm">
+                       <span class="text-gray-500 block">Total Bayar</span>
+                       <span class="font-bold text-lg text-gray-900">${formatRupiah(selectedPackage.price)}</span>
+                     </div>
+                     <button 
+                       onclick="proceedToPayment()"
+                       class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-xl shadow-lg shadow-blue-300 transition-all active:scale-95 flex items-center gap-2"
+                     >
+                       Lanjut ${getIconHtml('arrow-right', 'w-4 h-4')}
+                     </button>
                    </div>
                 </div>
-                <div className="flex justify-between border-t border-orange-200/50 pt-2">
-                   <span className="text-sm text-gray-600">Atas Nama</span>
-                   {/* Nama GAGAT GINATA */}
-                   <span className="text-sm font-bold text-gray-900">GAGAT GINATA</span>
-                </div>
-             </div>
-          </div>
-        </div>
-      </div>
+                `;
+            }
 
-      {/* Bottom Bar - Updated to show finalPrice */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white border-t p-4 shadow-[0_-5px_20px_rgba(0,0,0,0.1)] max-w-md mx-auto z-20">
-         <div className="flex justify-between items-center mb-3">
-           <span className="text-gray-600 font-medium text-sm">Total Tagihan (Wajib Transfer)</span>
-           <span className="text-xl font-bold text-blue-600">{formatRupiah(finalPrice)}</span>
-         </div>
-         <button 
-           onClick={handleGenerateOrder} // New action
-           disabled={isLoading}
-           className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-blue-200 transition-all flex justify-center items-center active:scale-98"
-         >
-           {isLoading ? (
-             <span className="flex items-center gap-2">
-               <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-               Membuat ID Pesanan...
-             </span>
-           ) : "Dapatkan ID Pesanan & Bayar"}
-         </button>
-      </div>
-    </div>
-  );
+            html += `</div>`;
+            return html;
+        };
 
-  // 4. CONFIRMATION/PAYMENT VIEW (Updated to show finalPrice and breakdown)
-  const renderConfirmation = () => (
-    <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-6 text-center animate-in zoom-in duration-300">
-      <div className="bg-white p-6 rounded-3xl shadow-xl w-full max-w-sm relative overflow-hidden">
-        {/* Ticket Header */}
-        <div className="border-b-2 border-dashed border-gray-200 pb-6 mb-6 relative">
-          <div className="absolute -left-10 bottom-[-14px] w-8 h-8 bg-gray-50 rounded-full"></div>
-          <div className="absolute -right-10 bottom-[-14px] w-8 h-8 bg-gray-50 rounded-full"></div>
-          
-          <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <AlertTriangle className="w-8 h-8 text-orange-600" />
-          </div>
-          <h2 className="text-xl font-bold text-gray-800">Langkah Terakhir: Bayar Dulu!</h2>
-          <p className="text-gray-500 text-xs mt-1">Pesanan akan diproses setelah transfer berhasil dikonfirmasi.</p>
-        </div>
-        
-        {/* Instruction Card */}
-        <div className="bg-red-50 border-l-4 border-red-500 p-4 rounded-lg text-left mb-6">
-            <p className="text-sm font-bold text-red-700 mb-2">PENTING!</p>
-            <ol className="list-decimal list-inside text-xs text-gray-700 space-y-1 pl-1">
-                <li>Segera lakukan transfer sebesar **{formatRupiah(finalPrice)}** ke rekening di bawah.</li>
-                <li>Pastikan nominal transfer **SAMA PERSIS** (termasuk kode unik) agar mudah diverifikasi.</li>
-                <li>Setelah transfer, klik tombol WhatsApp di bawah untuk konfirmasi ke Admin.</li>
-            </ol>
-        </div>
-
-        {/* Payment Detail Reminder */}
-        <div className="space-y-4 text-left border border-gray-200 rounded-xl p-4 mb-6">
-            <h3 className="text-sm font-bold text-gray-700 flex items-center gap-2 mb-2">
-                <CreditCard size={16} className="text-blue-600"/>
-                Detail Pembayaran Anda
-            </h3>
+        // 3. PAYMENT VIEW
+        const renderPayment = () => {
+            if (!selectedPackage) return '';
             
-            <div className="flex justify-between">
-                <span className="text-xs text-gray-500">ID Transaksi</span>
-                <span className="text-xs font-mono font-bold text-gray-800 bg-gray-100 px-2 py-0.5 rounded">{orderId}</span>
-            </div>
-
-            {/* Price Breakdown */}
-            <div className="pt-2 space-y-1">
-                <div className="flex justify-between text-sm text-gray-600">
-                    <span>Harga Paket</span>
-                    <span>{formatRupiah(selectedPackage.price)}</span>
-                </div>
-                <div className="flex justify-between text-sm font-bold text-green-600">
-                    <span>Kode Unik (Wajib Ditransfer)</span>
-                    <span>+{uniqueCode}</span>
-                </div>
-                <div className="border-t border-blue-100 pt-2 flex justify-between items-center">
-                    <span className="text-sm font-bold text-gray-800">TOTAL BAYAR</span>
-                    <span className="text-2xl font-extrabold text-blue-600">{formatRupiah(finalPrice)}</span>
-                </div>
-            </div>
+            const finalPrice = selectedPackage.price + uniqueCode;
             
-            <div className="border-t border-gray-100 pt-2">
-                <span className="text-xs text-gray-500 block mb-1">Nomor Rekening SeaBank</span>
-                <div className="flex items-center justify-between">
-                   <span className="text-lg font-mono font-bold text-gray-900 tracking-wide">901030212504</span>
-                   <button 
-                        onClick={() => handleCopy('901030212504')}
-                        className="p-1.5 bg-white border border-orange-200 rounded-lg hover:bg-orange-100 transition-colors"
-                      >
-                         {copied ? <CheckCircle2 size={16} className="text-green-600"/> : <Copy size={16} className="text-orange-500"/>}
-                   </button>
-                </div>
-                <span className="text-xs text-gray-500">A/N: GAGAT GINATA</span>
-            </div>
-        </div>
-
-
-        {/* WhatsApp Confirmation Button */}
-        <a 
-          href={generateWhatsAppUrl()}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3.5 rounded-xl transition-all shadow-lg shadow-green-300 flex justify-center items-center gap-2 active:scale-98"
-        >
-          <Send size={20} />
-          Konfirmasi Pembayaran via WhatsApp
-        </a>
-
-        <button 
-          onClick={resetApp}
-          className="w-full text-gray-500 font-bold py-3.5 rounded-xl hover:text-gray-700 transition-all mt-4 text-sm"
-        >
-          &larr; Buat Pesanan Baru
-        </button>
-      </div>
-    </div>
-  );
-
-  return (
-    <div className="min-h-screen bg-gray-200 font-sans flex justify-center items-center">
-      {/* Container utama simulasi HP */}
-      <div className="w-full max-w-md min-h-screen bg-white shadow-2xl overflow-hidden relative">
+            let html = `
+            <div class="animate-in slide-in-from-right duration-300 pb-24">
+              <!-- Header -->
+              <div class="sticky top-0 bg-white z-10 py-4 px-2 border-b mb-4 flex items-center gap-3">
+                <button onclick="setView('details')" class="p-2 hover:bg-gray-100 rounded-full transition-colors">
+                  ${getIconHtml('chevron-left', 'w-6 h-6 text-gray-700')}
+                </button>
+                <h2 class="font-bold text-lg text-gray-800">Checkout</h2>
+              </div>
         
-        {/* Header App */}
-        <header className="px-5 py-4 bg-white border-b flex justify-between items-center sticky top-0 z-30 shadow-sm">
-          <div className="flex items-center gap-2">
-            <div className="w-9 h-9 bg-blue-600 rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-blue-200 shadow-md">
-              T
+              <div class="px-3 space-y-6">
+                
+                <!-- Ringkasan Produk -->
+                <div class="bg-gradient-to-r from-blue-50 to-white p-4 rounded-xl border border-blue-100 shadow-sm">
+                  <div class="flex items-start gap-3">
+                    <div class="bg-blue-100 p-2 rounded-lg text-blue-600">
+                      ${getIconHtml('shopping-bag', 'w-5 h-5')}
+                    </div>
+                    <div class="flex-1">
+                       <p class="text-xs text-gray-500 uppercase font-semibold tracking-wider">Item Details</p>
+                       <h3 class="font-bold text-gray-800 text-lg">${selectedPackage.name}</h3>
+                       <p class="text-xs text-gray-500 mb-2">${selectedCategory.provider} - ${selectedCategory.title}</p>
+                       <div class="h-px bg-blue-100 w-full my-2"></div>
+                       <div class="flex justify-between items-center">
+                         <span class="text-xs font-medium text-gray-600">Harga Paket</span>
+                         <p class="font-bold text-gray-600 text-lg">${formatRupiah(selectedPackage.price)}</p>
+                       </div>
+                       <div class="flex justify-between items-center border-t border-dashed border-blue-200 mt-2 pt-2">
+                         <span class="text-sm font-bold text-green-600">Kode Unik</span>
+                         <p class="font-bold text-green-600 text-lg">
+                           +${uniqueCode} 
+                           <span class="text-[10px] text-gray-500 font-normal ml-1">(Wajib Ditransfer)</span>
+                         </p>
+                       </div>
+                    </div>
+                  </div>
+                </div>
+        
+                <!-- Input Nomor HP -->
+                <div class="space-y-2">
+                  <label class="block text-sm font-bold text-gray-800 flex items-center gap-2">
+                    ${getIconHtml('smartphone', 'w-4 h-4 text-blue-600')}
+                    Nomor Tujuan
+                  </label>
+                  <div class="relative group">
+                     <input
+                       id="phone-input"
+                       type="tel"
+                       placeholder="08xxxxxxxxxx"
+                       value="${phoneNumber}"
+                       oninput="setPhoneNumber(this.value)"
+                       class="w-full pl-4 pr-12 py-3.5 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none transition-all font-mono text-xl font-bold tracking-wider text-gray-800 bg-gray-50 focus:bg-white"
+                     />
+                     <!-- Provider Icon Logic -->
+                     <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
+                       ${phoneNumber.length >= 4 ? `
+                         <img 
+                            src="${
+                              phoneNumber.startsWith('081') || phoneNumber.startsWith('082') ? 'https://upload.wikimedia.org/wikipedia/commons/b/bc/Telkomsel_2021_icon.svg' :
+                              phoneNumber.startsWith('083') || phoneNumber.startsWith('085') ? 'https://upload.wikimedia.org/wikipedia/commons/a/a2/Indosat_Ooredoo_Hutchison.svg' :
+                              phoneNumber.startsWith('087') || phoneNumber.startsWith('0859') || phoneNumber.startsWith('0817') ? 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Axis_logo_2015.svg/2560px-Axis_logo_2015.svg.png' :
+                              'https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/XL_Axiata_2016_icon.svg/2048px-XL_Axiata_2016_icon.svg.png'
+                            }"
+                            alt="Provider"
+                            class="h-6 w-auto object-contain drop-shadow-sm"
+                         />
+                       ` : `
+                          <span class="text-gray-300 text-xs">Provider</span>
+                       `}
+                     </div>
+                  </div>
+                  <p class="text-[11px] text-red-500 italic ml-1">*Pastikan nomor benar, kesalahan input bukan tanggung jawab kami.</p>
+                </div>
+        
+                <!-- Metode Pembayaran (SeaBank ONLY) -->
+                <div class="space-y-3">
+                  <label class="block text-sm font-bold text-gray-800 flex items-center gap-2 mb-4">
+                    ${getIconHtml('credit-card', 'w-4 h-4 text-blue-600')}
+                    Metode Pembayaran
+                  </label>
+        
+                  <!-- Opsi Pembayaran Tunggal: SeaBank -->
+                  <div class="flex items-center p-3.5 rounded-xl border-2 border-blue-500 bg-blue-50 ring-1 ring-blue-500">
+                    <div class="w-14 h-9 mr-4 flex items-center justify-center bg-white rounded-md border border-gray-200 p-1 shadow-sm">
+                       <img src="${PAYMENT_METHODS[0].icon}" alt="${PAYMENT_METHODS[0].name}" class="max-h-full max-w-full object-contain" />
+                    </div>
+                    <div class="flex-1">
+                      <p class="text-sm font-bold text-gray-800">Transfer SeaBank</p>
+                      <p class="text-[10px] text-gray-500 font-medium">Metode Pembayaran Utama</p>
+                    </div>
+                    <div class="w-5 h-5 rounded-full border-2 flex items-center justify-center border-blue-600">
+                      <div class="w-2.5 h-2.5 bg-blue-600 rounded-full animate-in zoom-in" />
+                    </div>
+                  </div>
+        
+                  <!-- DETAIL REKENING SEABANK (GAGAT GINATA) -->
+                  <div class="mt-2 bg-orange-50 border border-orange-200 rounded-xl p-4 animate-in slide-in-from-top fade-in relative overflow-hidden">
+                     <div class="flex justify-between items-center mb-3">
+                       <span class="text-xs text-orange-800 font-semibold uppercase tracking-wide">Rekening Tujuan</span>
+                       <div class="bg-orange-100 px-2 py-0.5 rounded text-[10px] text-orange-700 font-bold">Wajib Dicek</div>
+                     </div>
+                     
+                     <div class="space-y-3">
+                        <div class="flex justify-between border-b border-orange-200/50 pb-2">
+                           <span class="text-sm text-gray-600">Bank Tujuan</span>
+                           <span class="text-sm font-bold text-gray-900">SEABANK</span>
+                        </div>
+                        <div>
+                           <span class="text-sm text-gray-600 block mb-1">Nomor Rekening</span>
+                           <div class="flex items-center gap-2">
+                              <!-- Nomor Rekening GAGAT GINATA -->
+                              <span class="text-lg font-mono font-bold text-gray-900 tracking-wide">901030212504</span>
+                              <button 
+                                onclick="handleCopy('901030212504')"
+                                class="p-1.5 bg-white border border-orange-200 rounded-lg hover:bg-orange-100 transition-colors"
+                              >
+                                 ${copied ? getIconHtml('check-circle-2', 'w-4 h-4 text-green-600') : getIconHtml('copy', 'w-4 h-4 text-orange-500')}
+                              </button>
+                           </div>
+                        </div>
+                        <div class="flex justify-between border-t border-orange-200/50 pt-2">
+                           <span class="text-sm text-gray-600">Atas Nama</span>
+                           <!-- Nama GAGAT GINATA -->
+                           <span class="text-sm font-bold text-gray-900">GAGAT GINATA</span>
+                        </div>
+                     </div>
+                  </div>
+                </div>
+              </div>
+        
+              <!-- Bottom Bar - Updated to show finalPrice -->
+              <div class="fixed bottom-0 left-0 right-0 bg-white border-t p-4 shadow-[0_-5px_20px_rgba(0,0,0,0.1)] max-w-md mx-auto z-20">
+                 <div class="flex justify-between items-center mb-3">
+                   <span class="text-gray-600 font-medium text-sm">Total Tagihan (Wajib Transfer)</span>
+                   <span class="text-xl font-bold text-blue-600">${formatRupiah(finalPrice)}</span>
+                 </div>
+                 <button 
+                   onclick="handleGenerateOrder()"
+                   ${isLoading ? 'disabled' : ''}
+                   class="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-blue-200 transition-all flex justify-center items-center active:scale-98"
+                 >
+                   ${isLoading ? `
+                     <span class="flex items-center gap-2">
+                       <div class="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                       Membuat ID Pesanan...
+                     </span>
+                   ` : 'Dapatkan ID Pesanan & Bayar'}
+                 </button>
+              </div>
             </div>
-            <span className="text-xl font-extrabold tracking-tighter text-gray-800">T-<span className="text-blue-600">STORE</span></span>
-          </div>
-          <div className="bg-gray-50 border border-gray-100 p-2 rounded-full cursor-pointer hover:bg-gray-100">
-            <Users size={18} className="text-gray-600" />
-          </div>
-        </header>
+            `;
+            return html;
+        };
 
-        {/* Content Area */}
-        <main className="p-4 bg-gray-50 min-h-full">
-          {view === 'home' && renderHome()}
-          {view === 'details' && renderDetails()}
-          {view === 'payment' && renderPayment()}
-          {view === 'confirmation' && renderConfirmation()}
-        </main>
+        // 4. CONFIRMATION/PAYMENT VIEW
+        const renderConfirmation = () => {
+            if (!selectedPackage || !orderId) return '';
 
-      </div>
-    </div>
-  );
-}
+            const finalPrice = selectedPackage.price + uniqueCode;
+
+            let html = `
+            <div class="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-6 text-center animate-in zoom-in duration-300">
+              <div class="bg-white p-6 rounded-3xl shadow-xl w-full max-w-sm relative overflow-hidden">
+                <!-- Ticket Header -->
+                <div class="border-b-2 border-dashed border-gray-200 pb-6 mb-6 relative">
+                  <div class="absolute -left-10 bottom-[-14px] w-8 h-8 bg-gray-50 rounded-full"></div>
+                  <div class="absolute -right-10 bottom-[-14px] w-8 h-8 bg-gray-50 rounded-full"></div>
+                  
+                  <div class="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    ${getIconHtml('alert-triangle', 'w-8 h-8 text-orange-600')}
+                  </div>
+                  <h2 class="text-xl font-bold text-gray-800">Langkah Terakhir: Bayar Dulu!</h2>
+                  <p class="text-gray-500 text-xs mt-1">Pesanan akan diproses setelah transfer berhasil dikonfirmasi.</p>
+                </div>
+                
+                <!-- Instruction Card -->
+                <div class="bg-red-50 border-l-4 border-red-500 p-4 rounded-lg text-left mb-6">
+                    <p class="text-sm font-bold text-red-700 mb-2">PENTING!</p>
+                    <ol class="list-decimal list-inside text-xs text-gray-700 space-y-1 pl-1">
+                        <li>Segera lakukan transfer sebesar **${formatRupiah(finalPrice)}** ke rekening di bawah.</li>
+                        <li>Pastikan nominal transfer **SAMA PERSIS** (termasuk kode unik) agar mudah diverifikasi.</li>
+                        <li>Setelah transfer, klik tombol WhatsApp di bawah untuk konfirmasi ke Admin.</li>
+                    </ol>
+                </div>
+        
+                <!-- Payment Detail Reminder -->
+                <div class="space-y-4 text-left border border-gray-200 rounded-xl p-4 mb-6">
+                    <h3 class="text-sm font-bold text-gray-700 flex items-center gap-2 mb-2">
+                        ${getIconHtml('credit-card', 'w-4 h-4 text-blue-600')}
+                        Detail Pembayaran Anda
+                    </h3>
+                    
+                    <div class="flex justify-between">
+                        <span class="text-xs text-gray-500">ID Transaksi</span>
+                        <span class="text-xs font-mono font-bold text-gray-800 bg-gray-100 px-2 py-0.5 rounded">${orderId}</span>
+                    </div>
+        
+                    <!-- Price Breakdown -->
+                    <div class="pt-2 space-y-1">
+                        <div class="flex justify-between text-sm text-gray-600">
+                            <span>Harga Paket</span>
+                            <span>${formatRupiah(selectedPackage.price)}</span>
+                        </div>
+                        <div class="flex justify-between text-sm font-bold text-green-600">
+                            <span>Kode Unik (Wajib Ditransfer)</span>
+                            <span>+${uniqueCode}</span>
+                        </div>
+                        <div class="border-t border-blue-100 pt-2 flex justify-between items-center">
+                            <span class="text-sm font-bold text-gray-800">TOTAL BAYAR</span>
+                            <span class="text-2xl font-extrabold text-blue-600">${formatRupiah(finalPrice)}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="border-t border-gray-100 pt-2">
+                        <span class="text-xs text-gray-500 block mb-1">Nomor Rekening SeaBank</span>
+                        <div class="flex items-center justify-between">
+                           <span class="text-lg font-mono font-bold text-gray-900 tracking-wide">901030212504</span>
+                           <button 
+                                onclick="handleCopy('901030212504')"
+                                class="p-1.5 bg-white border border-orange-200 rounded-lg hover:bg-orange-100 transition-colors"
+                              >
+                             ${copied ? getIconHtml('check-circle-2', 'w-4 h-4 text-green-600') : getIconHtml('copy', 'w-4 h-4 text-orange-500')}
+                           </button>
+                        </div>
+                        <span class="text-xs text-gray-500">A/N: GAGAT GINATA</span>
+                    </div>
+                </div>
+        
+        
+                <!-- WhatsApp Confirmation Button -->
+                <a 
+                  href="${generateWhatsAppUrl()}"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3.5 rounded-xl transition-all shadow-lg shadow-green-300 flex justify-center items-center gap-2 active:scale-98"
+                >
+                  ${getIconHtml('send', 'w-5 h-5')}
+                  Konfirmasi Pembayaran via WhatsApp
+                </a>
+        
+                <button 
+                  onclick="resetApp()"
+                  class="w-full text-gray-500 font-bold py-3.5 rounded-xl hover:text-gray-700 transition-all mt-4 text-sm"
+                >
+                  &larr; Buat Pesanan Baru
+                </button>
+              </div>
+            </div>
+            `;
+            return html;
+        };
+
+
+        // --- MAIN RENDER FUNCTION ---
+        const renderApp = () => {
+            const content = document.getElementById('app-content');
+            let htmlContent = '';
+            
+            switch (view) {
+                case 'home':
+                    htmlContent = renderHome();
+                    break;
+                case 'details':
+                    htmlContent = renderDetails();
+                    break;
+                case 'payment':
+                    htmlContent = renderPayment();
+                    break;
+                case 'confirmation':
+                    htmlContent = renderConfirmation();
+                    break;
+                default:
+                    htmlContent = renderHome();
+            }
+
+            content.innerHTML = htmlContent;
+            lucide.createIcons(); // Inisialisasi ikon Lucide setelah konten di-render
+        };
+
+        // Helper untuk mencari objek berdasarkan ID
+        function getCategoryById(id) {
+            return CATEGORIES.find(cat => cat.id === id);
+        }
+        function getPackageById(id) {
+            if (!selectedCategory) return null;
+            return selectedCategory.packages.find(pkg => pkg.id === id);
+        }
+        
+        // Overwrite functions called from HTML to update state before rendering
+        window.setSelectedCategory = (id) => {
+            const category = getCategoryById(id);
+            if (category) setSelectedCategory(category);
+        };
+        window.setSelectedPackage = (id) => {
+            const pkg = getPackageById(id);
+            if (pkg) setSelectedPackage(pkg);
+        };
+        window.setPhoneNumber = setPhoneNumber;
+        window.setView = setView;
+        window.proceedToPayment = proceedToPayment;
+        window.handleGenerateOrder = handleGenerateOrder;
+        window.handleCopy = handleCopy;
+        window.resetApp = resetApp;
+        window.showModal = showModal;
+        window.hideModal = hideModal;
+
+        // Initial render
+        document.addEventListener('DOMContentLoaded', renderApp);
+
+    </script>
+</body>
+</html>
