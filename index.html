@@ -220,7 +220,7 @@
         ];
 
         const PAYMENT_METHODS = [
-          { id: 'seabank', name: 'Transfer SeaBank', icon: 'https://a.top4top.io/p_3622i9ecc1.png' },
+          { id: 'DANA', name: 'Transfer DANA', icon: 'https://l.top4top.io/p_365026ibv1.jpg' },
         ];
         
         // --- NEW CONFIGURATION FOR EXTERNAL TOOLS ---
@@ -887,15 +887,15 @@ Mohon diproses segera setelah pembayaran diverifikasi. Terima kasih.`
                      <div class="space-y-3">
                         <div class="flex justify-between border-b border-orange-200/50 pb-2">
                            <span class="text-sm text-gray-600">Bank Tujuan</span>
-                           <span class="text-sm font-bold text-gray-900">SEABANK</span>
+                           <span class="text-sm font-bold text-gray-900">DANA</span>
                         </div>
                         <div>
                            <span class="text-sm text-gray-600 block mb-1">Nomor Rekening</span>
                            <div class="flex items-center gap-2">
                               <!-- GAGAT GINATA's Account Number -->
-                              <span class="text-lg font-mono font-bold text-gray-900 tracking-wide">901030212504</span>
+                              <span class="text-lg font-mono font-bold text-gray-900 tracking-wide">081952545612</span>
                               <button 
-                                onclick="handleCopy('901030212504')"
+                                onclick="handleCopy('081952545612')"
                                 class="p-1.5 bg-white border border-orange-200 rounded-lg hover:bg-orange-100 transition-colors"
                               >
                                  ${copied ? getIconHtml('check-circle-2', 'w-4 h-4 text-green-600') : getIconHtml('copy', 'w-4 h-4 text-orange-500')}
@@ -995,11 +995,11 @@ Mohon diproses segera setelah pembayaran diverifikasi. Terima kasih.`
                     </div>
                     
                     <div class="border-t border-gray-100 pt-3">
-                        <span class="text-xs text-gray-500 block mb-1">Rekening Tujuan SeaBank</span>
+                        <span class="text-xs text-gray-500 block mb-1">Rekening Tujuan DANA</span>
                         <div class="flex items-center justify-between">
-                           <span class="text-lg font-mono font-bold text-gray-900 tracking-wide">901030212504</span>
+                           <span class="text-lg font-mono font-bold text-gray-900 tracking-wide">081952545612</span>
                            <button 
-                                onclick="handleCopy('901030212504')"
+                                onclick="handleCopy('081952545612')"
                                 class="p-1.5 bg-white border border-orange-200 rounded-lg hover:bg-orange-100 transition-colors"
                               >
                              ${copied ? getIconHtml('check-circle-2', 'w-4 h-4 text-green-600') : getIconHtml('copy', 'w-4 h-4 text-orange-500')}
