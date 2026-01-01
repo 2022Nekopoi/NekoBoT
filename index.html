@@ -597,21 +597,53 @@ Mohon diproses segera setelah pembayaran diverifikasi. Terima kasih.`
                 </div>
               </div>
               
-              <!-- Promo Banner -->
-              <div class="bg-gradient-to-r from-orange-100 to-yellow-50 rounded-xl p-4 border border-orange-200 flex items-center gap-3 shadow-sm">
-                <div class="bg-orange-500 p-2.5 rounded-full text-white shadow-md">
-                  ${getIconHtml('zap', 'w-5 h-5')}
-                </div>
-                <div>
-                  <h4 class="font-bold text-gray-800 text-sm">Flash Sale Harian!</h4>
-                  <p class="text-xs text-gray-600">Diskon spesial untuk pengguna baru T-STORE.</p>
-                </div>
-              </div>
+              <!-- Menu Donasi -->
+<div class="relative overflow-hidden rounded-2xl border border-emerald-200 bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-200 p-4 shadow-lg flex items-center gap-4">
 
-              <!-- NEW: ABOUT US & RULES SECTION -->
-              <div class="space-y-6">
-                
-                <!-- Tentang Kami Section -->
+  <!-- Glow -->
+  <div class="absolute -top-6 -right-6 w-28 h-28 bg-white/30 rounded-full blur-2xl"></div>
+
+  <!-- Icon -->
+  <div class="relative bg-white p-3 rounded-full text-emerald-600 shadow-md">
+    ❤️
+  </div>
+
+  <!-- Text -->
+  <div class="relative flex-1">
+    <span class="text-[10px] font-bold uppercase bg-emerald-600 text-white px-2 py-0.5 rounded-full">
+      Donasi
+    </span>
+
+    <h4 class="font-extrabold text-gray-900 text-sm mt-1">
+      Dukung T-STORE 💚
+    </h4>
+    <p class="text-xs text-gray-700">
+      Donasi Anda membantu pengembangan layanan T-STORE.
+    </p>
+  </div>
+
+  <!-- Button -->
+  <div class="relative">
+    <a href="https://saweria.co/TStore"
+       target="_blank"
+       onclick="showDonationNotif()"
+       class="text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-full shadow transition">
+      Donasi Sekarang
+    </a>
+  </div>
+</div>
+
+<!-- Notifikasi Donasi -->
+<div id="donationNotif"
+     class="fixed top-5 right-5 hidden items-center gap-3 bg-white border border-emerald-200 shadow-xl rounded-xl px-4 py-3 z-50 animate-slide-in">
+  <div class="text-emerald-600 text-lg">🎉</div>
+  <div>
+    <p class="text-sm font-bold text-gray-800">Terima kasih!</p>
+    <p class="text-xs text-gray-600">Anda diarahkan ke halaman donasi.</p>
+  </div>
+</div>
+
+              <!-- Tentang Kami Section -->
                 <div class="bg-white rounded-2xl p-5 shadow-xl border border-gray-100">
                     <div class="flex items-center justify-center mb-4">
                         <div class="bg-blue-600 text-white font-extrabold text-lg px-4 py-2 rounded-full shadow-lg shadow-blue-200 tracking-wider">
@@ -633,6 +665,7 @@ Mohon diproses segera setelah pembayaran diverifikasi. Terima kasih.`
                         </p>
                     </div>
                 </div>
+
 
                 <!-- Syarat & Ketentuan Section -->
                 <div class="bg-red-50 rounded-2xl p-5 shadow-xl border border-red-200">
